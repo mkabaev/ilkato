@@ -1,0 +1,152 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 24.12.2015, 17:17:55
+    Author     : maxim_kabaev
+*/
+
+body {
+    /*min-width: 520px;*/
+}
+.ordrow {
+    width: 100%;
+    height: 230px;
+    float: top;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /*    padding-bottom: 100px;*/
+}
+.order {
+    margin: 0.4em;
+    /*padding: 0.3em;*/
+    width: 200px;
+    height: 200px;
+    /*float: left;*/
+    display:inline-block;
+}
+.order:hover {
+    border-color: red;
+    /*background-color: yellow;*/
+}
+
+#Panel5 .order {
+    width:140px;
+    height:140px;
+}
+
+#Panel5 .order .order-content {
+    font-size: 0.8em;
+}
+
+.order-header {
+    padding: 0.1em;
+    /* margin-bottom: 0.5em; */
+    position: relative;
+    font-size: 2em;
+    /*height: 60px;*/
+}
+/*.ui-state-disabled .order-content{
+    text-decoration: line-through;
+}*/
+
+.ui-state-disabled .order-content ul {
+    list-style: none;
+}
+.ui-state-disabled .order-content ul li {
+    position: relative;
+}
+.ui-state-disabled .order-content ul li:after {
+    content: '\2714';
+    position: absolute;
+    top: -3px;
+    left: -25px;
+}
+
+.setCourierButton {
+    float: left;
+    width: 50px;
+    height: 100%;
+}
+
+.order-header .time{
+    padding: 0.2em 0.3em;
+    /*    margin-bottom: 0.5em;
+        position: relative;*/
+    font-size: 0.4em;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    /*background-color: red;*/
+}
+.order-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+}
+.order-content {
+    padding: 0 0 0 0.4em;
+    white-space: normal;
+}
+/*.ui-button{
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+}*/
+.order-placeholder {
+    border: 1px dotted black;
+    margin: 1em 1em 1em 1em;
+    width: 30px;
+    height: 200px;
+    /*float: left;*/
+    display: inline-block;
+}
+
+.products{
+    /*border: 1px dotted black;*/ 
+    font-size: 0.7em;
+    height: 100px;
+    overflow: auto;
+    margin-bottom: 0.2em;
+}
+
+#ul_couriers .ui-selecting { background: #FECA40; }
+#ul_couriers .ui-selected { background: #F39814; color: white; }
+#ul_couriers { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#ul_couriers li { margin: 8px; padding: 0; font-size: 1.4em; text-align: center; line-height: 100px; width: 270px; height: 100px;  }
+
+#ul_couriers {
+    height: 480px;
+    -webkit-column-count: 3;
+       -moz-column-count: 3;
+            column-count: 3; /*3 in those rules is just placeholder -- can be anything*/
+}
+#ul_couriers li {
+    display: inline-block; /*necessary*/
+}
+
+.left{
+    width:100%;
+    float:left;
+}
+/*.right{
+    width:100px;
+    height: 600px;
+    float:right;
+    background-color: cornflowerblue;
+    border-color: #F39814;
+    border-width: 2em;
+}*/
+.noclose .ui-dialog-titlebar-close
+{
+    display:none;
+}
+
+.comment{
+    font-size: 1.8em;
+    color: red;
+}
