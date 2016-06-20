@@ -5,6 +5,7 @@ define('DB_PASSWORD', 'cargvidon17');
 define('DB_DATABASE', 'delivery');
 define('DB_PORT', 3306);
 
+//
 //define('STATUS_ID_RECEIVED', 1); //Оформлен ОНЛАЙН
 //define('STATUS_ID_ORDER', 2); //Принят
 
