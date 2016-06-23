@@ -54,7 +54,7 @@
         </div>
 
 
-        <script src="js/sound.js"></script>
+<!--        <script src="js/sound.js"></script>-->
         <script src="js/main.js"></script>
         <script src="js/edit.js"></script>
         <script src="js/KHelper.js"></script>
