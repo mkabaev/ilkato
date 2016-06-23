@@ -39,9 +39,9 @@ function K_RequestServer()
 }
 
 $(function () {
-    $(".ordrow").sortable({
-        connectWith: ".ordrow",
-        //axis: "y",
+    $("#rightpanel").sortable({
+        connectWith: "#rightpanel",
+        axis: "y",
         handle: ".order-header, .order-content",
         cancel: ".order-toggle",
         placeholder: "order-placeholder ui-corner-all",
@@ -150,8 +150,9 @@ $(function () {
 //                        items: "> :not(.ui-widget-header)"
 //                    });
 //                });
-
-
+    $("#menu").selectable({
+        selected: function (event, ui) {}
+    });
 //                $("#inpScanner").change(function () {
 //                    alert("called.");
 //                });
@@ -171,7 +172,7 @@ $(document).ready(function () {
     K_RequestServer();
     LoadCouriers();
     setInterval('K_RequestServer()', 3000);
-    $(".left").append(MakePanelHTML('pane12',12));
+    $(".left").append(MakePanelHTML('pane12', 12));
     //$('#mainRange').append(DrawOrderCartHTML(3,123,6));
 
 });

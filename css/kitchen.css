@@ -1,0 +1,12 @@
+/** { margin: 0; padding: 0; }
+p { padding: 10px; }*/
+#leftpanel { position: absolute; left: 0; top: 0; width: 15%; height: 100%; background-color: lightyellow; box-sizing: border-box; border-right: 4px solid #F39814;}
+#rightpanel { position: absolute; right: 0; top: 0; width: 85%; height: 100%; background-color: cornsilk; }
+#orderinfo {width:90%; height: 90%; margin: 0 auto; background-color: #F39814;}
+
+#menu .ui-selecting { background: #FECA40; }
+#menu .ui-selected { background: #F39814; color: white; }
+#menu { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#menu li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
+
+#products { list-style-type: none; margin: 0; padding: 0; width: 80%; }

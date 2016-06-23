@@ -5,7 +5,6 @@
         <title>Кухня</title>
         <link rel="stylesheet" href="external/jquery/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/kitchen.css">
         <script src="external/jquery/jquery.js"></script>
         <script src="external/jquery/jquery-ui.js"></script>
         <script src="external/jquery.ui.touch-punch.min.js"></script>
@@ -24,35 +23,13 @@
         </div>
 
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
-
-        <div id="leftpanel">
-            <div>
-                <ol id="menu">
-                    <li class="ui-widget-content">23</li>
-                    <li class="ui-widget-content">19</li>
-                    <li class="ui-widget-content">33</li>
-                    <li class="ui-widget-content">34</li>
-                    <li class="ui-widget-content">35</li>
-                    <li class="ui-widget-content">16</li>
-                    <li class="ui-widget-content">22</li>
-                </ol>
+        <div class="left">
+            <h1 class="ui-widget-header" >ЗАКАЗ</h1>
+            <div id="Panel5" row="5" class="ordrow ui-state-active">
             </div>
         </div>
-        <div id="rightpanel">
-            <div id="orderinfo">
-                <p style="border:2px solid">Заказ 19</p>
-                <ol id="products" style="border:2px solid">
-                    <li>Ролл Калифорния</li>
-                    <li>Ролл Филаделфия</li>
-                    <li>Пицца 1</li>
-                    <li>Пицца 2</li>
-                    <li>Васаби 1л</li>
-                    <li>Палочки 1 комплект</li>
-                    <li>Соус 1л</li>
-                </ol>
-            </div>
+        <div class="right">
         </div>
-
 
         <script src="js/sound.js"></script>
         <script src="js/main.js"></script>
