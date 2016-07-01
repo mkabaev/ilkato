@@ -8,6 +8,42 @@
         <script src="external/jquery/jquery.js"></script>
         <script src="external/jquery/jquery-ui.js"></script>
         <script src="external/jquery.ui.touch-punch.min.js"></script>
+
+        <script>
+            if (typeof (EventSource) !== "undefined") {
+                var source = new EventSource("demo_sse.php");
+
+//                source.onmessage = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//
+//                source.myevent = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//                source.addEventListener('message', function (e) {
+//                    document.getElementById("result").innerHTML += e.data + "<br>";
+//                }, false);
+
+                //source.addEventListener('message', function (e) {
+                //    document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
+                //}, false);
+
+                source.addEventListener('onopen', function (e) {
+                    document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
+                }, false);
+
+                source.addEventListener('onerror', function (e) {
+                    document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
+                }, false);
+                source.addEventListener('myevent', function (e) {
+                    document.getElementById("result").innerHTML += "myevent:" + e.data + "<br>";
+                }, false);
+
+            } else {
+                document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+            }
+        </script>
+
     </head>
     <body>
         <?php
@@ -44,5 +80,7 @@
                 //if(!db){alert("Failed to connect to database.");}
             });
         </script>
+
+        <div id="result"></div>
     </body>
 </html>
