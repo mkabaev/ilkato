@@ -1,5 +1,8 @@
 /** { margin: 0; padding: 0; }
 p { padding: 10px; }*/
+*{font-family: sans-serif; margin: 0; padding: 0;}
+div{border:1px solid #d34d17}
+
 #leftpanel { position: absolute; left: 0; top: 0; width: 15%; height: 100%; background-color: lightyellow; box-sizing: border-box; border-right: 4px solid #F39814;}
 #rightpanel { position: absolute; right: 0; top: 0; width: 85%; height: 100%; background-color: cornsilk; }
 #orderinfo {width:90%; height: 90%; margin: 0 auto; background-color: #F39814;}
@@ -9,4 +12,8 @@ p { padding: 10px; }*/
 #menu { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 #menu li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
 
-#products { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+#header {border:solid; height:120px;}
+#number {float:left; margin:20px; }
+#timer {float: right; font-size: 6em; font-weight:bold;}
+
+#products { list-style-type: none;}

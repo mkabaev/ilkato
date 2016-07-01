@@ -40,7 +40,10 @@
         </div>
         <div id="rightpanel">
             <div id="orderinfo">
-                <p style="border:2px solid">Заказ 19</p>
+                <div id="header">
+                    <div id="timer">120с</div>
+                    <div id="number"><h1>Заказ 19</h1></div>
+                </div>
                 <ol id="products" style="border:2px solid">
                     <li>Ролл Калифорния - среднее время приготовлегия 3 мин</li>
                     <li>Ролл Филаделфия - среднее время приготовлегия 3 мин</li>
