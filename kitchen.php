@@ -9,6 +9,7 @@
         <script src="external/jquery/jquery.js"></script>
         <script src="external/jquery/jquery-ui.js"></script>
         <script src="external/jquery.ui.touch-punch.min.js"></script>
+        <script src="external/easy-pie-chart.js"></script>
     </head>
     <body>
         <div id='log'></div>
@@ -39,9 +40,34 @@
             </div>
         </div>
         <div id="rightpanel">
+
             <div id="orderinfo">
                 <div id="header">
-                    <div id="timer">120с</div>
+                    <!--                    <div id="timer">120с</div>-->
+<!--                    <div id="timer" class="chart" data-percent="100" data-scale-color="#ffb400"></div>-->
+<div id="timer" class="chart" data-percent="73"><span>73</span>z</div>
+                    <script>
+                        $(function () {
+                            //create instance
+                            $('.chart').easyPieChart({
+                                animate: 500,
+                                scaleColor: 'red',
+                                lineWidth: 12,
+                                lineCap: 'butt', //butt round square
+                                size: 160,
+                                trackColor: 'orange',
+                                barColor: 'red'
+                            });
+                            //update instance after 5 sec
+                            var sec=60;
+                            setInterval(function () {
+                                sec=sec-1;
+                                $('.chart').data('easyPieChart').update(sec);
+                                $('span', $('.chart')).text(sec);
+                            }, 1000);
+                        });
+
+                    </script>
                     <div id="number"><h1>Заказ 19</h1></div>
                 </div>
                 <ol id="products" style="border:2px solid">

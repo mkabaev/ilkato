@@ -14,6 +14,6 @@ div{border:1px solid #d34d17}
 
 #header {border:solid; height:120px;}
 #number {float:left; margin:20px; }
-#timer {float: right; font-size: 6em; font-weight:bold;}
+#timer {float: right; font-size: 2em; font-weight:bold;}
 
 #products { list-style-type: none;}
