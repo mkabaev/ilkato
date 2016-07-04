@@ -156,7 +156,14 @@ $(function () {
 //                $("#inpScanner").change(function () {
 //                    alert("called.");
 //                });
-
+    $("#bDone").button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });  
+    $("#bDone").click(function (event) {alert('event.target')});
+    
     var ScannerTimerId;
     $("#inpScanner").focusin(function () {
         ScannerTimerId = setInterval('ProcessScanner()', 100);

@@ -29,7 +29,7 @@
         <div id="leftpanel">
             <div>
                 <ol id="menu">
-                    <li class="ui-widget-content">23</li>
+                    <li class="ui-widget-content ui-selected">23</li>
                     <li class="ui-widget-content">19</li>
                     <li class="ui-widget-content">33</li>
                     <li class="ui-widget-content">34</li>
@@ -41,36 +41,17 @@
         </div>
         <div id="rightpanel">
 
-            <div id="orderinfo">
+            <div id="orderinfo" class="ui-widget ui-accordion-content">
                 <div id="header">
-                    <!--                    <div id="timer">120с</div>-->
-<!--                    <div id="timer" class="chart" data-percent="100" data-scale-color="#ffb400"></div>-->
-<div id="timer" class="chart" data-percent="73"><span>73</span>z</div>
-                    <script>
-                        $(function () {
-                            //create instance
-                            $('.chart').easyPieChart({
-                                animate: 500,
-                                scaleColor: 'red',
-                                lineWidth: 12,
-                                lineCap: 'butt', //butt round square
-                                size: 160,
-                                trackColor: 'orange',
-                                barColor: 'red'
-                            });
-                            //update instance after 5 sec
-                            var sec=60;
-                            setInterval(function () {
-                                sec=sec-1;
-                                $('.chart').data('easyPieChart').update(sec);
-                                $('span', $('.chart')).text(sec);
-                            }, 1000);
-                        });
 
-                    </script>
-                    <div id="number"><h1>Заказ 19</h1></div>
+                    <div id="timer" class="chart">
+                        <span class="digit"></span>
+                    </div>
+
+
+                    <div id="number"><h1>Заказ 23</h1></div>
                 </div>
-                <ol id="products" style="border:2px solid">
+                <ol id="products">
                     <li>Ролл Калифорния - среднее время приготовлегия 3 мин</li>
                     <li>Ролл Филаделфия - среднее время приготовлегия 3 мин</li>
                     <li>Пицца 1 - среднее время приготовлегия 5 мин</li>
@@ -79,6 +60,9 @@
                     <li>Палочки 1 комплект - среднее время приготовлегия 20сек</li>
                     <li>Соус 1л - среднее время приготовлегия 20сек</li>
                 </ol>
+                <div id="footer">
+                    <button id="bDone">Готово</button>
+                </div>
             </div>
         </div>
 
@@ -87,5 +71,6 @@
         <script src="js/main.js"></script>
         <script src="js/edit.js"></script>
         <script src="js/KHelper.js"></script>
+        <script src="js/timer.js"></script>
     </body>
 </html>
