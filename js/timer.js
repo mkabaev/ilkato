@@ -14,7 +14,7 @@ $(function () {
         }, //#0033CC
     });
 
-    var sec = 10;
+    var sec = 60;
     
     var d=100/sec;
     var c=0;

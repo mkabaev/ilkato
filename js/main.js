@@ -231,7 +231,7 @@ function ProcessOrders(jsondata) { //create orders, skip if exists
                 var address = val.street == null ? 'адрес не указан' : val.street + " " + val.building;
                 panel.append(MakeOrderHTML(val.id, val.number, val.status_id, val.comment, val.start_time, val.stop_time, val.ts, address)); //val.id
                 //ChangeOrder(val.id, val.status_id, val.ts, val.x, val.y, val.start_time, val.stop_time);
-                clicksound.playclip();
+// temporary commented                clicksound.playclip();
             }
 
             //items.push(MakeOrderHTML(val.id,val.number,val.status_id));

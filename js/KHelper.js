@@ -156,14 +156,18 @@ $(function () {
 //                $("#inpScanner").change(function () {
 //                    alert("called.");
 //                });
-    $("#bDone").button({
+    $("#bJapanDone, #bItalyDone").button({
         icons: {
             primary: "ui-icon-check",
             //secondary: "ui-icon-triangle-1-s"
         },
-    });  
-    $("#bDone").click(function (event) {alert('event.target')});
-    
+    });
+    $("#bJapanDone, #bItalyDone").click(function (event) {
+        alert('event.target')
+    });
+
+    $("#bPrint").button();
+
     var ScannerTimerId;
     $("#inpScanner").focusin(function () {
         ScannerTimerId = setInterval('ProcessScanner()', 100);

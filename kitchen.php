@@ -12,7 +12,6 @@
         <script src="external/easy-pie-chart.js"></script>
     </head>
     <body>
-        <div id='log'></div>
         <div id="dlgEdit" title="Редактирование заказа">
             <input id="inpScanner" type="text" value="" />
             <table id="tProducts" border="1" width="100%">
@@ -21,7 +20,6 @@
                 <tbody></tbody>
                 <tfoot><tr><th>Всего</th><th id="totalWeight"></th><th id="totalPrice"></th></tr></tfoot>
             </table>
-
         </div>
 
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
@@ -43,25 +41,31 @@
 
             <div id="orderinfo" class="ui-widget ui-accordion-content">
                 <div id="header">
+                    <div id="number"><h1>Заказ 23</h1></div>
 
                     <div id="timer" class="chart">
                         <span class="digit"></span>
                     </div>
 
-
-                    <div id="number"><h1>Заказ 23</h1></div>
                 </div>
-                <ol id="products">
-                    <li>Ролл Калифорния - среднее время приготовлегия 3 мин</li>
-                    <li>Ролл Филаделфия - среднее время приготовлегия 3 мин</li>
-                    <li>Пицца 1 - среднее время приготовлегия 5 мин</li>
-                    <li>Пицца 2 - среднее время приготовлегия 7 мин</li>
-                    <li>Васаби 1л - среднее время приготовлегия 20сек</li>
-                    <li>Палочки 1 комплект - среднее время приготовлегия 20сек</li>
-                    <li>Соус 1л - среднее время приготовлегия 20сек</li>
-                </ol>
+
+                <table id="products" border="1" width="100%">
+<!--                <caption>Продукты</caption>-->
+                    <thead><tr><th>Продукт</th><th>Кол-во</th></tr></thead>
+                    <tbody>
+                        <tr><td>Ролл Калифорния</td><td>1</td></tr>
+                        <tr><td>Ролл Филаделфия</td><td>2</td></tr>
+                        <tr><td>Ролл сет Обжорка</td><td>1</td></tr>
+                        <tr><td>Палочки</td><td>5</td></tr>
+                        <tr><td>Васаби</td><td>1л</td></tr>
+                        <tr><td>Имбирь</td><td>1</td></tr>
+                    </tbody>
+                </table>
+                <div id="comment">Приготовить как для себя</div>
                 <div id="footer">
-                    <button id="bDone">Готово</button>
+                    <button id="bJapanDone">Готово - Япония</button>
+                    <button id="bItalyDone">Готово - Италия</button>
+                    <button id="bPrint">Печать</button>
                 </div>
             </div>
         </div>

@@ -292,14 +292,14 @@ function SetOrderProducts($issue_id, $weightR, $weightP) {
     return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
 }
 
-checkdb();
-$action=$_POST["action"];
+//checkdb();
+$action = $_POST["action"];
 switch ($action) {
     case 'getKOrders':
-        echo getOrders($_POST["json"],"K");
+        echo getOrders($_POST["json"], "K");
         break;
     case 'getCOrders':
-        echo getOrders($_POST["json"],"C");
+        echo getOrders($_POST["json"], "C");
         break;
     case 'getOrderProducts':
         echo getOrderProducts($_POST["order_id"]);

@@ -1,7 +1,9 @@
 /** { margin: 0; padding: 0; }
 p { padding: 10px; }*/
-*{font-family: sans-serif; margin: 0; padding: 0;}
+*{font-family: sans-serif; margin: 0; padding: 0; color:#494437;}
 div, li{border:1px dotted #d34d17}
+table tr td{padding:10px;}
+table thead th{padding:10px;}
 
 #leftpanel { position: absolute; left: 0; top: 0; width: 15%; height: 100%; background-color: lightyellow; box-sizing: border-box; border-right: 4px solid #F39814;}
 #rightpanel { position: absolute; right: 0; top: 0; width: 85%; height: 100%; background-color: cornsilk; }
@@ -45,6 +47,6 @@ div, li{border:1px dotted #d34d17}
   font-size: .8em;
 }*/
 
-#products, li { list-style-type: none; padding: 10px; font-size: 20px;}
-
+#products {font-size: 20px;border: 1px solid orange; border-collapse: collapse; width: 75%}
+#comment {font-size: 1.5em; padding: 30px 10px 10px 10px; color: red;}
 #footer{position:absolute;bottom:60px;right:60px;}
