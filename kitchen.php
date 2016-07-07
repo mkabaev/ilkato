@@ -39,7 +39,7 @@
         </div>
         <div id="rightpanel">
 
-            <div id="orderinfo" class="ui-widget ui-accordion-content">
+            <div id="orderinfo">
                 <div id="header">
                     <div id="number"><h1>Заказ 23</h1></div>
 
@@ -51,7 +51,7 @@
 
                 <table id="products" border="1" width="100%">
 <!--                <caption>Продукты</caption>-->
-                    <thead><tr><th>Продукт</th><th>Кол-во</th></tr></thead>
+                    <thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>
                     <tbody>
                         <tr><td>Ролл Калифорния</td><td>1</td></tr>
                         <tr><td>Ролл Филаделфия</td><td>2</td></tr>
@@ -62,11 +62,11 @@
                     </tbody>
                 </table>
                 <div id="comment">Приготовить как для себя</div>
-                <div id="footer">
-                    <button id="bJapanDone">Готово - Япония</button>
-                    <button id="bItalyDone">Готово - Италия</button>
-                    <button id="bPrint">Печать</button>
-                </div>
+            </div>
+            <div id="footer">
+                <button id="bJapanDone">Готово - Япония</button>
+                <button id="bItalyDone">Готово - Италия</button>
+                <button id="bPrint">Печать</button>
             </div>
         </div>
 
@@ -76,5 +76,16 @@
         <script src="js/edit.js"></script>
         <script src="js/KHelper.js"></script>
         <script src="js/timer.js"></script>
+<!--        <script>
+            window.addEventListener('popstate', function (e) {
+                // код обработчика события
+                alert(e.toString());
+            });
+
+            var state = {'page_id': 1, 'user_id': 5};
+            var title = 'Hello World';
+            var url = 'hello-world.html';
+            history.pushState(state, title, url);
+        </script>-->
     </body>
 </html>
