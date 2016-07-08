@@ -180,10 +180,10 @@ $(function () {
 });
 
 $(document).ready(function () {
-    K_RequestServer();
-    LoadCouriers();
-    setInterval('K_RequestServer()', 3000);
-    $(".left").append(MakePanelHTML('pane12', 12));
-    //$('#mainRange').append(DrawOrderCartHTML(3,123,6));
+    //K_RequestServer();
+    //LoadCouriers();
+    //setInterval('K_RequestServer()', 3000);
+    //$(".left").append(MakePanelHTML('pane12', 12));
+    ////$('#mainRange').append(DrawOrderCartHTML(3,123,6));
 
 });

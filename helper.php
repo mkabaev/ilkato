@@ -13,46 +13,46 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once 'database.php';
 
-function checkdb() {
-    $db = new DB();
-    $query = "CREATE TABLE module_kitchen (
-          id_issue int(11) NOT NULL,
-            timestamp timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            json tinytext DEFAULT NULL,
-            x tinyint(3) UNSIGNED DEFAULT NULL,
-            y tinyint(3) UNSIGNED DEFAULT NULL,
-            startCoocking DATETIME DEFAULT NULL,
-            stopCoocking DATETIME DEFAULT NULL,
-            setCourier DATETIME DEFAULT NULL,
-            PRIMARY KEY (id_issue)
-        )
-        ENGINE = INNODB
-        CHARACTER SET utf8
-        COLLATE utf8_general_ci
-        COMMENT = 'autocreated by kitchen module';
-        CREATE 
-	DEFINER = 'sxl'@'%'
-TRIGGER delivery.trigger_issue_upd
-	AFTER UPDATE
-	ON delivery.testform_issues
-	FOR EACH ROW
-BEGIN
-    insert into module_kitchen (id_issue, timestamp) values (new.id, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE timestamp=CURRENT_TIMESTAMP;
-  CASE new.status_id
-      WHEN 3 THEN UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP, startCoocking=CURRENT_TIMESTAMP, stopCoocking=null where id_issue=new.id;
-      WHEN 4 THEN UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP, stopCoocking=CURRENT_TIMESTAMP where id_issue=new.id;
-      ELSE
-        BEGIN
-          UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP where id_issue=new.id;
-        END;
-    END CASE;
-END";
-
-    if ($db->conn->query("SHOW TABLES LIKE 'module_kitchen'")->rowCount() > 0 or die($db->conn->exec($query))) {
-        //echo "exist";
-    }
-    $db->conn = null;
-}
+//function checkdb() {
+//    $db = new DB();
+//    $query = "CREATE TABLE module_kitchen (
+//          id_issue int(11) NOT NULL,
+//            timestamp timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+//            json tinytext DEFAULT NULL,
+//            x tinyint(3) UNSIGNED DEFAULT NULL,
+//            y tinyint(3) UNSIGNED DEFAULT NULL,
+//            startCoocking DATETIME DEFAULT NULL,
+//            stopCoocking DATETIME DEFAULT NULL,
+//            setCourier DATETIME DEFAULT NULL,
+//            PRIMARY KEY (id_issue)
+//        )
+//        ENGINE = INNODB
+//        CHARACTER SET utf8
+//        COLLATE utf8_general_ci
+//        COMMENT = 'autocreated by kitchen module';
+//        CREATE 
+//	DEFINER = 'sxl'@'%'
+//TRIGGER delivery.trigger_issue_upd
+//	AFTER UPDATE
+//	ON delivery.testform_issues
+//	FOR EACH ROW
+//BEGIN
+//    insert into module_kitchen (id_issue, timestamp) values (new.id, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE timestamp=CURRENT_TIMESTAMP;
+//  CASE new.status_id
+//      WHEN 3 THEN UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP, startCoocking=CURRENT_TIMESTAMP, stopCoocking=null where id_issue=new.id;
+//      WHEN 4 THEN UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP, stopCoocking=CURRENT_TIMESTAMP where id_issue=new.id;
+//      ELSE
+//        BEGIN
+//          UPDATE module_kitchen set timestamp=CURRENT_TIMESTAMP where id_issue=new.id;
+//        END;
+//    END CASE;
+//END";
+//
+//    if ($db->conn->query("SHOW TABLES LIKE 'module_kitchen'")->rowCount() > 0 or die($db->conn->exec($query))) {
+//        //echo "exist";
+//    }
+//    $db->conn = null;
+//}
 
 function getOrders($json_orders, $query_type) {
     $db = new DB();

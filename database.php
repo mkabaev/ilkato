@@ -8,14 +8,13 @@
 
 require_once 'config.php';
 
-
 class DB {
 
     public $conn;
 
     function __construct() {
         try {
-            $this->conn = new PDO('mysql:host=' . DB_HOSTNAME . ';dbname=' . DB_DATABASE. ';port=' . DB_PORT. ';charset=utf8', DB_USERNAME, DB_PASSWORD, array(
+            $this->conn = new PDO('mysql:host=' . DB_HOSTNAME . ';dbname=' . DB_DATABASE . ';port=' . DB_PORT . ';charset=utf8', DB_USERNAME, DB_PASSWORD, array(
                 PDO::ATTR_PERSISTENT => true
                     //PDO::ATTR_PERSISTENT => true - постоянное подключение, кэшируется
             ));
@@ -31,7 +30,6 @@ class DB {
     //        print_r($row);
     //    }
     //}
-
 }
 
 //try {

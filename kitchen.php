@@ -87,5 +87,40 @@
             var url = 'hello-world.html';
             history.pushState(state, title, url);
         </script>-->
+        <script>
+            if (typeof (EventSource) !== "undefined") {
+                var source = new EventSource("events.php?event=ordUpdated");
+
+//                source.onmessage = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//
+//                source.myevent = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//                source.addEventListener('message', function (e) {
+//                    document.getElementById("result").innerHTML += e.data + "<br>";
+//                }, false);
+
+                source.addEventListener('message', function (e) {
+                    document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
+                }, false);
+
+                source.addEventListener('onopen', function (e) {
+                    document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
+                }, false);
+
+                source.addEventListener('onerror', function (e) {
+                    document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
+                }, false);
+                source.addEventListener('ordUpdated', function (e) {
+                    document.getElementById("result").innerHTML += "doOrderUpdate " + e.data + "<br>";
+                }, false);
+
+            } else {
+                document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+            }
+        </script>
+        <div id="result"></div>
     </body>
 </html>
