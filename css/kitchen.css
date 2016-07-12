@@ -24,27 +24,27 @@ body {background-color: cornsilk;}
 #number {float:left; margin:20px;}
 
 .chart {
-  position: relative;
-  display: inline-block;
-  width: 200px;
-  height: 200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  
-  float: right;
-  font-size: 40px;
-  font-weight:bold;
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+
+    float: right;
+    font-size: 40px;
+    font-weight:bold;
 }
 .chart canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .digit {
-  display: inline-block;
-  line-height: 200px;
-  z-index: 2;
+    display: inline-block;
+    line-height: 200px;
+    z-index: 2;
 }
 /*.digit:after {
   content: '%';
@@ -55,3 +55,13 @@ body {background-color: cornsilk;}
 #products {font-size: 20px;border: 1px solid orange; border-collapse: collapse; width: 75%; }
 #comment {font-size: 1.5em; padding: 30px 10px 10px 10px; color: red;}
 #footer{position:fixed;bottom:20px;right:20px;}
+
+@media print { /* Стиль для печати */
+    body {
+        font-family: Times, 'Times New Roman', serif; /* Шрифт с засечками */
+    }
+    h1, h2, p {
+        color: #000; /* Черный цвет текста */
+    }
+    #number, #products{display: none;}
+}
