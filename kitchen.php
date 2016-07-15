@@ -3,13 +3,23 @@
     <head>
         <meta charset="utf-8">
         <title>Кухня</title>
-        <link rel="stylesheet" href="external/jquery/jquery-ui.css">
+<!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
+        <link rel="stylesheet" href="jquery-ui-1.12.0/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/kitchen.css">
-        <script src="external/jquery/jquery.js"></script>
-        <script src="external/jquery/jquery-ui.js"></script>
-        <script src="external/jquery.ui.touch-punch.min.js"></script>
-        <script src="external/easy-pie-chart.js"></script>
+        
+<!--        <script src="external/jquery/jquery.js"></script>
+        <script src="external/jquery/jquery-ui.js"></script>-->
+
+
+        <script src="jquery-ui-1.12.0/external/jquery/jquery.js"></script>
+        <script src="jquery-ui-1.12.0/jquery-ui.js"></script>
+        <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
+
+        
+        
+        <script src="js-ext/easy-pie-chart.js"></script>
+        <script src="js-ext/jquery.printPage.js"></script>
     </head>
     <body>
         <div id="dlgEdit" title="Редактирование заказа">
@@ -66,7 +76,15 @@
             <div id="footer">
                 <button id="bJapanDone">Готово - Япония</button>
                 <button id="bItalyDone">Готово - Италия</button>
-                <button id="bPrint">Печать</button>
+                <a id="bPrint">Печать</a>
+                <p><a class="btnPrint" href='check.html'>Print!</a></p>
+                <script>
+                    $(".btnPrint").printPage({
+                        url: "check.html",
+                        attr: "href",
+                        message: "Печатаю..."
+                    })
+                </script>
             </div>
         </div>
 
@@ -88,8 +106,8 @@
             history.pushState(state, title, url);
         </script>-->
         <script>
-            if (typeof (EventSource) !== "undefined") {
-                var source = new EventSource("events.php?event=ordUpdated");
+                    if (typeof (EventSource) !== "undefined") {
+                        var source = new EventSource("events.php?event=ordUpdated");
 
 //                source.onmessage = function (event) {
 //                    document.getElementById("result").innerHTML += event.data + "<br>";
@@ -102,24 +120,24 @@
 //                    document.getElementById("result").innerHTML += e.data + "<br>";
 //                }, false);
 
-                source.addEventListener('message', function (e) {
-                    document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
-                }, false);
+                        source.addEventListener('message', function (e) {
+                            document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
+                        }, false);
 
-                source.addEventListener('onopen', function (e) {
-                    document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
-                }, false);
+                        source.addEventListener('onopen', function (e) {
+                            document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
+                        }, false);
 
-                source.addEventListener('onerror', function (e) {
-                    document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
-                }, false);
-                source.addEventListener('ordUpdated', function (e) {
-                    document.getElementById("result").innerHTML += "doOrderUpdate " + e.data + "<br>";
-                }, false);
+                        source.addEventListener('onerror', function (e) {
+                            document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
+                        }, false);
+                        source.addEventListener('ordUpdated', function (e) {
+                            document.getElementById("result").innerHTML += "doOrderUpdate " + e.data + "<br>";
+                        }, false);
 
-            } else {
-                document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
-            }
+                    } else {
+                        document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+                    }
         </script>
         <div id="result"></div>
     </body>

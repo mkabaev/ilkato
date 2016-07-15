@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>Кухня</title>
-        <link rel="stylesheet" href="external/jquery/jquery-ui.css">
+        <link rel="stylesheet" href="js-ext/jquery/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
-        <script src="external/jquery/jquery.js"></script>
-        <script src="external/jquery/jquery-ui.js"></script>
+        <script src="js-ext/jquery/jquery.js"></script>
+        <script src="js-ext/jquery/jquery-ui.js"></script>
         <script src="external/jquery.ui.touch-punch.min.js"></script>
     </head>
     <body>
