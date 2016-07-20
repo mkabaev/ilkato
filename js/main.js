@@ -25,27 +25,6 @@ function CreateTable(id, _class) {
     return table;
 }
 
-function MakeTableHTML(id) {
-//    <table id="products" border="1" width="100%">
-//                    <thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>
-//                    <tbody>
-//                        <tr><td>Ролл Калифорния</td><td>1</td></tr>
-//                        <tr><td>Ролл Филаделфия</td><td>2</td></tr>
-//                        <tr><td>Ролл сет Обжорка</td><td>1</td></tr>
-//                        <tr><td>Палочки</td><td>5</td></tr>
-//                        <tr><td>Васаби</td><td>1л</td></tr>
-//                        <tr><td>Имбирь</td><td>1</td></tr>
-//                    </tbody>
-//                </table>
-
-    var table = $('<table/>', {
-        id: id,
-        class: 'ui-state-active',
-        attr: {'ssss': 'ssada', 'bla': 'blllaa'}
-    });
-    return table;
-}
-
 function MakePanelHTML(panel_id, row) {
     var divPanel = $('<div/>', {
         id: panel_id,

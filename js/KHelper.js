@@ -137,12 +137,13 @@ function CreateOrderViewer() {
         class: 'chart',
     }).append('<span class="digit"></span>');
     divHeader.append(divNumber);
+    divHeader.append('<div id="comment">Приготовить как для себя</div>');
     divHeader.append(divTimer);
     divOrderViewer.append(divHeader);
 
     var tProducts = CreateTable('products1', 'tProducts');
     divOrderViewer.append(tProducts);
-    divOrderViewer.append('<div id="comment">Приготовить как для себя</div>');
+    divOrderViewer.append(CreateTable('products2', 'tProducts'));
     
     return divOrderViewer;
 }
