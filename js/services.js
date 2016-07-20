@@ -45,6 +45,47 @@ function LoadOrderProducts(order_id)
     });
 }
 
+function LoadOrderProducts(order_id)
+{
+    return $.ajax({
+        type: "POST",
+        data: "action=getOrderProducts&order_id=" + order_id,
+        url: "helper.php",
+        cache: false,
+        success: function (jsondata) {
+            console.log("Loading products. Server response is " + jsondata);
+            var data = $.parseJSON(jsondata);
+            var items = [];
+            var sum=0;
+            //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
+            weightP = 0;
+            weightR = 0;
+            $.each(data, function (key, val) {
+                var id_string = "";
+                sum=sum+parseFloat(val.price);
+                switch (val.product_id) {
+                    case '1271':
+                        id_string = "id='scanp'";
+                        weightP = parseFloat(val.count);
+                        break;
+                    case '1272':
+                        id_string = "id='scanr'";
+                        weightR = parseFloat(val.count);
+                        break;
+                    case '1273':
+                        id_string = "id='weight'";
+                        break;
+                }
+                items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td " + id_string + ">" + val.count + "</td><td>" + val.price + "</td></tr>");
+            });
+            //items.push("<tr><tfoot>sum</tfoot><tfoot>Кол-во</tfoot><tfoot>"+sum+"</tfoot></tr>");
+            $("#weight").text((weightP + weightR));
+            $("#tProducts tbody").html(items);
+            $("#totalPrice").html(sum);
+        }
+    });
+}
+
 var inp = $("#inpScanner");
 var weightP = 0;
 var weightR = 0;

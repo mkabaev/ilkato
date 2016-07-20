@@ -3,21 +3,21 @@
     <head>
         <meta charset="utf-8">
         <title>Кухня</title>
-<!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
+        <!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
         <link rel="stylesheet" href="jquery-ui-1.12.0/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/kitchen.css">
-        
+
 <!--        <script src="external/jquery/jquery.js"></script>
-        <script src="external/jquery/jquery-ui.js"></script>-->
+<script src="external/jquery/jquery-ui.js"></script>-->
 
 
         <script src="jquery-ui-1.12.0/external/jquery/jquery.js"></script>
         <script src="jquery-ui-1.12.0/jquery-ui.js"></script>
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
 
-        
-        
+
+
         <script src="js-ext/easy-pie-chart.js"></script>
         <script src="js-ext/jquery.printPage.js"></script>
     </head>
@@ -33,23 +33,24 @@
         </div>
 
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
+        <div id="userinfo"></div>
 
-        <div id="leftpanel">
-            <div>
-                <ol id="menu">
-                    <li class="ui-widget-content ui-selected">23</li>
-                    <li class="ui-widget-content">19</li>
-                    <li class="ui-widget-content">33</li>
-                    <li class="ui-widget-content">34</li>
-                    <li class="ui-widget-content">35</li>
-                    <li class="ui-widget-content">16</li>
-                    <li class="ui-widget-content">22</li>
-                </ol>
-            </div>
-        </div>
+        <!--        <div id="leftpanel">
+                    <div>
+                        <ol id="menu">
+                            <li class="ui-widget-content ui-selected">23</li>
+                            <li class="ui-widget-content">19</li>
+                            <li class="ui-widget-content">33</li>
+                            <li class="ui-widget-content">34</li>
+                            <li class="ui-widget-content">35</li>
+                            <li class="ui-widget-content">16</li>
+                            <li class="ui-widget-content">22</li>
+                        </ol>
+                    </div>
+                </div>-->
         <div id="rightpanel">
-
-            <div id="orderinfo">
+            
+<!--            <div id="orderinfo">
                 <div id="header">
                     <div id="number"><h1>Заказ 23</h1></div>
 
@@ -60,7 +61,7 @@
                 </div>
 
                 <table id="products" border="1" width="100%">
-<!--                <caption>Продукты</caption>-->
+                <caption>Продукты</caption>
                     <thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>
                     <tbody>
                         <tr><td>Ролл Калифорния</td><td>1</td></tr>
@@ -72,14 +73,13 @@
                     </tbody>
                 </table>
                 <div id="comment">Приготовить как для себя</div>
-            </div>
+            </div>-->
             <div id="footer">
                 <button id="bJapanDone">Готово - Япония</button>
                 <button id="bItalyDone">Готово - Италия</button>
-                <a id="bPrint">Печать</a>
-                <p><a class="btnPrint" href='check.html'>Print!</a></p>
+                <button id="bPrint">Печать</button>
                 <script>
-                    $(".btnPrint").printPage({
+                    $("#bPrint").printPage({
                         url: "check.html",
                         attr: "href",
                         message: "Печатаю..."
@@ -106,6 +106,15 @@
             history.pushState(state, title, url);
         </script>-->
         <script>
+                    $('body').append(CreateLeftPanel());
+                    $('body').append(CreateOrderViewer());
+//                    $(window).bind('storage', function (e) {
+//                        console.log(e.originalEvent.key, e.originalEvent.newValue);
+//                        alert('fired');
+//                    });
+
+
+
                     if (typeof (EventSource) !== "undefined") {
                         var source = new EventSource("events.php?event=ordUpdated");
 
@@ -132,7 +141,9 @@
                             document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
                         }, false);
                         source.addEventListener('ordUpdated', function (e) {
-                            document.getElementById("result").innerHTML += "doOrderUpdate " + e.data + "<br>";
+                            localStorage.user = 'Повар 1' + e.data;
+                            $("#userinfo").text(localStorage.user);
+
                         }, false);
 
                     } else {

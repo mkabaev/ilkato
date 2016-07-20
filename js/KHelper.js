@@ -99,6 +99,54 @@ $(function () {
     });
 });
 
+function CreateLeftPanel() {
+    var divPanel = $('<div/>', {
+        id: "leftpanel",
+        //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+
+    var olMenu = $('<ol/>', {
+        id: "menu",
+    });
+    olMenu.append('<li class="ui-widget-content ui-selected">23</li>');
+    olMenu.append('<li class="ui-widget-content">19</li>');
+    olMenu.append('<li class="ui-widget-content">33</li>');
+    olMenu.append('<li class="ui-widget-content">34</li>');
+    olMenu.append('<li class="ui-widget-content">38</li>');
+
+    divPanel.append(olMenu);
+    return divPanel;
+}
+
+function CreateOrderViewer() {
+    var divOrderViewer = $('<div/>', {
+        id: "orderinfo",
+        class: 'orderinfo',
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+
+    var divHeader = $('<div/>', {
+        id: "header",
+    });
+    var divNumber = $('<div/>', {
+        id: "number",
+    }).append("<h1>Заказ 23</h1>");
+    var divTimer = $('<div/>', {
+        id: "timer",
+        class: 'chart',
+    }).append('<span class="digit"></span>');
+    divHeader.append(divNumber);
+    divHeader.append(divTimer);
+    divOrderViewer.append(divHeader);
+
+    var tProducts = CreateTable('products1', 'tProducts');
+    divOrderViewer.append(tProducts);
+    divOrderViewer.append('<div id="comment">Приготовить как для себя</div>');
+    
+    return divOrderViewer;
+}
+
 $(function () {
     //$(".ordrow").disableSelection();
     //$(".order").disableSelection();

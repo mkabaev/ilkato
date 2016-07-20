@@ -3,12 +3,55 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-function MakePanelHTML(panel_id, row){
-     var divPanel = $('<div/>', {
+function CreateTable(id, _class) {
+    var table = $('<table/>', {
+        id: id,
+        class: _class,
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+    table.append('<thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>');
+
+    var tBody = $('<tbody/>', {
+        //id: id,
+        //class: _class,
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+    tBody.append('<tr><td>Ролл Калифорния</td><td>1</td></tr>');
+    tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
+    tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
+
+    table.append(tBody);
+
+    return table;
+}
+
+function MakeTableHTML(id) {
+//    <table id="products" border="1" width="100%">
+//                    <thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>
+//                    <tbody>
+//                        <tr><td>Ролл Калифорния</td><td>1</td></tr>
+//                        <tr><td>Ролл Филаделфия</td><td>2</td></tr>
+//                        <tr><td>Ролл сет Обжорка</td><td>1</td></tr>
+//                        <tr><td>Палочки</td><td>5</td></tr>
+//                        <tr><td>Васаби</td><td>1л</td></tr>
+//                        <tr><td>Имбирь</td><td>1</td></tr>
+//                    </tbody>
+//                </table>
+
+    var table = $('<table/>', {
+        id: id,
+        class: 'ui-state-active',
+        attr: {'ssss': 'ssada', 'bla': 'blllaa'}
+    });
+    return table;
+}
+
+function MakePanelHTML(panel_id, row) {
+    var divPanel = $('<div/>', {
         id: panel_id,
         class: 'ordrow ui-state-active',
         attr: {'row': row, 'bla': 'blllaa'}
-    });   
+    });
     return divPanel;
 }
 
@@ -32,7 +75,7 @@ function MakeOrderHTML(order_id, number, status_id, Comment, start_time, stop_ti
         class: 'order-header ui-widget-header ui-corner-top',
         text: number
     });
-    
+
 
     if (stop_time == null) {
         stop_time = '-'
@@ -52,7 +95,7 @@ function MakeOrderHTML(order_id, number, status_id, Comment, start_time, stop_ti
         class: 'order-content',
         html: '<div class="products"><ul id="ulProducts_' + order_id + '"></ul><span class=comment>' + Comment + '</span><hr/>' + address + '</div>'
     });
-      
+
     $('<label for="' + 'chkDone' + order_id + '">Готов</label>').appendTo(divOrderContent);
     var chkDone = $("<input/>", {
         type: 'checkbox',
@@ -102,7 +145,7 @@ function MakeOrderHTML(order_id, number, status_id, Comment, start_time, stop_ti
 //      text: false
 //  }).appendTo(divOrderContent);;
 
-    
+
     $('<label for="' + 'bEdit' + order_id + '">Редактор</label>').appendTo(divOrderContent);
     var bEdit = $("<button/>", {
         type: 'checkbox',
@@ -123,7 +166,7 @@ function MakeOrderHTML(order_id, number, status_id, Comment, start_time, stop_ti
     );
 
     $(bEdit).click(function (event) {
-        
+
         //var order = $(event.target).parent().parent();
         //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
         var order_id = $(event.target).parent().parent().attr("id");
@@ -143,10 +186,54 @@ function MakeOrderHTML(order_id, number, status_id, Comment, start_time, stop_ti
 //            .click(function () {
 //                alert('hi');
 //            }).appendTo(divOrderContent);
-    
+
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
     return divOrder;
+}
+
+function LoadOrderProducts(order_id)
+{
+    return $.ajax({
+        type: "POST",
+        data: "action=getOrderProducts&order_id=" + order_id,
+        url: "helper.php",
+        cache: false,
+        success: function (jsondata) {
+            console.log("Loading products. Server response is " + jsondata);
+            localStorage.orders = jsondata;
+            localStorage.orders_ts = 123;
+
+            var data = $.parseJSON(jsondata);
+            var items = [];
+            var sum = 0;
+            //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
+            weightP = 0;
+            weightR = 0;
+            $.each(data, function (key, val) {
+                var id_string = "";
+                sum = sum + parseFloat(val.price);
+                switch (val.product_id) {
+                    case '1271':
+                        id_string = "id='scanp'";
+                        weightP = parseFloat(val.count);
+                        break;
+                    case '1272':
+                        id_string = "id='scanr'";
+                        weightR = parseFloat(val.count);
+                        break;
+                    case '1273':
+                        id_string = "id='weight'";
+                        break;
+                }
+                items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td " + id_string + ">" + val.count + "</td><td>" + val.price + "</td></tr>");
+            });
+            //items.push("<tr><tfoot>sum</tfoot><tfoot>Кол-во</tfoot><tfoot>"+sum+"</tfoot></tr>");
+            $("#weight").text((weightP + weightR));
+            $("#tProducts tbody").html(items);
+            $("#totalPrice").html(sum);
+        }
+    });
 }
 
 //changes status 

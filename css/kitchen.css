@@ -23,6 +23,8 @@ body {background-color: cornsilk;}
 #header {height:120px;}
 #number {float:left; margin:20px;}
 
+#userinfo{position: absolute; top:0; right: 30px;}
+
 .chart {
     position: relative;
     display: inline-block;
@@ -52,7 +54,8 @@ body {background-color: cornsilk;}
   font-size: .8em;
 }*/
 
-#products {font-size: 20px;border: 1px solid orange; border-collapse: collapse; width: 75%; }
+.tProducts {font-size: 20px;border: 1px solid orange; border-collapse: collapse; width: 75%; }
+
 #comment {font-size: 1.5em; padding: 30px 10px 10px 10px; color: red;}
 #footer{position:fixed;bottom:20px;right:20px;}
 

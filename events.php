@@ -1,6 +1,6 @@
 <?php
 
-//мониторит изменения в базе и шлет их клиенту (Server Sent Events)
+//мониторит изменения в базе и шлет их в браузер (Server Sent Events)
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header('Connection: keep-alive'); /////
