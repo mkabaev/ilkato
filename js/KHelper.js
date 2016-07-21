@@ -119,7 +119,7 @@ function CreateLeftPanel() {
     return divPanel;
 }
 
-function CreateOrderViewer(id, _class, comment, headerItems, tableItems) {
+function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
     var divOrderViewer = $('<div/>', {
         id: id,
         class: _class,
@@ -132,7 +132,7 @@ function CreateOrderViewer(id, _class, comment, headerItems, tableItems) {
     });
     var divNumber = $('<div/>', {
         //id: "number",
-    }).append("<h1>Заказ 23</h1>");
+    }).append("<h1>Заказ " + No + "</h1>");
 
     divHeader.append(divNumber);
     divHeader.append('<div id="comment">' + comment + '</div>');
@@ -140,8 +140,25 @@ function CreateOrderViewer(id, _class, comment, headerItems, tableItems) {
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    var tProducts = CreateTable(id+'Table', 'tProducts', headerItems, tableItems);
+    var tProducts = CreateTable(id + 'Table', 'tProducts', headerItems, tableItems);
     divOrderViewer.append(tProducts);
+
+    var bDone = $('<button/>', {
+        id: "bDone" + id,
+        //class: 'ui-widget-content',
+        text: "Готово",
+        click: function (event) {
+            alert('event.target')
+        },
+    }).appendTo(divOrderViewer);
+    //divOrderViewer.append('<button id="bDone'+id+'">Готово</button>');
+
+    bDone.button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
 
     return divOrderViewer;
 }
@@ -203,15 +220,7 @@ $(function () {
 //                $("#inpScanner").change(function () {
 //                    alert("called.");
 //                });
-    $("#bJapanDone, #bItalyDone").button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-    $("#bJapanDone, #bItalyDone").click(function (event) {
-        alert('event.target')
-    });
+
 
     $("#bPrint").button();
 
@@ -227,7 +236,7 @@ $(function () {
 });
 
 function ordUpdate(data) {
-    localStorage.products = '[{"id":"3","name":"Ролл 1'+data+' ","count":"2"},{"id":"10","name":"Ролл 2","count":"2"},{"id":"11","name":"Ролл 3","count":"2"},{"id":"12","name":"Ролл 4","count":"2"},{"id":"13","name":"Ролл 5","count":"2"},{"id":"17","name":"Ролл 6","count":"2"},{"id":"19","name":"Ролл 7","count":"2"},{"id":"20","name":"Ролл 8","count":"2"}]';
+    localStorage.products = '[{"id":"3","name":"Ролл 1' + data + ' ","count":"2"},{"id":"10","name":"Ролл 2","count":"2"},{"id":"11","name":"Ролл 3","count":"2"},{"id":"12","name":"Ролл 4","count":"2"},{"id":"13","name":"Ролл 5","count":"2"},{"id":"17","name":"Ролл 6","count":"2"},{"id":"19","name":"Ролл 7","count":"2"},{"id":"20","name":"Ролл 8","count":"2"}]';
     localStorage.products_ts = data;
     $('#ordViewerTable tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
 }

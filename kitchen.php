@@ -37,8 +37,7 @@
             var headerItems = $.parseJSON('["Продукт","Кол-во"]');
 
             //var tableItems = $.parseJSON(localStorage.products);
-            $('body').append(CreateOrderViewer('ordViewer', 'orderViewer', 'Приготовить как для себя', headerItems, null));
-
+            $('body').append(CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null));
             var divTimer = $('<div/>', {
                 id: "timer",
                 class: 'chart',
@@ -48,8 +47,6 @@
         </script>
 
         <div id="footer">
-            <button id="bJapanDone">Готово - Япония</button>
-            <button id="bItalyDone">Готово - Италия</button>
             <button id="bPrint">Печать</button>
             <script>
                 $("#bPrint").printPage({
