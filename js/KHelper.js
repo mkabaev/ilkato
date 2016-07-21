@@ -119,32 +119,30 @@ function CreateLeftPanel() {
     return divPanel;
 }
 
-function CreateOrderViewer() {
+function CreateOrderViewer(id, _class, comment, headerItems, tableItems) {
     var divOrderViewer = $('<div/>', {
-        id: "orderinfo",
-        class: 'orderinfo',
-        //attr: {'status_id': status_id, 'ts': timestamp}
+        id: id,
+        class: _class,
+        //attr: {'order_id': '123', 'ts': timestamp}
     });
 
     var divHeader = $('<div/>', {
-        id: "header",
+        //id: "orderheader",
+        //class: 'ui-widget-content',
     });
     var divNumber = $('<div/>', {
-        id: "number",
+        //id: "number",
     }).append("<h1>Заказ 23</h1>");
-    var divTimer = $('<div/>', {
-        id: "timer",
-        class: 'chart',
-    }).append('<span class="digit"></span>');
+
     divHeader.append(divNumber);
-    divHeader.append('<div id="comment">Приготовить как для себя</div>');
-    divHeader.append(divTimer);
+    divHeader.append('<div id="comment">' + comment + '</div>');
     divOrderViewer.append(divHeader);
 
-    var tProducts = CreateTable('products1', 'tProducts');
+    //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
+
+    var tProducts = CreateTable(id+'Table', 'tProducts', headerItems, tableItems);
     divOrderViewer.append(tProducts);
-    divOrderViewer.append(CreateTable('products2', 'tProducts'));
-    
+
     return divOrderViewer;
 }
 
@@ -227,6 +225,12 @@ $(function () {
         //console.log("scannerTimer: "+ScannerTimerId);
     });
 });
+
+function ordUpdate(data) {
+    localStorage.products = '[{"id":"3","name":"Ролл 1'+data+' ","count":"2"},{"id":"10","name":"Ролл 2","count":"2"},{"id":"11","name":"Ролл 3","count":"2"},{"id":"12","name":"Ролл 4","count":"2"},{"id":"13","name":"Ролл 5","count":"2"},{"id":"17","name":"Ролл 6","count":"2"},{"id":"19","name":"Ролл 7","count":"2"},{"id":"20","name":"Ролл 8","count":"2"}]';
+    localStorage.products_ts = data;
+    $('#ordViewerTable tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
+}
 
 $(document).ready(function () {
     //K_RequestServer();

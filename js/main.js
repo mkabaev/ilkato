@@ -3,26 +3,63 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-function CreateTable(id, _class) {
+function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     var table = $('<table/>', {
         id: id,
         class: _class,
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
-    table.append('<thead><tr><th>Продукт</th><th style="width:80px;">Кол-во</th></tr></thead>');
+
+    var tHead = $('<thead/>', {
+        //id: id,
+        //class: _class,
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+
+    tHead.append(ArrayToTableHeader(headerItems));
+    table.append(tHead);
 
     var tBody = $('<tbody/>', {
         //id: id,
         //class: _class,
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
-    tBody.append('<tr><td>Ролл Калифорния</td><td>1</td></tr>');
-    tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
-    tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
+
+    tBody.append(ArrayToTableItems(tableItems));
+    //tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
+    //tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
 
     table.append(tBody);
 
     return table;
+}
+
+function ArrayToTableHeader(headerItems) {
+    var headerHtml;
+    headerHtml = '<tr>';
+    $.each(headerItems, function (key, val) {
+        headerHtml = headerHtml + "<th>" + val + "</th>";
+    });
+    headerHtml = headerHtml + '</tr>';
+    return headerHtml;
+    //$("#tProducts tbody").html(items);
+}
+
+function ArrayToTableItems(tableItems) {
+    var items = [];
+    var row;
+    $.each(tableItems, function (key, val) {
+        row = "<tr>";
+        $.each(val, function (key2, val2) {
+            if (key2 != 'id') {
+                row = row + "<td>" + val2 + "</td>";
+            }
+        });
+        row = row + "</tr>";
+        items.push(row);
+    });
+    return items;
+    //$("#tProducts tbody").html(items);
 }
 
 function MakePanelHTML(panel_id, row) {

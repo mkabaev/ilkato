@@ -5,10 +5,11 @@ div, li{border:1px dotted #d34d17}
 table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
+table {margin: 10px;}
 body {background-color: cornsilk;}
 
 #leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
-#orderinfo {width: 90%; height: 100%; margin: 40px 100px; border-color: blue;}
+.orderViewer {float:left; height: 100%; margin: 20px 10px; border-color: blue; display: inline-block;}
 
 /*background-color: #F39814;*/
 
@@ -17,8 +18,7 @@ body {background-color: cornsilk;}
 #menu { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 #menu li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
 
-#header {height:120px;}
-#number {float:left; margin:20px;}
+#comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
 
 #userinfo{position: absolute; top:0; right: 30px;}
 
@@ -45,14 +45,37 @@ body {background-color: cornsilk;}
     line-height: 200px;
     z-index: 2;
 }
+
+/*.chart {
+    position: fixed;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    right:10px;
+    top: 10px;    
+    font-size: 40px;
+    font-weight:bold;
+}
+.chart canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.digit {
+    display: inline-block;
+    line-height: 200px;
+    z-index: 2;
+}*/
 /*.digit:after {
   content: '%';
   margin-left: 0.1em;
   font-size: .8em;
 }*/
 
-.tProducts{float:left; width:50%;}
-#comment {position:absolute; font-size: 1.5em; padding: 80px 0 0 40px; color: red;}
+.tProducts{width: 90%;}
 #footer{position:fixed;bottom:20px;right:20px;}
 
 @media print { /* Стиль для печати */

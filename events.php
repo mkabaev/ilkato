@@ -7,11 +7,11 @@ header('Connection: keep-alive'); /////
 
 $event = $_GET["event"];
 switch ($event) {
-    case 'ordUpdated':
+    case 'ordUpdate':
         $i=0;
         while ($i<3) {
             $i=$i+1;
-            echo "event: ordUpdated" . PHP_EOL;
+            echo "event: ordUpdate" . PHP_EOL;
             echo "data: data $i\n\n";
 //echo PHP_EOL;
             ob_end_flush();
@@ -25,7 +25,7 @@ switch ($event) {
 //            flush();
         }
         break;
-    case 'ordCreated':
+    case 'ordCreate':
         echo getOrders($_POST["json"], "C");
         break;
     default:

@@ -32,8 +32,19 @@
         <div id="userinfo"></div>
 
         <script>
-            $('body').append(CreateLeftPanel());
-            $('body').append(CreateOrderViewer());
+            //$('body').append(CreateLeftPanel());
+
+            var headerItems = $.parseJSON('["Продукт","Кол-во"]');
+
+            //var tableItems = $.parseJSON(localStorage.products);
+            $('body').append(CreateOrderViewer('ordViewer', 'orderViewer', 'Приготовить как для себя', headerItems, null));
+
+            var divTimer = $('<div/>', {
+                id: "timer",
+                class: 'chart',
+            }).append('<span class="digit"></span>');
+            $('body').append(divTimer);
+
         </script>
 
         <div id="footer">
@@ -73,7 +84,7 @@
 
 
             if (typeof (EventSource) !== "undefined") {
-                var source = new EventSource("events.php?event=ordUpdated");
+                var source = new EventSource("events.php?event=ordUpdate");
 
 //                source.onmessage = function (event) {
 //                    document.getElementById("result").innerHTML += event.data + "<br>";
@@ -97,10 +108,10 @@
                 source.addEventListener('onerror', function (e) {
                     document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
                 }, false);
-                source.addEventListener('ordUpdated', function (e) {
+                source.addEventListener('ordUpdate', function (e) {
                     localStorage.user = 'Повар 1' + e.data;
                     $("#userinfo").text(localStorage.user);
-
+                    ordUpdate(e.data);
                 }, false);
 
             } else {
