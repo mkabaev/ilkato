@@ -30,8 +30,6 @@ function ss_soundbits(sound) {
         return audio_element;
     }
 }
-
-
-var clicksound = ss_soundbits('s1.mp3');
-//    var plopsound  = ss_soundbits('your/path/to/plopp.ogg', "your/path/to/plopp.mp3");
+// var sound = ss_soundbits('s1.mp3');
+// var plopsound  = ss_soundbits('your/path/to/plopp.ogg', "your/path/to/plopp.mp3");
 

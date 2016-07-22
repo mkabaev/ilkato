@@ -188,6 +188,15 @@ function getCouriers() {
     return json_encode($items, JSON_UNESCAPED_UNICODE);
 }
 
+function getUsers() {
+    $db = new DB();
+    $query = "SELECT id, name FROM testform_courier limit 20";
+    $stmt = $db->conn->prepare($query);
+    $stmt->execute();
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return json_encode($items, JSON_UNESCAPED_UNICODE);
+}
+
 function getOrderProducts($order_id) {
     $db = new DB();
     $query = 'SELECT tip.product_id,
@@ -311,6 +320,9 @@ switch ($action) {
         echo SetCourierToOrders($_POST["json"], $_POST["courier_id"]);
         break;
     case 'getCouriers':
+        echo getCouriers();
+        break;
+    case 'getUsers':
         echo getCouriers();
         break;
     case 'SetOrderPosition':

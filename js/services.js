@@ -4,6 +4,45 @@
  * and open the template in the editor.
  */
 
+/* global sound */
+
+function addEventListeners() {
+    if (typeof (EventSource) !== "undefined") {
+        var source = new EventSource("events.php?event=ordUpdate");
+
+//                source.onmessage = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//
+//                source.myevent = function (event) {
+//                    document.getElementById("result").innerHTML += event.data + "<br>";
+//                };
+//                source.addEventListener('message', function (e) {
+//                    document.getElementById("result").innerHTML += e.data + "<br>";
+//                }, false);
+
+        source.addEventListener('message', function (e) {
+            document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
+        }, false);
+
+        source.addEventListener('onopen', function (e) {
+            document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
+        }, false);
+
+        source.addEventListener('onerror', function (e) {
+            document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
+        }, false);
+        source.addEventListener('ordUpdate', function (e) {
+            localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2"},{"id":"10","name":"Ролл 2","count":"2"},{"id":"11","name":"Ролл 3","count":"2"},{"id":"12","name":"Ролл 4","count":"2"},{"id":"13","name":"Ролл 5","count":"2"},{"id":"17","name":"Ролл 6","count":"2"},{"id":"19","name":"Ролл 7","count":"2"},{"id":"20","name":"Ролл 8","count":"2"}]';
+            localStorage.products_ts = e.data;
+            updateInterface_products();
+            //sound.playclip();
+        }, false);
+
+    } else {
+        alert("Sorry, your browser does not support server-sent events..., Звоните Максимке");
+    }
+}
 function LoadOrderProducts(order_id)
 {
     return $.ajax({
@@ -15,13 +54,13 @@ function LoadOrderProducts(order_id)
             console.log("Loading products. Server response is " + jsondata);
             var data = $.parseJSON(jsondata);
             var items = [];
-            var sum=0;
+            var sum = 0;
             //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
             weightP = 0;
             weightR = 0;
             $.each(data, function (key, val) {
                 var id_string = "";
-                sum=sum+parseFloat(val.price);
+                sum = sum + parseFloat(val.price);
                 switch (val.product_id) {
                     case '1271':
                         id_string = "id='scanp'";
@@ -56,13 +95,13 @@ function LoadOrderProducts(order_id)
             console.log("Loading products. Server response is " + jsondata);
             var data = $.parseJSON(jsondata);
             var items = [];
-            var sum=0;
+            var sum = 0;
             //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
             weightP = 0;
             weightR = 0;
             $.each(data, function (key, val) {
                 var id_string = "";
-                sum=sum+parseFloat(val.price);
+                sum = sum + parseFloat(val.price);
                 switch (val.product_id) {
                     case '1271':
                         id_string = "id='scanp'";

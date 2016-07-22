@@ -18,6 +18,7 @@
 
 
 
+        <script src="js-ext/sound.js"></script>
         <script src="js-ext/easy-pie-chart.js"></script>
         <script src="js-ext/jquery.printPage.js"></script>
 
@@ -32,17 +33,26 @@
         <div id="userinfo"></div>
 
         <script>
-            //$('body').append(CreateLeftPanel());
+            //localStorage.removeItem('user_id');
+            var sound = ss_soundbits('s1.mp3');
+            updateInterface_user();
+            if (localStorage.user_id == null) {
+                doInit();
+            } else {
+
+            }
 
             var headerItems = $.parseJSON('["Продукт","Кол-во"]');
 
             //var tableItems = $.parseJSON(localStorage.products);
-            $('body').append(CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null));
+            CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
             var divTimer = $('<div/>', {
                 id: "timer",
                 class: 'chart',
             }).append('<span class="digit"></span>');
             $('body').append(divTimer);
+            //$('body').append(CreateLeftPanel());
+
 
         </script>
 
@@ -53,68 +63,19 @@
                     url: "check.html",
                     attr: "href",
                     message: "Печатаю..."
-                })
+                });
+                addEventListeners();
             </script>
         </div>
 
 
-
-<!--        <script src="js/sound.js"></script>-->
-
 <!--        <script>
-            window.addEventListener('popstate', function (e) {
-                // код обработчика события
-                alert(e.toString());
-            });
-
             var state = {'page_id': 1, 'user_id': 5};
             var title = 'Hello World';
             var url = 'hello-world.html';
             history.pushState(state, title, url);
         </script>-->
-        <script>
-//                    $(window).bind('storage', function (e) {
-//                        console.log(e.originalEvent.key, e.originalEvent.newValue);
-//                        alert('fired');
-//                    });
 
-
-
-            if (typeof (EventSource) !== "undefined") {
-                var source = new EventSource("events.php?event=ordUpdate");
-
-//                source.onmessage = function (event) {
-//                    document.getElementById("result").innerHTML += event.data + "<br>";
-//                };
-//
-//                source.myevent = function (event) {
-//                    document.getElementById("result").innerHTML += event.data + "<br>";
-//                };
-//                source.addEventListener('message', function (e) {
-//                    document.getElementById("result").innerHTML += e.data + "<br>";
-//                }, false);
-
-                source.addEventListener('message', function (e) {
-                    document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
-                }, false);
-
-                source.addEventListener('onopen', function (e) {
-                    document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
-                }, false);
-
-                source.addEventListener('onerror', function (e) {
-                    document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
-                }, false);
-                source.addEventListener('ordUpdate', function (e) {
-                    localStorage.user = 'Повар 1' + e.data;
-                    $("#userinfo").text(localStorage.user);
-                    ordUpdate(e.data);
-                }, false);
-
-            } else {
-                document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
-            }
-        </script>
         <div id="result"></div>
     </body>
 </html>

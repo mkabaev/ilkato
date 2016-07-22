@@ -3,6 +3,104 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+function CreateDialogWithItems() {
+    var divDialog = $('<div/>', {
+        //id: id,
+        //class: _class,
+        attr: {'title': "Авторизация"}
+    });
+    var ulUsers = $('<ul/>', {
+        //id: id,
+        class: 'ul_users',
+        //attr: {'title': "Авторизация", 'ts': timestamp}
+    });
+    divDialog.append(ulUsers);
+
+    $('body').append(divDialog);
+
+    $.ajax({
+        type: "POST",
+        data: "action=getUsers",
+        url: "helper.php",
+        cache: false,
+        success: function (jsondata) {
+            $('body').removeClass("ui-state-error");
+            ulUsers.html(ArrayToLiItems($.parseJSON(jsondata)));
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log("status: " + xhr.status + " | " + thrownError);
+            $("body").addClass("ui-state-error");
+            //$("body").addClass("ui-state-error");
+//            alert(xhr.status);
+//            alert(thrownError);
+        }
+    });
+
+    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
+
+    divDialog.dialog({
+        width: "900px",
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "explode",
+            duration: 300
+        },
+        open: function () {
+            $('.ui-widget-overlay').bind('click', function () {
+                divDialog.dialog('close');
+            })
+        },
+        dialogClass: "noclose"
+    });
+
+    ulUsers.selectable({
+        tolerance: "fit",
+        selected: function (event, ui) {
+            //alert(ui.selected.id + " " + ui.selected.innerHTML);
+            localStorage.user_id = $(ui.selected).attr("item_id");
+            localStorage.user_name = ui.selected.innerHTML;
+            updateInterface_user();
+            //$("#"+idPanel + " .order").css("visible:none;");
+            //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
+
+            //console.log(JSON.stringify(ar));
+            divDialog.dialog("close");
+        }
+
+    });
+    return divDialog;
+}
+function doInit() {
+    if (localStorage.user_id == null) {
+        CreateDialogWithItems().dialog('open'); //show auth dialog
+    } else {
+        alert(localStorage.user_id);
+    }
+//    $.ajax({
+//        type: "POST",
+//        data: "action=getKOrders&json=" + json_orders,
+//        url: "helper.php",
+//        cache: false,
+//        success: function (jsondata) {
+//            $(".ordrow").removeClass("ui-state-error");
+//            ProcessOrders(jsondata);    //append(jsondata); 
+//        },
+//        error: function (xhr, ajaxOptions, thrownError) {
+//            console.log("status: " + xhr.status + " | " + thrownError);
+//            $(".ordrow").addClass("ui-state-error");
+//            //$("body").addClass("ui-state-error");
+////            alert(xhr.status);
+////            alert(thrownError);
+//        }
+//    });
+}
+
 function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     var table = $('<table/>', {
         id: id,
@@ -60,6 +158,15 @@ function ArrayToTableItems(tableItems) {
     });
     return items;
     //$("#tProducts tbody").html(items);
+}
+
+function ArrayToLiItems(ulItems) {
+    var items = [];
+    $.each(ulItems, function (key, val) {
+        //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
+        items.push("<li item_id=" + val.id + ">" + val.name + "</li>");
+    });
+    return items;
 }
 
 function MakePanelHTML(panel_id, row) {
@@ -363,7 +470,6 @@ function LoadCouriers()
                 //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
                 items.push("<li id='courier_" + val.id + "' courier_id='" + val.id + "' class='ui-widget-content ui-corner-all'>" + val.name + "</li>");
             });
-
             $("#ul_couriers").html(items);
 
             $("#ul_couriers").selectable({
@@ -470,4 +576,12 @@ function SetOrderPositionOnServer(order_id, x, y)
 //            }
         }
     });
+}
+
+function updateInterface_user() {
+    $("#userinfo").text(localStorage.user_name);
+}
+
+function updateInterface_products() {
+    $('#ordViewerTable tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
 }

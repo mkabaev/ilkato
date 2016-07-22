@@ -235,12 +235,6 @@ $(function () {
     });
 });
 
-function ordUpdate(data) {
-    localStorage.products = '[{"id":"3","name":"Ролл 1' + data + ' ","count":"2"},{"id":"10","name":"Ролл 2","count":"2"},{"id":"11","name":"Ролл 3","count":"2"},{"id":"12","name":"Ролл 4","count":"2"},{"id":"13","name":"Ролл 5","count":"2"},{"id":"17","name":"Ролл 6","count":"2"},{"id":"19","name":"Ролл 7","count":"2"},{"id":"20","name":"Ролл 8","count":"2"}]';
-    localStorage.products_ts = data;
-    $('#ordViewerTable tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
-}
-
 $(document).ready(function () {
     //K_RequestServer();
     //LoadCouriers();
