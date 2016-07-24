@@ -114,18 +114,18 @@ body {
     margin-bottom: 0.2em;
 }
 
-.ul_users .ui-selecting { background: #FECA40; }
-.ul_users .ui-selected { background: #F39814; color: white; }
-.ul_users { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-.ul_users li { margin: 8px; padding: 0; font-size: 1.4em; text-align: center; line-height: 100px; width: 270px; height: 100px;  }
+.ul_selectItems .ui-selecting { background: #FECA40; }
+.ul_selectItems .ui-selected { background: #F39814; color: white; }
+.ul_selectItems { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+.ul_selectItems li { margin: 8px; padding: 0; font-size: 1.4em; text-align: center; line-height: 100px; width: 270px; height: 100px;  }
 
-.ul_users {
+.ul_selectItems {
     height: 480px;
     -webkit-column-count: 3;
        -moz-column-count: 3;
             column-count: 3; /*3 in those rules is just placeholder -- can be anything*/
 }
-.ul_users li {
+.ul_selectItems li {
     display: inline-block; /*necessary*/
 }
 

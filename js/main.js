@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-function CreateDialogWithItems() {
+function CreateDialogWithItems(caption, _class) {
     var divDialog = $('<div/>', {
         //id: id,
-        //class: _class,
-        attr: {'title': "Авторизация"}
+        class: _class,
+        attr: {'title': caption}
     });
     var ulUsers = $('<ul/>', {
         //id: id,
-        class: 'ul_users',
+        class: 'ul_selectItems',
         //attr: {'title': "Авторизация", 'ts': timestamp}
     });
     divDialog.append(ulUsers);
@@ -76,11 +76,15 @@ function CreateDialogWithItems() {
     });
     return divDialog;
 }
+
 function doInit() {
+    //проверяем есть ли юзер. 
+    //если есть, то загружаем локальные данные
+    //если нет, то авторизуемся
     if (localStorage.user_id == null) {
-        CreateDialogWithItems().dialog('open'); //show auth dialog
+        CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
-        alert(localStorage.user_id);
+        updateInterface_user();
     }
 //    $.ajax({
 //        type: "POST",
@@ -123,13 +127,18 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
-    tBody.append(ArrayToTableItems(tableItems));
-    //tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
+    //tBody.append(ArrayToTableItems(tableItems));
+
+//tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
     //tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
 
     table.append(tBody);
 
     return table;
+}
+
+function UpdateTableItems(table, tableItems) {
+    $(table > 'tbody').html(ArrayToTableItems(tableItems));
 }
 
 function ArrayToTableHeader(headerItems) {
@@ -583,5 +592,6 @@ function updateInterface_user() {
 }
 
 function updateInterface_products() {
-    $('#ordViewerTable tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
+    $('#tableR tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
+    $('#tableP tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
 }

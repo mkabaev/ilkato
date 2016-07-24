@@ -33,40 +33,24 @@
         <div id="userinfo"></div>
 
         <script>
+            $("#userinfo").on("click", function ()
+            {
+                CreateDialogWithItems('Авторизация', null).dialog('open');
+            });
             //localStorage.removeItem('user_id');
             var sound = ss_soundbits('s1.mp3');
-            updateInterface_user();
-            if (localStorage.user_id == null) {
-                doInit();
-            } else {
-
-            }
-
-            var headerItems = $.parseJSON('["Продукт","Кол-во"]');
-
-            //var tableItems = $.parseJSON(localStorage.products);
-            CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
-            var divTimer = $('<div/>', {
-                id: "timer",
-                class: 'chart',
-            }).append('<span class="digit"></span>');
-            $('body').append(divTimer);
-            //$('body').append(CreateLeftPanel());
+            //localStorage.removeItem('user_id');
 
 
+            //проверяем есть ли юзер. 
+            //если есть, то загружаем локальные данные
+            //если нет, то авторизуемся
+            doInit();
+            createInterface()
+            addEventListeners();
         </script>
 
-        <div id="footer">
-            <button id="bPrint">Печать</button>
-            <script>
-                $("#bPrint").printPage({
-                    url: "check.html",
-                    attr: "href",
-                    message: "Печатаю..."
-                });
-                addEventListeners();
-            </script>
-        </div>
+
 
 
 <!--        <script>

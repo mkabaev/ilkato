@@ -6,10 +6,11 @@ table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
 table {margin: 10px;}
-body {background-color: cornsilk;}
+body {background-color: cornsilk; overflow: hidden;}
 #leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
-.orderViewer {float:left; height: 100%; margin: 20px 10px; border-color: blue; display: inline-block; display:none;}
 
+.orderViewer {float:left; height: 100%; width: 80%; margin: 20px 10px; border-color: blue; display:none;}
+#divR, #divP {float: left; width:40%;}
 /*background-color: #F39814;*/
 
 #menu .ui-selecting { background: #FECA40; }

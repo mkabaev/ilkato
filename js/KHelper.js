@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+/* global al, CreateTimer */
+
 function K_RequestServer()
 //send orders timestamps to server and recive changes
 {
@@ -140,20 +142,46 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    var tProducts = CreateTable(id + 'Table', 'tProducts', headerItems, tableItems);
-    divOrderViewer.append(tProducts);
+    var divR = $('<div/>', {
+        id: 'divR',
+        //class: 'ui-widget-content',
+    }).append(CreateTable('tableR', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
 
-    var bDone = $('<button/>', {
-        id: "bDone" + id,
+    var divP = $('<div/>', {
+        id: 'divP',
+        //class: 'ui-widget-content',
+    }).append(CreateTable('tableP', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
+
+
+    var bDoneR = $('<button/>', {
+        id: "bDoneR",
         //class: 'ui-widget-content',
         text: "Готово",
         click: function (event) {
             alert('event.target')
         },
-    }).appendTo(divOrderViewer);
+    }).appendTo(divR);
     //divOrderViewer.append('<button id="bDone'+id+'">Готово</button>');
 
-    bDone.button({
+    bDoneR.button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
+
+
+    var bDoneP = $('<button/>', {
+        id: "bDoneP",
+        //class: 'ui-widget-content',
+        text: "Готово",
+        click: function (event) {
+            alert('event.target')
+        },
+    }).appendTo(divP);
+    //divOrderViewer.append('<button id="bDone'+id+'">Готово</button>');
+
+    bDoneP.button({
         icons: {
             primary: "ui-icon-check",
             //secondary: "ui-icon-triangle-1-s"
@@ -234,6 +262,43 @@ $(function () {
         //console.log("scannerTimer: "+ScannerTimerId);
     });
 });
+
+function createInterface() {
+    var headerItems = $.parseJSON('["Продукт","Кол-во"]');
+    //var tableItems = $.parseJSON(localStorage.products);
+    CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
+    CreateTimer('timer',null,60).appendTo($('body'));
+    //$('body').append(CreateLeftPanel());
+
+    var divFooter = $('<div/>', {
+        id: 'footer',
+        //class: _class,
+        attr: {'title': 'caption'}
+    });
+    $('body').append(CreateTimer('timer2',null,30));
+
+    var bPrint = $('<button/>', {
+        id: "bPrint",
+        //class: 'ui-widget-content',
+        text: "Печать",
+        click: function (event) {
+            alert('event.target')
+        },
+    }).appendTo(divFooter);
+
+    bPrint.button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
+
+    bPrint.printPage({
+        url: "check.html",
+        attr: "href",
+        message: "Печатаю..."
+    });
+}
 
 $(document).ready(function () {
     //K_RequestServer();
