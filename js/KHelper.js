@@ -267,15 +267,14 @@ function createInterface() {
     var headerItems = $.parseJSON('["Продукт","Кол-во"]');
     //var tableItems = $.parseJSON(localStorage.products);
     CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
-    CreateTimer('timer',null,60).appendTo($('body'));
+    CreateTimer('timer',null,60).appendTo($('#ordViewer'));
     //$('body').append(CreateLeftPanel());
 
     var divFooter = $('<div/>', {
         id: 'footer',
         //class: _class,
         attr: {'title': 'caption'}
-    });
-    $('body').append(CreateTimer('timer2',null,30));
+    }).appendTo($('#ordViewer'));
 
     var bPrint = $('<button/>', {
         id: "bPrint",
@@ -286,6 +285,8 @@ function createInterface() {
         },
     }).appendTo(divFooter);
 
+    //divFooter.append(CreateTimer('timer2',null,30));
+    
     bPrint.button({
         icons: {
             primary: "ui-icon-check",
