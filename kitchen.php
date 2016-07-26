@@ -20,7 +20,7 @@
 
         <script src="js-ext/sound.js"></script>
         <script src="js-ext/easy-pie-chart.js"></script>
-        <script src="js-ext/jquery.printPage.js"></script>
+<!--        <script src="js-ext/jquery.printPage.js"></script>-->
 
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>

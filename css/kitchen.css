@@ -79,12 +79,19 @@ body {background-color: cornsilk; overflow: hidden;}
 /*#footer{position:fixed;bottom:20px;right:20px; height:200px}*/
 #footer{position: absolute; width:100%; bottom: 0;}
 
-@media print { /* Стиль для печати */
-    body {
-        font-family: Times, 'Times New Roman', serif; /* Шрифт с засечками */
+#divPrint {
+    visibility: hidden;
+}
+@media print {
+    body * {
+        visibility: hidden;
     }
-    h1, h2, p {
-        color: #000; /* Черный цвет текста */
+    #divPrint, #divPrint * {
+        visibility: visible;
     }
-    #number, #products{display: none;}
+/*    #divPrint {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }*/
 }

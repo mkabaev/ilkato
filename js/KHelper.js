@@ -146,12 +146,49 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
         id: 'divR',
         //class: 'ui-widget-content',
     }).append(CreateTable('tableR', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
+    var bPrint = $('<button/>', {
+        id: "bPrintR",
+        //class: 'ui-widget-content',
+        text: "Печать",
+        click: function (event) {
+            CreatePrintArea().appendTo($('body'));
+            window.print();
+        },
+    }).appendTo(divR);
+
+    //divFooter.append(CreateTimer('timer2',null,30));
+
+    bPrint.button({
+        icons: {
+            primary: "ui-icon-print",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
+
+
 
     var divP = $('<div/>', {
         id: 'divP',
         //class: 'ui-widget-content',
     }).append(CreateTable('tableP', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
+    var bPrint = $('<button/>', {
+        id: "bPrintP",
+        //class: 'ui-widget-content',
+        text: "Печать",
+        click: function (event) {
+            CreatePrintArea().appendTo($('body'));
+            window.print();
+        },
+    }).appendTo(divP);
 
+    //divFooter.append(CreateTimer('timer2',null,30));
+
+    bPrint.button({
+        icons: {
+            primary: "ui-icon-print",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
 
     var bDoneR = $('<button/>', {
         id: "bDoneR",
@@ -267,7 +304,7 @@ function createInterface() {
     var headerItems = $.parseJSON('["Продукт","Кол-во"]');
     //var tableItems = $.parseJSON(localStorage.products);
     CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
-    CreateTimer('timer',null,60).appendTo($('#ordViewer'));
+    CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
     //$('body').append(CreateLeftPanel());
 
     var divFooter = $('<div/>', {
@@ -276,29 +313,7 @@ function createInterface() {
         attr: {'title': 'caption'}
     }).appendTo($('#ordViewer'));
 
-    var bPrint = $('<button/>', {
-        id: "bPrint",
-        //class: 'ui-widget-content',
-        text: "Печать",
-        click: function (event) {
-            alert('event.target')
-        },
-    }).appendTo(divFooter);
 
-    //divFooter.append(CreateTimer('timer2',null,30));
-    
-    bPrint.button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-
-    bPrint.printPage({
-        url: "check.html",
-        attr: "href",
-        message: "Печатаю..."
-    });
 }
 
 $(document).ready(function () {

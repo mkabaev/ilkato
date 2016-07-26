@@ -3,6 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+function CreatePrintArea() {
+    var divPrint = $('<div/>', {
+        id: "divPrint",
+    }).append("<h1>Заказ " + "sdfsdfsdf" + "</h1>");
+    return divPrint;
+}
 function CreateDialogWithItems(caption, _class) {
     var divDialog = $('<div/>', {
         //id: id,
