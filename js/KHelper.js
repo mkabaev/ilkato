@@ -144,7 +144,7 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
 
     var divR = $('<div/>', {
         id: 'divR',
-        //class: 'ui-widget-content',
+        //class: 'ui-widget-',
     }).append(CreateTable('tableR', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
     var bPrint = $('<button/>', {
         id: "bPrintR",
