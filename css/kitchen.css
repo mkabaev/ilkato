@@ -11,7 +11,7 @@ body {background-color: cornsilk; overflow: hidden;}
 
 .orderViewer {position:absolute; top:10px; bottom:10px; left:10px; right:10px; border-color: blue; display:none;}
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
-#divR, #divP {float: left; width:40%;}
+#divR, #divP {float: left; width:45%; bottom: 10px;}
 /*background-color: #F39814;*/
 
 #menu .ui-selecting { background: #FECA40; }
@@ -75,7 +75,7 @@ body {background-color: cornsilk; overflow: hidden;}
   font-size: .8em;
 }*/
 
-.tProducts{width: 90%;}
+.tProducts{position: relative;  left: 20px; top:20px; width: 90%;}
 /*#footer{position:fixed;bottom:20px;right:20px; height:200px}*/
 #footer{position: absolute; width:100%; bottom: 0;}
 

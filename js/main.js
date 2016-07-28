@@ -114,13 +114,13 @@ function doInit() {
 function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     var table = $('<table/>', {
         id: id,
-        class: _class,
+        class: 'ui-widget-content '+_class,
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
     var tHead = $('<thead/>', {
         //id: id,
-        //class: _class,
+        class: 'ui-widget-header',
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
@@ -129,7 +129,7 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
 
     var tBody = $('<tbody/>', {
         //id: id,
-        //class: _class,
+        //class: 'ui-widget-content',
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
