@@ -32,6 +32,10 @@
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
         <div id="userinfo"></div>
         <script>
+            $(document).ajaxComplete(function () {
+                alert("ajaxComplete");
+            });
+
             $("#userinfo").on("click", function ()
             {
                 CreateDialogWithItems('Авторизация', null).dialog('open');

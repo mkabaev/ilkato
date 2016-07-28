@@ -303,6 +303,7 @@ function SetOrderProducts($issue_id, $weightR, $weightP) {
 
 //checkdb();
 $action = $_POST["action"];
+//$action = $_GET["action"];
 switch ($action) {
     case 'getKOrders':
         echo getOrders($_POST["json"], "K");

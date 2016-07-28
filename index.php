@@ -22,6 +22,14 @@
 //                //require_once 'newhtml.html';
 //                break;
 //        }
+        
+        
+        
+//        $array = array(
+//            1 => "a",
+//            1/3=> "b",
+//        );
+//        var_dump($array);
         ?>
         <style type="text/css">
             div {
