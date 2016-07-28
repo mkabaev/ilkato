@@ -32,13 +32,14 @@
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
         <div id="userinfo"></div>
         <script>
-            $(document).ajaxComplete(function () {
-                alert("ajaxComplete");
-            });
+//            $(document).ajaxComplete(function () {
+//                alert("ajaxComplete");
+//            });
 
             $("#userinfo").on("click", function ()
             {
-                CreateDialogWithItems('Авторизация', null).dialog('open');
+                showSelectDialog('SelUsers', 'Авторизация');
+                //CreateDialogWithItems('Авторизация', null).dialog('open');
             });
             //localStorage.removeItem('user_id');
             var sound = ss_soundbits('s1.mp3');
@@ -49,8 +50,7 @@
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
             doInit();
-            createInterface()
-            addEventListeners();
+
         </script>
 
 

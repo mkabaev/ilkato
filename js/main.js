@@ -9,20 +9,14 @@ function CreatePrintArea() {
     }).append("<h1>Заказ " + "sdfsdfsdf" + "</h1>");
     return divPrint;
 }
-function CreateDialogWithItems(caption, _class) {
-    var divDialog = $('<div/>', {
-        //id: id,
-        class: _class,
-        attr: {'title': caption}
-    });
-    var ulUsers = $('<ul/>', {
-        //id: id,
-        class: 'ul_selectItems',
-        //attr: {'title': "Авторизация", 'ts': timestamp}
-    });
-    divDialog.append(ulUsers);
 
-    $('body').append(divDialog);
+function showSelectDialog(id, caption) {
+    var dlg = $('#dlg_' + id);
+    if ( !$('#dlg_' + id).length) {
+        alert('dialog null. try to create');
+        dlg = CreateDialogWithItems(id, caption, null, null);
+    }
+
 
     $.ajax({
         type: "POST",
@@ -30,8 +24,10 @@ function CreateDialogWithItems(caption, _class) {
         url: "helper.php",
         cache: false,
         success: function (jsondata) {
+            alert('success...');
             $('body').removeClass("ui-state-error");
-            ulUsers.html(ArrayToLiItems($.parseJSON(jsondata)));
+            $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
+            dlg.dialog('open');
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
@@ -41,6 +37,28 @@ function CreateDialogWithItems(caption, _class) {
 //            alert(thrownError);
         }
     });
+
+
+}
+
+function CreateDialogWithItems(id, caption, _class, liItems) {
+    var divDialog = $('<div/>', {
+        id: 'dlg_' + id,
+        class: _class,
+        attr: {'title': caption}
+    });
+    var list = $('<ul/>', {
+        //id: 'ul_'+id,
+        class: 'ul_selectItems',
+        //attr: {'title': "Авторизация", 'ts': timestamp}
+    });
+    divDialog.append(list);
+
+    $('body').append(divDialog);
+
+
+
+
 
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
 
@@ -65,7 +83,7 @@ function CreateDialogWithItems(caption, _class) {
         dialogClass: "noclose"
     });
 
-    ulUsers.selectable({
+    list.selectable({
         tolerance: "fit",
         selected: function (event, ui) {
             //alert(ui.selected.id + " " + ui.selected.innerHTML);
@@ -84,11 +102,14 @@ function CreateDialogWithItems(caption, _class) {
 }
 
 function doInit() {
+    createInterface()
+    addEventListeners();
     //проверяем есть ли юзер. 
     //если есть, то загружаем локальные данные
     //если нет, то авторизуемся
     if (localStorage.user_id == null) {
-        CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
+        showSelectDialog('SelUsers', 'Авторизация');
+        //CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
         updateInterface_user();
     }
@@ -114,7 +135,7 @@ function doInit() {
 function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     var table = $('<table/>', {
         id: id,
-        class: 'ui-widget-content '+_class,
+        class: 'ui-widget-content ' + _class,
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
