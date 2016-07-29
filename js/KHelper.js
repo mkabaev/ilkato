@@ -6,6 +6,13 @@
 
 /* global al, CreateTimer */
 
+function afterSel(id, name) {
+    //alert(ui.selected.id + " " + ui.selected.innerHTML);
+    localStorage.user_id = id;
+    localStorage.user_name = name;
+    updateInterface_user();
+}
+
 function K_RequestServer()
 //send orders timestamps to server and recive changes
 {

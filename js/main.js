@@ -1,8 +1,4 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 function CreatePrintArea() {
     var divPrint = $('<div/>', {
         id: "divPrint",
@@ -10,13 +6,12 @@ function CreatePrintArea() {
     return divPrint;
 }
 
-function showSelectDialog(id, caption) {
+function showSelectDialog(id, caption, callback) {
     var dlg = $('#dlg_' + id);
-    if ( !$('#dlg_' + id).length) {
-        alert('dialog null. try to create');
-        dlg = CreateDialogWithItems(id, caption, null, null);
+    if (!$('#dlg_' + id).length) {
+        console.log('dialog ' + id + ' is null. Creating...');
+        dlg = CreateSelectDialog(id, caption, undefined, undefined, callback);
     }
-
 
     $.ajax({
         type: "POST",
@@ -24,7 +19,7 @@ function showSelectDialog(id, caption) {
         url: "helper.php",
         cache: false,
         success: function (jsondata) {
-            alert('success...');
+            console.log('dialog ' + id + ' found on page. items');
             $('body').removeClass("ui-state-error");
             $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
             dlg.dialog('open');
@@ -41,25 +36,13 @@ function showSelectDialog(id, caption) {
 
 }
 
-function CreateDialogWithItems(id, caption, _class, liItems) {
+function CreateDialog(id, caption, _class) {
     var divDialog = $('<div/>', {
         id: 'dlg_' + id,
         class: _class,
         attr: {'title': caption}
     });
-    var list = $('<ul/>', {
-        //id: 'ul_'+id,
-        class: 'ul_selectItems',
-        //attr: {'title': "Авторизация", 'ts': timestamp}
-    });
-    divDialog.append(list);
-
-    $('body').append(divDialog);
-
-
-
-
-
+    //$('body').append(divDialog);
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
 
     divDialog.dialog({
@@ -82,20 +65,46 @@ function CreateDialogWithItems(id, caption, _class, liItems) {
         },
         dialogClass: "noclose"
     });
+    return divDialog;
+}
 
+/**
+ * Create modal dialog with select menu and callback function
+ * @param id {number} id to set
+ * @param caption {string} Dialog Caption
+ * @param _class {string} add class
+ * @param items {Array} array of li items
+ * @param callback function(id,name)
+ * @return {Object} div dialog
+ */
+function CreateSelectDialog(id, caption, _class, items, callback) {
+    var divDialog = CreateDialog(id, caption, _class);
+    var list = $('<ul/>', {
+        //id: 'ul_'+id,
+        class: 'ul_selectItems',
+        //attr: {'title': "Авторизация", 'ts': timestamp}
+    });
+    divDialog.append(list);
+
+    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
+    list.html(items);
     list.selectable({
         tolerance: "fit",
-        selected: function (event, ui) {
-            //alert(ui.selected.id + " " + ui.selected.innerHTML);
-            localStorage.user_id = $(ui.selected).attr("item_id");
-            localStorage.user_name = ui.selected.innerHTML;
-            updateInterface_user();
-            //$("#"+idPanel + " .order").css("visible:none;");
-            //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
-
-            //console.log(JSON.stringify(ar));
-            divDialog.dialog("close");
-        }
+        selected:
+                function (event, ui) {
+                    //alert(ui.selected.id + " " + ui.selected.innerHTML);
+                    //localStorage.user_id = $(ui.selected).attr("item_id");
+                    //localStorage.user_name = ui.selected.innerHTML;
+                    //updateInterface_user();
+                    //$("#"+idPanel + " .order").css("visible:none;");
+                    //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
+                    if (callback) {
+                        callback($(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                    }
+                    //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
+                    //console.log(JSON.stringify(ar));
+                    divDialog.dialog("close");
+                }
 
     });
     return divDialog;

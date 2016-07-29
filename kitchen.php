@@ -38,7 +38,7 @@
 
             $("#userinfo").on("click", function ()
             {
-                showSelectDialog('SelUsers', 'Авторизация');
+                showSelectDialog('SelUsers', 'Авторизация', afterSel);
                 //CreateDialogWithItems('Авторизация', null).dialog('open');
             });
             //localStorage.removeItem('user_id');
