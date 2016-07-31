@@ -36,6 +36,44 @@ function showSelectDialog(id, caption, callback) {
 
 }
 
+function CreateSelectPanel(id, _class, items, callback) {
+    var div = $('<div/>', {
+        id: id,
+        class: _class,
+    });
+
+    var list = $('<ul/>', {
+        //id: 'ul_'+id,
+        class: 'selItems',
+        //attr: {'title': "Авторизация", 'ts': timestamp}
+    });
+    div.append(list);
+
+    list.append(ArrayToLiItems(items));
+    $(list.children('li')).addClass('ui-widget-content');
+
+    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
+    list.selectable({
+        tolerance: "fit",
+        selected:
+                function (event, ui) {
+                    //alert(ui.selected.id + " " + ui.selected.innerHTML);
+                    //localStorage.user_id = $(ui.selected).attr("item_id");
+                    //localStorage.user_name = ui.selected.innerHTML;
+                    //updateInterface_user();
+                    //$("#"+idPanel + " .order").css("visible:none;");
+                    //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
+                    if (callback) {
+                        callback($(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                    }
+                    //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
+                    //console.log(JSON.stringify(ar));
+                }
+
+    });
+    return div;
+}
+
 function CreateDialog(id, caption, _class) {
     var divDialog = $('<div/>', {
         id: 'dlg_' + id,
@@ -205,13 +243,13 @@ function ArrayToTableItems(tableItems) {
     //$("#tProducts tbody").html(items);
 }
 
-function ArrayToLiItems(ulItems) {
-    var items = [];
-    $.each(ulItems, function (key, val) {
+function ArrayToLiItems(items) {
+    var _items = [];
+    $.each(items, function (key, val) {
         //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
-        items.push("<li item_id=" + val.id + ">" + val.name + "</li>");
+        _items.push("<li item_id=" + val.id + ">" + val.name + "</li>");
     });
-    return items;
+    return _items;
 }
 
 function MakePanelHTML(panel_id, row) {

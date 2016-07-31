@@ -13,6 +13,10 @@ function afterSel(id, name) {
     updateInterface_user();
 }
 
+function afterSelTest(id, name) {
+    alert(id + " | " + name);
+}
+
 function K_RequestServer()
 //send orders timestamps to server and recive changes
 {
@@ -108,26 +112,6 @@ $(function () {
     });
 });
 
-function CreateLeftPanel() {
-    var divPanel = $('<div/>', {
-        id: "leftpanel",
-        //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
-        //attr: {'status_id': status_id, 'ts': timestamp}
-    });
-
-    var olMenu = $('<ol/>', {
-        id: "menu",
-    });
-    olMenu.append('<li class="ui-widget-content ui-selected">23</li>');
-    olMenu.append('<li class="ui-widget-content">19</li>');
-    olMenu.append('<li class="ui-widget-content">33</li>');
-    olMenu.append('<li class="ui-widget-content">34</li>');
-    olMenu.append('<li class="ui-widget-content">38</li>');
-
-    divPanel.append(olMenu);
-    return divPanel;
-}
-
 function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
     var divOrderViewer = $('<div/>', {
         id: id,
@@ -171,8 +155,6 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
             //secondary: "ui-icon-triangle-1-s"
         },
     });
-
-
 
     var divP = $('<div/>', {
         id: 'divP',
@@ -235,79 +217,9 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
     return divOrderViewer;
 }
 
-$(function () {
-    //$(".ordrow").disableSelection();
-    //$(".order").disableSelection();
-    //$(".dialog").disableSelection();
-    //$(".dlgEdit").disableSelection();
-    $("body").disableSelection();
-//                $(".setCourierButton").click(function () {
-//                    $("#divcurier").animate({width: '300px'}, 500);
-//                });
-//                $("#menu_drivers").selectmenu();
-    $("#dlgEdit").dialog({
-        width: "500px",
-        autoOpen: false,
-        modal: true,
-        resizable: false,
-        show: {
-            effect: "blind",
-            duration: 300
-        },
-        hide: {
-            effect: "explode",
-            duration: 300
-        },
-        buttons: {
-//                        "ЗАКРЫТЬ": function () {
-////                            var order_id = $("#dlgEdit").attr("order_id");
-//                            //var weightP=$("#scanp").attr("weight");
-//                            //var weightR=$("#scanr").attr("weight");
-//                            //console.log(weightP);
-////                            SetOrderProductsOnServer(order_id, weightR, weightP);
-//                            weightR = 0;
-//                            weightP = 0;
-//                            //console.log("response is "+res);
-//                            //alert( $(this).children("#scanp").text());
-//                            $(this).dialog("close");
-//                        }
-        },
-        open: function () {
-            $('.ui-widget-overlay').bind('click', function () {
-                weightR = 0;
-                weightP = 0;
-                $('#dlgEdit').dialog('close');
-            })
-        },
-        dialogClass: "noclose"
-    });
-//                $(function () {
-//                    $("#menu").menu({
-//                        items: "> :not(.ui-widget-header)"
-//                    });
-//                });
-    $("#menu").selectable({
-        selected: function (event, ui) {}
-    });
-//                $("#inpScanner").change(function () {
-//                    alert("called.");
-//                });
-
-
-    $("#bPrint").button();
-
-    var ScannerTimerId;
-    $("#inpScanner").focusin(function () {
-        ScannerTimerId = setInterval('ProcessScanner()', 100);
-        //console.log("scannerTimer: "+ScannerTimerId);
-    });
-    $("#inpScanner").focusout(function () {
-        clearInterval(ScannerTimerId);
-        //console.log("scannerTimer: "+ScannerTimerId);
-    });
-});
 
 function createInterface() {
+    $("body").disableSelection();
     var headerItems = $.parseJSON('["Продукт","Кол-во"]');
     //var tableItems = $.parseJSON(localStorage.products);
     CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
