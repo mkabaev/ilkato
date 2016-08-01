@@ -662,7 +662,7 @@ function SetOrderPositionOnServer(order_id, x, y)
 }
 
 function updateInterface_user() {
-    $("#userinfo").text(localStorage.user_name);
+    $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>'+localStorage.user_name);
 }
 
 function updateInterface_products() {

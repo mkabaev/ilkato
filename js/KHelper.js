@@ -112,7 +112,68 @@ $(function () {
     });
 });
 
-function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
+/**
+ * Create module with table and buttons
+ * @param modType {string} "R" for Roll and "P" for Pizza
+ * @param _class {string} add class
+ * @param headerItems {Array} array of li items
+ * @param tableItems {Array} array of li items
+ * @param callback function(id,name)
+ * @return {Object} div
+ */
+function CreateKitchenModule(modType, _class,headerItems, tableItems) {
+    var divModule = $('<div/>', {
+        id: 'div'+modType,
+        //class: 'ui-widget-',
+    })
+
+    var divHeader = $('<div/>', {
+        id: 'divHeader'+modType,
+        //class: 'ui-widget-',
+    }).appendTo(divModule)
+
+    divModule.append(CreateTable('table'+modType, 'tProducts', headerItems, tableItems));
+
+    var bDone = $('<button/>', {
+        id: "bDone"+modType,
+        //class: 'ui-widget-content',
+        text: "Готово",
+        click: function (event) {
+            alert('event.target')
+        },
+    }).appendTo(divHeader);
+    
+    bDone.button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
+    
+    var bPrint = $('<button/>', {
+        id: "bPrint"+modType,
+        //class: 'ui-widget-content',
+        text: "Печать",
+        click: function (event) {
+            CreatePrintArea().appendTo($('body'));
+            window.print();
+        },
+    }).appendTo(divHeader);
+
+    //divFooter.append(CreateTimer('timer2',null,30));
+
+    bPrint.button({
+        icons: {
+            primary: "ui-icon-print",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+    });
+    return divModule;
+}
+function CreateOrderViewer(id, _class, No, comment) {
+    var headerItems = $.parseJSON('["Продукт","Кол-во"]');
+    var tableItems = null;
+    
     var divOrderViewer = $('<div/>', {
         id: id,
         class: _class,
@@ -133,86 +194,8 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    var divR = $('<div/>', {
-        id: 'divR',
-        //class: 'ui-widget-',
-    }).append(CreateTable('tableR', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
-    var bPrint = $('<button/>', {
-        id: "bPrintR",
-        //class: 'ui-widget-content',
-        text: "Печать",
-        click: function (event) {
-            CreatePrintArea().appendTo($('body'));
-            window.print();
-        },
-    }).appendTo(divR);
-
-    //divFooter.append(CreateTimer('timer2',null,30));
-
-    bPrint.button({
-        icons: {
-            primary: "ui-icon-print",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-
-    var divP = $('<div/>', {
-        id: 'divP',
-        //class: 'ui-widget-content',
-    }).append(CreateTable('tableP', 'tProducts', headerItems, tableItems)).appendTo(divOrderViewer);
-    var bPrint = $('<button/>', {
-        id: "bPrintP",
-        //class: 'ui-widget-content',
-        text: "Печать",
-        click: function (event) {
-            CreatePrintArea().appendTo($('body'));
-            window.print();
-        },
-    }).appendTo(divP);
-
-    //divFooter.append(CreateTimer('timer2',null,30));
-
-    bPrint.button({
-        icons: {
-            primary: "ui-icon-print",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-
-    var bDoneR = $('<button/>', {
-        id: "bDoneR",
-        //class: 'ui-widget-content',
-        text: "Готово",
-        click: function (event) {
-            alert('event.target')
-        },
-    }).appendTo(divR);
-    //divOrderViewer.append('<button id="bDone'+id+'">Готово</button>');
-
-    bDoneR.button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-
-
-    var bDoneP = $('<button/>', {
-        id: "bDoneP",
-        //class: 'ui-widget-content',
-        text: "Готово",
-        click: function (event) {
-            alert('event.target')
-        },
-    }).appendTo(divP);
-    //divOrderViewer.append('<button id="bDone'+id+'">Готово</button>');
-
-    bDoneP.button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
+    divOrderViewer.append(CreateKitchenModule('R',undefined,headerItems, tableItems));
+    divOrderViewer.append(CreateKitchenModule('P',undefined,headerItems, tableItems));
 
     return divOrderViewer;
 }
@@ -220,9 +203,8 @@ function CreateOrderViewer(id, _class, No, comment, headerItems, tableItems) {
 
 function createInterface() {
     $("body").disableSelection();
-    var headerItems = $.parseJSON('["Продукт","Кол-во"]');
     //var tableItems = $.parseJSON(localStorage.products);
-    CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя', headerItems, null).appendTo($('body')).fadeIn(1000);
+    CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя').appendTo($('body')).fadeIn(1000);
     CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
     //$('body').append(CreateLeftPanel());
 
