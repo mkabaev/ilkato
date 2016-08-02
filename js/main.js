@@ -19,7 +19,8 @@ function showSelectDialog(id, caption, callback) {
         url: "helper.php",
         cache: false,
         success: function (jsondata) {
-            console.log('dialog ' + id + ' found on page. items');
+            console.log('dialog ' + id + ' found on page. items');            
+            console.log('server data: ' + jsondata);
             $('body').removeClass("ui-state-error");
             $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
             dlg.dialog('open');
@@ -149,6 +150,8 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
 }
 
 function doInit() {
+    clearStorage();
+    loadDataToStorage();
     createInterface()
     addEventListeners();
     //проверяем есть ли юзер. 

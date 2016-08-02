@@ -30,6 +30,7 @@
     </head>
     <body>
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
+        <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
         <div id="userinfo"></div>
 
         <script>
@@ -45,9 +46,6 @@
             //localStorage.removeItem('user_id');
             var sound = ss_soundbits('s1.mp3');
             //localStorage.removeItem('user_id');
-
-            var items = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
-            CreateSelectPanel('p1', 'selPanel', items, afterSelTest).appendTo('body');
 
             //проверяем есть ли юзер. 
             //если есть, то загружаем локальные данные

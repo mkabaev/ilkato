@@ -121,37 +121,37 @@ $(function () {
  * @param callback function(id,name)
  * @return {Object} div
  */
-function CreateKitchenModule(modType, _class,headerItems, tableItems) {
+function CreateKitchenModule(modType, _class, headerItems, tableItems) {
     var divModule = $('<div/>', {
-        id: 'div'+modType,
-        //class: 'ui-widget-',
-    })
+        id: 'div' + modType,
+        class: 'mk ui-widget ui-widget-content',
+    }).css('border', '1px solid #d34d17')
 
     var divHeader = $('<div/>', {
-        id: 'divHeader'+modType,
+        id: 'divHeader' + modType,
         //class: 'ui-widget-',
-    }).appendTo(divModule)
+    }).appendTo(divModule).css('padding-left', '30px')
 
-    divModule.append(CreateTable('table'+modType, 'tProducts', headerItems, tableItems));
+    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems));
 
     var bDone = $('<button/>', {
-        id: "bDone"+modType,
+        id: "bDone" + modType,
         //class: 'ui-widget-content',
         text: "Готово",
         click: function (event) {
             alert('event.target')
         },
     }).appendTo(divHeader);
-    
+
     bDone.button({
         icons: {
             primary: "ui-icon-check",
             //secondary: "ui-icon-triangle-1-s"
         },
     });
-    
+
     var bPrint = $('<button/>', {
-        id: "bPrint"+modType,
+        id: "bPrint" + modType,
         //class: 'ui-widget-content',
         text: "Печать",
         click: function (event) {
@@ -168,12 +168,19 @@ function CreateKitchenModule(modType, _class,headerItems, tableItems) {
             //secondary: "ui-icon-triangle-1-s"
         },
     });
+
+    //var json='[{"id":"3","name":"Илья"},{"id":"10","name":"Дима 12ка"}]';
+    var divChefs = $('<div/>', {
+        id: 'divChefs' + modType,
+        //class: 'ui-widget-',
+    }).appendTo(divHeader).append('<span class="ui-icon ui-icon-person"></span>Илья | Егор | Василий').css({"float": "right", "padding": "5px"});
+
     return divModule;
 }
 function CreateOrderViewer(id, _class, No, comment) {
-    var headerItems = $.parseJSON('["Продукт","Кол-во"]');
+    var headerItems = $.parseJSON('["Продукт","Кол-во","Вес"]');
     var tableItems = null;
-    
+
     var divOrderViewer = $('<div/>', {
         id: id,
         class: _class,
@@ -194,8 +201,8 @@ function CreateOrderViewer(id, _class, No, comment) {
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    divOrderViewer.append(CreateKitchenModule('R',undefined,headerItems, tableItems));
-    divOrderViewer.append(CreateKitchenModule('P',undefined,headerItems, tableItems));
+    divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
+    divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
 
     return divOrderViewer;
 }
@@ -208,13 +215,49 @@ function createInterface() {
     CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
     //$('body').append(CreateLeftPanel());
 
+    var items = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
+    CreateSelectPanel('p1', 'selPanel', items, afterSelTest).appendTo('body');
+
     var divFooter = $('<div/>', {
         id: 'footer',
         //class: _class,
         attr: {'title': 'caption'}
     }).appendTo($('#ordViewer'));
+}
 
+function clearStorage() {
+    var user_id = localStorage.user_id;
+    var user_name = localStorage.user_name;
+    var app = localStorage.app;
 
+    localStorage.clear();
+
+    localStorage.user_id = user_id;
+    localStorage.user_name = user_name;
+    localStorage.app = app;
+    //updateInterface_user();
+}
+
+function loadDataToStorage() {
+    $.getJSON("./orderJSON.json", function (data) {
+        var items = [];
+        alert(data.toString());
+        $.each(data, function (key, val) {
+            items.push("<li id='" + key + "'>" + val + "</li>");
+
+        });
+localStorage.setItem('o124', data);
+//        $("<ul/>", {
+//            "class": "my-new-list",
+//            html: items.join("")
+//        }).appendTo("body");
+
+    });
+
+    var o123 = '{"id":123,"no":9,"comment":"Как для себя"}';
+    var o123_products = '[{"id":"10","type":"R","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","type":"R","name":"Ролл 4","count":"1","weight":"150"},{"id":"17","type":"P","name":"Пицца 2","count":"1","weight":"500"}]';
+    localStorage.setItem('o123', o123);
+    localStorage.setItem('o123_products', o123_products);
 }
 
 $(document).ready(function () {
