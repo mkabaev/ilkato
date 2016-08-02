@@ -146,7 +146,19 @@ body {
     display:none;
 }
 
-.comment{
-    font-size: 1.8em;
-    color: red;
+#divPrint {
+    visibility: hidden;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #divPrint, #divPrint * {
+        visibility: visible;
+    }
+/*    #divPrint {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }*/
 }

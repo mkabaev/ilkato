@@ -7,12 +7,15 @@ table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
 table {margin: 10px;}
 body {overflow: hidden;} 
+tr:hover {background-color: #f5f5f5}
+tr:nth-child(even) {background-color: #f2f2f2}
 /*background-color: cornsilk; */
 #leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
 
-.orderViewer {position:absolute; top:20px; bottom:10px; left:80px; right:10px; border-color: blue; display:none;}
+.orderViewer {position:absolute; top:20px; bottom:10px; left:80px; right:10px; display:none;}
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
-.mk {float: left; width:40%; bottom: 10px; padding-top:6px; height:100%;}
+.mk {float: left; width:40%; padding-top:6px; margin-left: 10px; overflow-y:auto}
+.mk .tProducts{position: relative; margin-left: auto; margin-right: auto; width: 90%;}
 /*background-color: #F39814;*/
 
 .selPanel {z-index:3; left:100px; float: left; width: 60px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
@@ -20,7 +23,7 @@ body {overflow: hidden;}
 .selItems .ui-selected { background: #F39814; color: white; }
 .selItems { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 .selItems li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
-#comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
+.orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
 
 #userinfo{position: absolute; top:0; right: 30px;}
 #settings{position: absolute; top:0; right: 200px;}
@@ -34,7 +37,7 @@ body {overflow: hidden;}
     margin-bottom: 10px;
     text-align: center;
     right:10px;
-    top: 10px;    
+    top: 30px;    
     font-size: 40px;
     font-weight:bold;
 }
@@ -78,23 +81,5 @@ body {overflow: hidden;}
   font-size: .8em;
 }*/
 
-.tProducts{position: relative;  left: 20px; top:20px; width: 90%;}
 /*#footer{position:fixed;bottom:20px;right:20px; height:200px}*/
 #footer{position: absolute; width:100%; bottom: 0;}
-
-#divPrint {
-    visibility: hidden;
-}
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    #divPrint, #divPrint * {
-        visibility: visible;
-    }
-/*    #divPrint {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }*/
-}

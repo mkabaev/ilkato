@@ -177,27 +177,28 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
 
     return divModule;
 }
+
 function CreateOrderViewer(id, _class, No, comment) {
     var headerItems = $.parseJSON('["Продукт","Кол-во","Вес"]');
     var tableItems = null;
 
     var divOrderViewer = $('<div/>', {
         id: id,
-        class: _class,
+        class: 'ui-widget ui-widget-content '+ _class,
         //attr: {'order_id': '123', 'ts': timestamp}
     });
 
     var divHeader = $('<div/>', {
         //id: "orderheader",
-        //class: 'ui-widget-content',
+        class: 'ui-widget-header',
     });
     var divNumber = $('<div/>', {
         //id: "number",
-    }).append("<h1>Заказ " + No + "</h1>");
+    }).append("<h3>Заказ " + No + "</h3>");
 
     divHeader.append(divNumber);
-    divHeader.append('<div id="comment">' + comment + '</div>');
     divOrderViewer.append(divHeader);
+    divOrderViewer.append('<div class="comment">' + comment + '</div>');
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
@@ -241,7 +242,7 @@ function clearStorage() {
 function loadDataToStorage() {
     $.getJSON("./orderJSON.json", function (data) {
         var items = [];
-        alert(data.toString());
+        //alert(data.toString());
         $.each(data, function (key, val) {
             items.push("<li id='" + key + "'>" + val + "</li>");
 

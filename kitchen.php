@@ -4,23 +4,16 @@
         <meta charset="utf-8">
         <title>Кухня</title>
         <!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
-        <link rel="stylesheet" href="jquery-ui-1.12.0/jquery-ui.css">
+        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/kitchen.css">
 
-<!--        <script src="external/jquery/jquery.js"></script>
-<script src="external/jquery/jquery-ui.js"></script>-->
-
-
-        <script src="jquery-ui-1.12.0/external/jquery/jquery.js"></script>
-        <script src="jquery-ui-1.12.0/jquery-ui.js"></script>
+        <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
+        <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
-
-
 
         <script src="js-ext/sound.js"></script>
         <script src="js-ext/easy-pie-chart.js"></script>
-<!--        <script src="js-ext/jquery.printPage.js"></script>-->
 
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>
@@ -32,7 +25,6 @@
         <!--        <h1 class="ui-widget-header" >Готовятся...</h1>-->
         <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
         <div id="userinfo"></div>
-
         <script>
 //            $(document).ajaxComplete(function () {
 //                alert("ajaxComplete");
