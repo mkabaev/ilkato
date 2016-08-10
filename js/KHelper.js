@@ -184,7 +184,7 @@ function CreateOrderViewer(id, _class, No, comment) {
 
     var divOrderViewer = $('<div/>', {
         id: id,
-        class: 'ui-widget ui-widget-content '+ _class,
+        class: 'ui-widget ui-widget-content ' + _class,
         //attr: {'order_id': '123', 'ts': timestamp}
     });
 
@@ -209,21 +209,71 @@ function CreateOrderViewer(id, _class, No, comment) {
 }
 
 
-function createInterface() {
+function createInterface(type) {
+    $("body").empty();
     $("body").disableSelection();
-    //var tableItems = $.parseJSON(localStorage.products);
-    CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя').appendTo($('body')).fadeIn(1000);
-    CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
-    //$('body').append(CreateLeftPanel());
 
-    var items = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
-    CreateSelectPanel('p1', 'selPanel', items, afterSelTest).appendTo('body');
+    switch (type) {
+        case 'O':
+            var oitems = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
 
-    var divFooter = $('<div/>', {
-        id: 'footer',
-        //class: _class,
-        attr: {'title': 'caption'}
-    }).appendTo($('#ordViewer'));
+            var ulOrders = $('<ul/>', {
+                id: 'o_sortable1',
+                class: 'connectedSortable',
+                //attr: {'title': 'caption'}
+            }).appendTo($('body'));
+            ulOrders.html(ArrayToLiItems(oitems));
+            ulOrders.children('li').addClass('ui-state-default');
+
+            var ritems = ArrayToLiItems($.parseJSON('[{"id":"3","name":"Row1"},{"id":"10","name":"Row2"},{"id":"11","name":"Row3"}]'));
+            var ulRows = CreateUL("o_rows", undefined, ritems).appendTo('body');
+            $(ulRows).children('li').addClass('ui-state-default');
+            
+            $(ulRows).children('li').html(CreateUL(undefined, 'o_orderlist connectedSortable', ritems)); //ritems
+
+$('.o_orderlist').children('li').html('<div style="float:left;">d</div>');
+
+            $(function () {
+                $("#o_sortable1").sortable({
+                    connectWith: ".connectedSortable",
+                    //axis: "y",
+                }).disableSelection();
+
+                $("#o_rows").sortable({
+                    //connectWith: ".connectedSortable",
+                    axis: "y",
+                }).disableSelection();
+
+                $("#o_sortable3").sortable({
+                    connectWith: ".connectedSortable",
+                }).disableSelection();
+
+                $(".o_orderlist").sortable({
+                    connectWith: ".connectedSortable",
+                    //axis: "y",
+                }).disableSelection();
+            });
+            break;
+        case 'K':
+            //var tableItems = $.parseJSON(localStorage.products);
+            CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя').appendTo($('body')).fadeIn(1000);
+            CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
+            //$('body').append(CreateLeftPanel());
+
+            var items = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
+            CreateSelectPanel('p1', 'selPanel', items, afterSelTest).appendTo('body');
+
+            var divFooter = $('<div/>', {
+                id: 'footer',
+                //class: _class,
+                attr: {'title': 'caption'}
+            }).appendTo($('#ordViewer'));
+            break;
+        default:
+            alert('select interface type');
+            break;
+    }
+
 }
 
 function clearStorage() {
@@ -247,7 +297,7 @@ function loadDataToStorage() {
             items.push("<li id='" + key + "'>" + val + "</li>");
 
         });
-localStorage.setItem('o124', data);
+        localStorage.setItem('o124', data);
 //        $("<ul/>", {
 //            "class": "my-new-list",
 //            html: items.join("")

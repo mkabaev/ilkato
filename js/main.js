@@ -144,15 +144,33 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
                     //console.log(JSON.stringify(ar));
                     divDialog.dialog("close");
                 }
-
     });
     return divDialog;
+}
+
+/**
+ * Create UL list
+ * @param id {number} id to set
+ * @param _class {string} add class
+ * @param items {Array} array of li items
+ * @return {Object} ul
+ */
+function CreateUL(id, _class, items){
+    var list = $('<ul/>', {
+        id: id,
+        class: _class,
+        //attr: {'title': "Авторизация", 'ts': timestamp}
+    });
+
+    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
+    list.html(items);
+    return list;
 }
 
 function doInit() {
     clearStorage();
     loadDataToStorage();
-    createInterface()
+    createInterface('O')
     addEventListeners();
     //проверяем есть ли юзер. 
     //если есть, то загружаем локальные данные
@@ -672,3 +690,25 @@ function updateInterface_products() {
     $('#tableR tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
     $('#tableP tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
 }
+
+
+//DYNAMIC CSS and JS load
+function loadjscssfile(filename, filetype){
+    if (filetype=="js"){ //if filename is a external JavaScript file
+        var fileref=document.createElement('script')
+        fileref.setAttribute("type","text/javascript")
+        fileref.setAttribute("src", filename)
+    }
+    else if (filetype=="css"){ //if filename is an external CSS file
+        var fileref=document.createElement("link")
+        fileref.setAttribute("rel", "stylesheet")
+        fileref.setAttribute("type", "text/css")
+        fileref.setAttribute("href", filename)
+    }
+    if (typeof fileref!="undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref)
+}
+ 
+//loadjscssfile("myscript.js", "js") //dynamically load and add this .js file
+//loadjscssfile("javascript.php", "js") //dynamically load "javascript.php" as a JavaScript file
+//loadjscssfile("mystyle.css", "css") ////dynamically load and add this .css file

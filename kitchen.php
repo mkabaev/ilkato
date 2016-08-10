@@ -46,51 +46,46 @@
 
         </script>
 
-        <style>
-            #sortable1, #sortable2, #sortable3{
-                border: 1px solid #eee;
-                width: 142px;
-                min-height: 20px;
-                list-style-type: none;
-                margin: 0;
-                padding: 5px 0 0 0;
-                float: left;
-                margin-right: 10px;
-            }
-            #sortable1 li, #sortable2 li, #sortable3 li {
-                margin: 0 5px 5px 5px;
-                padding: 5px;
-                font-size: 1.2em;
-                width: 120px;
-            }
-        </style>
-        <script>
-            $(function () {
-                $("#sortable1, #sortable2, #sortable3").sortable({
-                    connectWith: ".connectedSortable"
-                }).disableSelection();
-            });
-        </script>
 
-        <ul id="sortable1" class="connectedSortable">
-            <li class="ui-state-default">11</li>
-            <li class="ui-state-default">12</li>
-            <li class="ui-state-default">13</li>
-            <li class="ui-state-default">14</li>
-            <li class="ui-state-default">15</li>
-            <li class="ui-state-default">16</li>
-            <li class="ui-state-default">17</li>
-        </ul>
 
-        <ul id="sortable2" class="connectedSortable">
-            <li class="ui-state-highlight">Item 1</li>
-            <li class="ui-state-highlight">Item 2</li>
-            <li class="ui-state-highlight">Item 3</li>
-            <li class="ui-state-highlight">Item 4</li>
-            <li class="ui-state-highlight">Item 5</li>
-        </ul>
+        <!--        <ul id="sortable1" class="connectedSortable">
+                    <li class="ui-state-default">11</li>
+                    <li class="ui-state-default">12</li>
+                    <li class="ui-state-default">13</li>
+                    <li class="ui-state-default">14</li>
+                    <li class="ui-state-default">15</li>
+                    <li class="ui-state-default">16</li>
+                    <li class="ui-state-default">17</li>
+                </ul>-->
 
-        <ul id="sortable3" class="connectedSortable">
+<!--        <ul id="o_rows">
+            <li class="ui-state-default">
+                <ul class="o_orderlist connectedSortable">Row
+                    <li class="ui-state-highlight">1</li>
+                    <li class="ui-state-highlight">2</li>
+                    <li class="ui-state-highlight">3</li>
+                    <li class="ui-state-highlight">4</li>
+                    <li class="ui-state-highlight">5</li>
+                </ul>
+            </li>
+            <li class="ui-state-default">
+                <ul>Row</ul>
+            </li>
+            <li class="ui-state-default">
+                <ul class="o_orderlist connectedSortable">Row
+                    <li class="ui-state-highlight">6</li>
+                    <li class="ui-state-highlight">7</li>
+                    <li class="ui-state-highlight">8</li>
+                    <li class="ui-state-highlight">9</li>
+                    <li class="ui-state-highlight">10</li>
+                </ul>
+            </li>
+            <li class="ui-state-default">
+                <ul class="o_orderlist connectedSortable">Row</ul>
+            </li>
+        </ul>-->
+
+        <ul id="o_sortable3" class="connectedSortable">
             <li class="ui-state-highlight">Item 1</li>
             <li class="ui-state-highlight">Item 2</li>
             <li class="ui-state-highlight">Item 3</li>
