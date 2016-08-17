@@ -19,7 +19,7 @@ function showSelectDialog(id, caption, callback) {
         url: "helper.php",
         cache: false,
         success: function (jsondata) {
-            console.log('dialog ' + id + ' found on page. items');            
+            console.log('dialog ' + id + ' found on page. items');
             console.log('server data: ' + jsondata);
             $('body').removeClass("ui-state-error");
             $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
@@ -155,7 +155,7 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
  * @param items {Array} array of li items
  * @return {Object} ul
  */
-function CreateUL(id, _class, items){
+function createUL(id, _class, items) {
     var list = $('<ul/>', {
         id: id,
         class: _class,
@@ -168,9 +168,9 @@ function CreateUL(id, _class, items){
 }
 
 function doInit() {
-    clearStorage();
-    loadDataToStorage();
-    createInterface('O')
+    //clearStorage();
+    //loadDataToStorage();
+    createInterface('K')
     addEventListeners();
     //проверяем есть ли юзер. 
     //если есть, то загружаем локальные данные
@@ -251,14 +251,19 @@ function ArrayToTableItems(tableItems) {
     var items = [];
     var row;
     $.each(tableItems, function (key, val) {
-        row = "<tr>";
+
+        row = "<tr item_id=" + val.id + ">";
+
         $.each(val, function (key2, val2) {
             if (key2 != 'id') {
                 row = row + "<td>" + val2 + "</td>";
             }
         });
         row = row + "</tr>";
+
+        //$(row).attr('item_id', 'val.id');
         items.push(row);
+
     });
     return items;
     //$("#tProducts tbody").html(items);
@@ -683,32 +688,47 @@ function SetOrderPositionOnServer(order_id, x, y)
 }
 
 function updateInterface_user() {
-    $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>'+localStorage.user_name);
+    $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }
 
-function updateInterface_products() {
-    $('#tableR tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
-    $('#tableP tbody').html(ArrayToTableItems($.parseJSON(localStorage.products)));
+function getOrdersFromLS() {
+    var orders = [];
+    //console.log('LS items count: '+localStorage.length);
+    for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).substr(0, 2) === 'o_') {
+            orders.push($.parseJSON(localStorage[localStorage.key(i)]));
+        }
+    }
+    return orders;
 }
 
+function getOrderFromLS(id) {
+    var order=undefined;
+    //console.log('LS items count: '+localStorage.length);
+    for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) === 'o_'+id) {
+            order=$.parseJSON(localStorage[localStorage.key(i)]);
+        }
+    }
+    return order;
+}
 
 //DYNAMIC CSS and JS load
-function loadjscssfile(filename, filetype){
-    if (filetype=="js"){ //if filename is a external JavaScript file
-        var fileref=document.createElement('script')
-        fileref.setAttribute("type","text/javascript")
+function loadjscssfile(filename, filetype) {
+    if (filetype == "js") { //if filename is a external JavaScript file
+        var fileref = document.createElement('script')
+        fileref.setAttribute("type", "text/javascript")
         fileref.setAttribute("src", filename)
-    }
-    else if (filetype=="css"){ //if filename is an external CSS file
-        var fileref=document.createElement("link")
+    } else if (filetype == "css") { //if filename is an external CSS file
+        var fileref = document.createElement("link")
         fileref.setAttribute("rel", "stylesheet")
         fileref.setAttribute("type", "text/css")
         fileref.setAttribute("href", filename)
     }
-    if (typeof fileref!="undefined")
+    if (typeof fileref != "undefined")
         document.getElementsByTagName("head")[0].appendChild(fileref)
 }
- 
+
 //loadjscssfile("myscript.js", "js") //dynamically load and add this .js file
 //loadjscssfile("javascript.php", "js") //dynamically load "javascript.php" as a JavaScript file
 //loadjscssfile("mystyle.css", "css") ////dynamically load and add this .css file

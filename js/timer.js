@@ -1,4 +1,4 @@
-function CreateTimer(id, _class, length, size) {
+function createTimer(id, _class, length, size) {
     var divTimer = $('<div/>', {
         id: id,
         class: 'chart ' + _class,

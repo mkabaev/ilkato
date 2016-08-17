@@ -1,7 +1,7 @@
 /** { margin: 0; padding: 0; }
 p { padding: 10px; }*/
 *{font-family: sans-serif; margin: 0; padding: 0; color:#494437;}
-div, li{border:1px dotted #d34d17}
+/*div, li{border:1px dotted #d34d17}*/
 table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
@@ -9,6 +9,9 @@ table {margin: 10px;}
 body {overflow: hidden;} 
 tr:hover {background-color: #f5f5f5}
 tr:nth-child(even) {background-color: #f2f2f2}
+/*body {
+    background-image: url('../bg_italian.png');
+}*/
 /*background-color: cornsilk; */
 
 
@@ -52,7 +55,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 .o_orderlist{
     border: 1px solid red;
-min-height: 32px;
+    min-height: 32px;
     height: 32px;
     list-style-type: none;
     margin: 0;

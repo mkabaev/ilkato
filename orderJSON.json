@@ -1,30 +1,66 @@
-{
-    "id": 123,
-    "ts": "12343453",
-    "no": 9,
-    "comment": "Как для себя",
-    "client": {
+[{
         "id": 123,
-        "name": "Вася",
-        "phone": "+79277501811"
+        "ts": "12343453",
+        "no": 9,
+        "comment": "Как для себя",
+        "client": {
+            "id": 123,
+            "name": "Вася",
+            "phone": "+79277501811"
+        },
+        "products": [{
+                "id": 10,
+                "type": "R",
+                "name": "Ролл 2",
+                "count": 2,
+                "weight": 250
+            }, {
+                "id": 11,
+                "type": "R",
+                "name": "Ролл 4",
+                "count": 1,
+                "weight": 150
+            }, {
+                "id": 17,
+                "type": "P",
+                "name": "Пицца 2",
+                "count": 1,
+                "weight": 500
+            }]
     },
-    "products": [{
-            "id": 10,
-            "type": "R",
-            "name": "Ролл 2",
-            "count": 2,
-            "weight": 250
-        }, {
-            "id": 11,
-            "type": "R",
-            "name": "Ролл 4",
-            "count": 1,
-            "weight": 150
-        }, {
-            "id": 17,
-            "type": "P",
-            "name": "Пицца 2",
-            "count": 1,
-            "weight": 500
-        }]
-}
+    {
+        "id": 124,
+        "ts": "12343453",
+        "no": 10,
+        "comment": "Как для себя",
+        "client": {
+            "id": 124,
+            "name": "Петя",
+            "phone": "+79277501811"
+        },
+        "products": [{
+                "id": 10,
+                "type": "R",
+                "name": "Ролл 2",
+                "count": 2,
+                "weight": 250
+            }, {
+                "id": 11,
+                "type": "R",
+                "name": "Ролл 4",
+                "count": 1,
+                "weight": 150
+            }, {
+                "id": 41,
+                "type": "R",
+                "name": "Ролл 5",
+                "count": 1,
+                "weight": 150
+            }, {
+                "id": 17,
+                "type": "P",
+                "name": "Пицца 2",
+                "count": 1,
+                "weight": 500
+            }]
+    }]

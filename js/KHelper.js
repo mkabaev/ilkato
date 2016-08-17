@@ -14,7 +14,8 @@ function afterSel(id, name) {
 }
 
 function afterSelTest(id, name) {
-    alert(id + " | " + name);
+    //var ov=$('#ordViewer');
+    updateOrderViewer(id);
 }
 
 function K_RequestServer()
@@ -139,7 +140,8 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         //class: 'ui-widget-content',
         text: "Готово",
         click: function (event) {
-            alert('event.target')
+            var divModule = $(this).parent().parent();
+            divModule.addClass('ui-state-disabled');
         },
     }).appendTo(divHeader);
 
@@ -178,7 +180,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
     return divModule;
 }
 
-function CreateOrderViewer(id, _class, No, comment) {
+function createOrderViewer(id, _class) {
     var headerItems = $.parseJSON('["Продукт","Кол-во","Вес"]');
     var tableItems = null;
 
@@ -189,16 +191,16 @@ function CreateOrderViewer(id, _class, No, comment) {
     });
 
     var divHeader = $('<div/>', {
-        //id: "orderheader",
+        id: "orderheader",
         class: 'ui-widget-header',
     });
     var divNumber = $('<div/>', {
         //id: "number",
-    }).append("<h3>Заказ " + No + "</h3>");
+    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
 
     divHeader.append(divNumber);
     divOrderViewer.append(divHeader);
-    divOrderViewer.append('<div class="comment">' + comment + '</div>');
+    divOrderViewer.append('<div id=ordercomment class="comment">' + 'comment' + '</div>');
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
@@ -208,14 +210,74 @@ function CreateOrderViewer(id, _class, No, comment) {
     return divOrderViewer;
 }
 
+function updateOrderViewer(id) {
+    localStorage.activeOrder = id;
+    var order = getOrderFromLS(id);
+    if (order === undefined) {
+        // load from server
+    } else {
+        $('#number').html(order.no);
+        $('#ordercomment').html('new commmen ' + order.id);
+
+        var itemsR = order.products.filter(function (row) {
+            return row.type === 'R';
+        });
+        itemsR = itemsR.map(function (obj) {
+            var newObj = {};
+            newObj.id = obj.id;
+            newObj.name = obj.name;
+            newObj.count = obj.count;
+            newObj.weight = obj.weight;
+            return newObj;
+        });
+
+        var itemsP = order.products.filter(function (row) {
+            return row.type === 'P';
+        });
+        itemsP = itemsP.map(function (obj) {
+            var newObj = {};
+            newObj.id = obj.id;
+            newObj.name = obj.name;
+            newObj.count = obj.count;
+            newObj.weight = obj.weight;
+            return newObj;
+        });
+
+//            $.each(products, function (key, val) {
+        //if (val.type=='R'){
+//                itemsR.push(new Array(val.id, val.name, val.count, val.weight));
+        //}
+//                if (val.type == 'P') {
+//                    itemsP.push(val);
+        //localStorage.setItem('o_' + val.id, JSON.stringify(val));
+//                }
+//            });
+
+        $('#tableR tbody').html(ArrayToTableItems(itemsR));
+        $('#tableP tbody').html(ArrayToTableItems(itemsP));
+
+//    $('body').append(localStorage.getItem(localStorage.key(i)));
+
+
+    }
+}
 
 function createInterface(type) {
-    $("body").empty();
+    //$("body").empty();
     $("body").disableSelection();
 
     switch (type) {
         case 'O':
-            var oitems = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
+            var oitems = getOrdersFromLS();
+            oitems = oitems.map(function (obj) {
+                var newObj = {};
+                newObj.id = obj.id;
+                newObj.name = obj.no;
+                return newObj;
+            });
+            //console.log(JSON.stringify(oitems));
+
+            //$.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
 
             var ulOrders = $('<ul/>', {
                 id: 'o_sortable1',
@@ -224,14 +286,20 @@ function createInterface(type) {
             }).appendTo($('body'));
             ulOrders.html(ArrayToLiItems(oitems));
             ulOrders.children('li').addClass('ui-state-default');
+            ulOrders.children('li').click(function () {
+                //alert($(this).attr('item_id'));
+                createOrderViewer('ordViewer', 'orderViewer').appendTo($('body')).fadeIn(1000);
 
-            var ritems = ArrayToLiItems($.parseJSON('[{"id":"3","name":"Row1"},{"id":"10","name":"Row2"},{"id":"11","name":"Row3"}]'));
-            var ulRows = CreateUL("o_rows", undefined, ritems).appendTo('body');
+            });
+
+            var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
+            var ulRows = createUL("o_rows", undefined, ritems).appendTo('body');
             $(ulRows).children('li').addClass('ui-state-default');
-            
-            $(ulRows).children('li').html(CreateUL(undefined, 'o_orderlist connectedSortable', ritems)); //ritems
 
-$('.o_orderlist').children('li').html('<div style="float:left;">d</div>');
+            $(ulRows).children('li').html(createUL(undefined, 'o_orderlist connectedSortable', undefined)); //ritems
+            $(ulRows).children('li').prepend('<div style="float:left;padding:0;margin:0;top:10px;" class="ui-icon ui-icon-grip-dotted-vertical"></div>');
+//'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
+//$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
 
             $(function () {
                 $("#o_sortable1").sortable({
@@ -256,12 +324,27 @@ $('.o_orderlist').children('li').html('<div style="float:left;">d</div>');
             break;
         case 'K':
             //var tableItems = $.parseJSON(localStorage.products);
-            CreateOrderViewer('ordViewer', 'orderViewer', 111, 'Приготовить как для себя').appendTo($('body')).fadeIn(1000);
-            CreateTimer('timer', null, 60).appendTo($('#ordViewer'));
+            createOrderViewer('ordViewer', 'orderViewer').appendTo($('body')).fadeIn(1000);
+            createTimer('timer', null, 60).appendTo($('#ordViewer'));
             //$('body').append(CreateLeftPanel());
 
-            var items = $.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
-            CreateSelectPanel('p1', 'selPanel', items, afterSelTest).appendTo('body');
+            var orders = getOrdersFromLS();
+            //orders.forEach(function (order, index, array) {
+            //});
+
+            var smallOrders = orders.map(function (obj) {
+                var newObj = {};
+                newObj.id = obj.id;
+                newObj.name = obj.no;
+                //newObj.count = obj.count;
+                //newObj.weight = obj.weight;
+                return newObj;
+            });
+            //console.log('items: '+JSON.stringify(smallOrders));
+
+
+            CreateSelectPanel('p1', 'selPanel', smallOrders, afterSelTest).appendTo('body');
+            $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
 
             var divFooter = $('<div/>', {
                 id: 'footer',

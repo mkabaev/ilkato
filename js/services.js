@@ -33,9 +33,15 @@ function addEventListeners() {
             document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
         }, false);
         source.addEventListener('ordUpdate', function (e) {
-            localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
-            localStorage.products_ts = e.data;
-            updateInterface_products();
+            //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
+            //localStorage.products_ts = e.data;
+            $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
+                $.each(data, function (key, val) {
+                    localStorage.setItem('o_' + val.id, JSON.stringify(val));
+                });
+            });
+            updateOrderViewer(localStorage.activeOrder);
+
             //sound.playclip();
         }, false);
 
