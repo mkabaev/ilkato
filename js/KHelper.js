@@ -4,13 +4,15 @@
  * and open the template in the editor.
  */
 
-/* global al, CreateTimer */
+/* global al, CreateTimer, createTimer */
 
-function afterSel(id, name) {
+function afterSelUser(sender, id, name) {
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
+    localStorage.app = $(sender).attr("group_id");
     localStorage.user_id = id;
     localStorage.user_name = name;
-    updateInterface_user();
+    doInit();
+    //updateInterface_user();
 }
 
 function afterSelTest(id, name) {
@@ -119,7 +121,6 @@ $(function () {
  * @param _class {string} add class
  * @param headerItems {Array} array of li items
  * @param tableItems {Array} array of li items
- * @param callback function(id,name)
  * @return {Object} div
  */
 function CreateKitchenModule(modType, _class, headerItems, tableItems) {
@@ -137,13 +138,13 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
 
     var bDone = $('<button/>', {
         id: "bDone" + modType,
-        //class: 'ui-widget-content',
+        class: 'doneButton',
         text: "Готово",
         click: function (event) {
-            var divModule = $(this).parent().parent();
+            var divModule = $(this).parent();
             divModule.addClass('ui-state-disabled');
         },
-    }).appendTo(divHeader);
+    }).appendTo(divModule);
 
     bDone.button({
         icons: {
@@ -155,10 +156,9 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
     var bPrint = $('<button/>', {
         id: "bPrint" + modType,
         //class: 'ui-widget-content',
-        text: "Печать",
+        //text: "Печать",
         click: function (event) {
-            CreatePrintArea().appendTo($('body'));
-            window.print();
+            printHTML('<h1>ORDER</h1>');
         },
     }).appendTo(divHeader);
 
@@ -262,8 +262,9 @@ function updateOrderViewer(id) {
     }
 }
 
-function createInterface(type) {
-    //$("body").empty();
+function createWorkplace(type) {
+    stopTimer();
+    $('#workplace').empty();
     $("body").disableSelection();
 
     switch (type) {
@@ -273,6 +274,7 @@ function createInterface(type) {
                 var newObj = {};
                 newObj.id = obj.id;
                 newObj.name = obj.no;
+                newObj.ts = obj.ts;
                 return newObj;
             });
             //console.log(JSON.stringify(oitems));
@@ -283,17 +285,17 @@ function createInterface(type) {
                 id: 'o_sortable1',
                 class: 'connectedSortable',
                 //attr: {'title': 'caption'}
-            }).appendTo($('body'));
+            }).appendTo($('#workplace'));
             ulOrders.html(ArrayToLiItems(oitems));
             ulOrders.children('li').addClass('ui-state-default');
             ulOrders.children('li').click(function () {
                 //alert($(this).attr('item_id'));
-                createOrderViewer('ordViewer', 'orderViewer').appendTo($('body')).fadeIn(1000);
+                createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
 
             });
 
             var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
-            var ulRows = createUL("o_rows", undefined, ritems).appendTo('body');
+            var ulRows = createUL("o_rows", undefined, ritems).appendTo('#workplace');
             $(ulRows).children('li').addClass('ui-state-default');
 
             $(ulRows).children('li').html(createUL(undefined, 'o_orderlist connectedSortable', undefined)); //ritems
@@ -324,8 +326,9 @@ function createInterface(type) {
             break;
         case 'K':
             //var tableItems = $.parseJSON(localStorage.products);
-            createOrderViewer('ordViewer', 'orderViewer').appendTo($('body')).fadeIn(1000);
-            createTimer('timer', null, 60).appendTo($('#ordViewer'));
+            var ov=createOrderViewer('ordViewer', 'orderViewer');
+            ov.appendTo($('#workplace')).fadeIn(1000);
+            createTimer('timer', 'ktimer', 10, 160).appendTo(ov);
             //$('body').append(CreateLeftPanel());
 
             var orders = getOrdersFromLS();
@@ -343,7 +346,7 @@ function createInterface(type) {
             //console.log('items: '+JSON.stringify(smallOrders));
 
 
-            CreateSelectPanel('p1', 'selPanel', smallOrders, afterSelTest).appendTo('body');
+            createSelectPanel('p1', 'selPanel', smallOrders, afterSelTest).appendTo('#workplace');
             $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
 
             var divFooter = $('<div/>', {

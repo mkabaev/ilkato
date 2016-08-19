@@ -71,23 +71,31 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 #leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
 
-.orderViewer {position:absolute; top:20px; bottom:10px; left:80px; right:10px; display:none;}
+.orderViewer {position:absolute; top:40px; bottom:10px; left:80px; right:10px; display:none;}
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
 .mk {float: left; width:40%; padding-top:6px; margin-left: 10px; overflow-y:auto}
 .mk .tProducts{position: relative; margin-left: auto; margin-right: auto; width: 90%;}
 /*background-color: #F39814;*/
+.mk .doneButton{
+    font-size: 2em;
+    font-weight:bold;
+    position: relative;
+    margin:20px;
+    width: calc(100% - 40px);
+}
 
 .selPanel {z-index:3; left:100px; float: left; width: 60px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
 .selItems .ui-selecting { background: #FECA40; }
 .selItems .ui-selected { background: #F39814; color: white; }
 .selItems { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 .selItems li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
-.orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
+.ui-selectable-helper{display:none;}
 
+.orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
 #userinfo{position: absolute; top:0; right: 30px;}
 #settings{position: absolute; top:0; right: 200px;}
 
-.chart {
+.ktimer {
     position: absolute;
     display: inline-block;
     width: 200px;
@@ -96,20 +104,20 @@ tr:nth-child(even) {background-color: #f2f2f2}
     margin-bottom: 10px;
     text-align: center;
     right:10px;
-    top: 30px;    
+    top: 10px;    
     font-size: 40px;
     font-weight:bold;
 }
-.chart canvas {
+.ktimer canvas {
     position: absolute;
     top: 0;
     left: 0;
 }
-.digit {
+/*.digit {
     display: inline-block;
     line-height: 200px;
     z-index: 2;
-}
+}*/
 
 /*.chart {
     position: fixed;

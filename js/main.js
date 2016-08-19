@@ -1,43 +1,45 @@
+/* global eventSource, afterSelUser */
 
-function CreatePrintArea() {
-    var divPrint = $('<div/>', {
-        id: "divPrint",
-    }).append("<h1>Заказ " + "sdfsdfsdf" + "</h1>");
-    return divPrint;
+function printHTML(html) {
+    var divPrint = $('#divPrint');
+    if (!divPrint.length) {
+        var divPrint = $('<div/>', {
+            id: "divPrint",
+        }).appendTo("#workplace");
+    }
+    divPrint.html(html);
+    window.print();
+//    return divPrint;
 }
 
-function showSelectDialog(id, caption, callback) {
-    var dlg = $('#dlg_' + id);
-    if (!$('#dlg_' + id).length) {
-        console.log('dialog ' + id + ' is null. Creating...');
-        dlg = CreateSelectDialog(id, caption, undefined, undefined, callback);
+function showSelectUserDialog() {
+    var dlg = $('#dlg_selUsers');
+    if (!dlg.length) {
+        dlg = CreateSelectDialog('SelUsers', 'Авторизация', undefined, undefined, afterSelUser);
     }
-
     $.ajax({
         type: "POST",
         data: "action=getUsers",
         url: "helper.php",
         cache: false,
         success: function (jsondata) {
-            console.log('dialog ' + id + ' found on page. items');
+            //console.log('dialog ' + id + ' found on page. items');
             console.log('server data: ' + jsondata);
-            $('body').removeClass("ui-state-error");
+            $('#workplace').removeClass("ui-state-error");
             $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
             dlg.dialog('open');
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
-            $("body").addClass("ui-state-error");
+            $("#workplace").addClass("ui-state-error");
             //$("body").addClass("ui-state-error");
 //            alert(xhr.status);
 //            alert(thrownError);
         }
     });
-
-
 }
 
-function CreateSelectPanel(id, _class, items, callback) {
+function createSelectPanel(id, _class, items, callback) {
     var div = $('<div/>', {
         id: id,
         class: _class,
@@ -55,7 +57,7 @@ function CreateSelectPanel(id, _class, items, callback) {
 
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
     list.selectable({
-        tolerance: "fit",
+        //tolerance: "fit",
         selected:
                 function (event, ui) {
                     //alert(ui.selected.id + " " + ui.selected.innerHTML);
@@ -72,6 +74,7 @@ function CreateSelectPanel(id, _class, items, callback) {
                 }
 
     });
+
     return div;
 }
 
@@ -131,14 +134,17 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
         tolerance: "fit",
         selected:
                 function (event, ui) {
-                    //alert(ui.selected.id + " " + ui.selected.innerHTML);
+                    //alert($(ui.selected).attr("item_id") + " " + ui.selected.innerHTML);
                     //localStorage.user_id = $(ui.selected).attr("item_id");
                     //localStorage.user_name = ui.selected.innerHTML;
                     //updateInterface_user();
                     //$("#"+idPanel + " .order").css("visible:none;");
                     //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
                     if (callback) {
-                        callback($(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                        callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                    } else {
+                        alert('callback error');
+                        callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
                     }
                     //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
                     //console.log(JSON.stringify(ar));
@@ -168,19 +174,44 @@ function createUL(id, _class, items) {
 }
 
 function doInit() {
-    //clearStorage();
-    //loadDataToStorage();
-    createInterface('K')
-    addEventListeners();
-    //проверяем есть ли юзер. 
-    //если есть, то загружаем локальные данные
-    //если нет, то авторизуемся
-    if (localStorage.user_id == null) {
-        showSelectDialog('SelUsers', 'Авторизация');
+//    if (eventSource!==undefined) {
+//        eventSource.close();
+//        alert('es closed');
+//    }
+
+    $(document).ajaxComplete(function () {
+        $('#settings').fadeOut().fadeIn();
+    });
+
+    $('#settings').click(function () {
+        console.log(eventSource);
+        eventSource.close();
+    });
+
+    if (localStorage.user_id === null) {
+        showSelectUserDialog();
         //CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
         updateInterface_user();
     }
+
+    //clearStorage();
+    //loadDataToStorage();
+    switch (localStorage.app) {
+        case '0':
+            createWorkplace('O');
+            break
+        case '1':
+            createWorkplace('K');
+            break
+    }
+    addEventListeners();
+    //проверяем есть ли юзер. 
+    //если есть, то загружаем локальные данные
+    //если нет, то авторизуемся
+    //    
+    //    
+    //    
 //    $.ajax({
 //        type: "POST",
 //        data: "action=getKOrders&json=" + json_orders,
@@ -273,7 +304,26 @@ function ArrayToLiItems(items) {
     var _items = [];
     $.each(items, function (key, val) {
         //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
-        _items.push("<li item_id=" + val.id + ">" + val.name + "</li>");
+        var s = "";
+        var t = "";
+        $.each(val, function (key2, val2) {
+            //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
+            switch (key2) {
+                case 'id':  // if (x === 'value1')
+                    s = s + " item_id=" + val2;
+                    break
+
+                case 'name':  // if (x === 'value2')
+                    t = val2;
+                    break
+                default:
+                    s = s + " " + key2 + "=" + val2;
+                    break
+            }
+        });
+        _items.push("<li" + s + ">" + t + "</li>");
+
+
     });
     return _items;
 }
@@ -703,11 +753,11 @@ function getOrdersFromLS() {
 }
 
 function getOrderFromLS(id) {
-    var order=undefined;
+    var order = undefined;
     //console.log('LS items count: '+localStorage.length);
     for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i) === 'o_'+id) {
-            order=$.parseJSON(localStorage[localStorage.key(i)]);
+        if (localStorage.key(i) === 'o_' + id) {
+            order = $.parseJSON(localStorage[localStorage.key(i)]);
         }
     }
     return order;

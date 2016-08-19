@@ -190,7 +190,7 @@ function getCouriers() {
 
 function getUsers() {
     $db = new DB();
-    $query = "SELECT id, name FROM testform_courier limit 20";
+    $query = "SELECT id, username as name, group_id FROM auth_user limit 20";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -324,7 +324,7 @@ switch ($action) {
         echo getCouriers();
         break;
     case 'getUsers':
-        echo getCouriers();
+        echo getUsers();
         break;
     case 'SetOrderPosition':
         echo SetOrderPosition($_POST["issue_id"], $_POST["x"], $_POST["y"]);

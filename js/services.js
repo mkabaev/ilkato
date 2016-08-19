@@ -4,12 +4,20 @@
  * and open the template in the editor.
  */
 
-/* global sound */
+
+/* global EventSource */
+
+var eventSource;
 
 function addEventListeners() {
+//    delete eventSource;
+    if (eventSource !== undefined) {
+        eventSource.close();
+        //eventSource=null;
+//        alert('es closed');
+    }
     if (typeof (EventSource) !== "undefined") {
-        var source = new EventSource("events.php?event=ordUpdate");
-
+        eventSource = new EventSource("events.php?event=ordUpdate");
 //                source.onmessage = function (event) {
 //                    document.getElementById("result").innerHTML += event.data + "<br>";
 //                };
@@ -21,18 +29,18 @@ function addEventListeners() {
 //                    document.getElementById("result").innerHTML += e.data + "<br>";
 //                }, false);
 
-        source.addEventListener('message', function (e) {
+        eventSource.addEventListener('message', function (e) {
             document.getElementById("result").innerHTML += "msg:" + e.data + "<br>";
         }, false);
 
-        source.addEventListener('onopen', function (e) {
+        eventSource.addEventListener('onopen', function (e) {
             document.getElementById("result").innerHTML += "open:" + e.data + "<br>";
         }, false);
 
-        source.addEventListener('onerror', function (e) {
+        eventSource.addEventListener('onerror', function (e) {
             document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
         }, false);
-        source.addEventListener('ordUpdate', function (e) {
+        eventSource.addEventListener('ordUpdate', function (e) {
             //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
             //localStorage.products_ts = e.data;
             $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
