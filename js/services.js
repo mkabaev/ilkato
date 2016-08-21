@@ -9,12 +9,10 @@
 
 var eventSource;
 
+//
 function addEventListeners() {
-//    delete eventSource;
     if (eventSource !== undefined) {
         eventSource.close();
-        //eventSource=null;
-//        alert('es closed');
     }
     if (typeof (EventSource) !== "undefined") {
         eventSource = new EventSource("events.php?event=ordUpdate");
@@ -40,23 +38,34 @@ function addEventListeners() {
         eventSource.addEventListener('onerror', function (e) {
             document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
         }, false);
-        eventSource.addEventListener('ordUpdate', function (e) {
-            //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
-            //localStorage.products_ts = e.data;
-            $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
-                $.each(data, function (key, val) {
-                    localStorage.setItem('o_' + val.id, JSON.stringify(val));
-                });
-            });
-            updateOrderViewer(localStorage.activeOrder);
 
-            //sound.playclip();
-        }, false);
+        eventSource.addEventListener('ordUpdate', afterOrdUpdate, false);
 
     } else {
         alert("Sorry, your browser does not support server-sent events..., Звоните Максимке");
     }
 }
+
+function afterOrdUpdate(e) {
+    //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
+    //localStorage.products_ts = e.data;
+
+    //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
+    //localStorage.products_ts = e.data;
+    console.log(e.data);
+    $.getJSON('http://localhost/sxl/orderJSON.json', function (data) {
+        $.each(data, function (key, val) {
+            localStorage.setItem('o_' + val.id, JSON.stringify(val));
+        });
+    });
+    if (localStorage.wp_type === '1') {
+        updateOrderViewer(localStorage.activeOrder);
+        updateKInterface_SelPanel();
+    }
+
+    //sound.playclip();
+}
+
 function LoadOrderProducts(order_id)
 {
     return $.ajax({

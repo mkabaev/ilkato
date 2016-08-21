@@ -29,8 +29,7 @@
         <!--<audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg" autoplay>
           Your browser does not support the <code>audio</code> element.
         </audio>-->
-        <div id="workplace">
-        </div>
+        <div id="workplace"/>
         <script>
             var sound = ss_soundbits('s1.mp3');
             //localStorage.removeItem('user_id');
@@ -38,7 +37,11 @@
             //проверяем есть ли юзер. 
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
+            //addEventListeners(); // with session id
             doInit();
+            addEventListeners();
+
+            //wp.
         </script>
         <!--
                 <ul id="o_sortable3" class="connectedSortable">

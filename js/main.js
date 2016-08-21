@@ -1,5 +1,50 @@
 /* global eventSource, afterSelUser */
 
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+
+function WorkPlace(name) {
+    this.name = name;
+    this._speed = 0;
+    this.orders = getOrdersFromLS();
+    //orders.forEach(function (order, index, array) {
+    //});
+
+    this.smallOrders = this.orders.map(function (obj) {
+        var newObj = {};
+        newObj.id = obj.id;
+        newObj.name = obj.no;
+        //newObj.count = obj.count;
+        //newObj.weight = obj.weight;
+        return newObj;
+    });
+}
+
+// методы в прототипе
+WorkPlace.prototype.run = function (speed) {
+    this._speed += speed;
+    alert(this.name + ' бежит, скорость ' + this.speed);
+};
+
+WorkPlace.prototype.orders2 = function (speed) {
+    //this.orders
+};
+
+WorkPlace.prototype.stop = function () {
+    this._speed = 0;
+    alert(this.name + ' стоит');
+};
+
+var wp = new WorkPlace('blaa');
+
+
+
 function printHTML(html) {
     var divPrint = $('#divPrint');
     if (!divPrint.length) {
@@ -178,34 +223,35 @@ function doInit() {
 //        eventSource.close();
 //        alert('es closed');
 //    }
-
     $(document).ajaxComplete(function () {
         $('#settings').fadeOut().fadeIn();
     });
 
     $('#settings').click(function () {
-        console.log(eventSource);
-        eventSource.close();
+        //console.log(eventSource);
+        //eventSource.close();
+        eventSource.removeEventListener('ordUpdate', afterOrdUpdate,false);
     });
 
-    if (localStorage.user_id === null) {
+    if (localStorage.user_id === undefined) {
         showSelectUserDialog();
         //CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
         updateInterface_user();
+        //clearStorage();
+        //loadDataToStorage();
+        switch (localStorage.wp_type) {
+            case '0':
+                createWorkplace('O');
+                break
+            case '1':
+                createWorkplace('K');
+                break
+        }
+
     }
 
-    //clearStorage();
-    //loadDataToStorage();
-    switch (localStorage.app) {
-        case '0':
-            createWorkplace('O');
-            break
-        case '1':
-            createWorkplace('K');
-            break
-    }
-    addEventListeners();
+
     //проверяем есть ли юзер. 
     //если есть, то загружаем локальные данные
     //если нет, то авторизуемся
@@ -614,95 +660,6 @@ function ProcessOrders(jsondata) { //create orders, skip if exists
     return 1; // data[0].number+" "+data[0].status_id;
 }
 
-function LoadCouriers()
-{
-    $.ajax({
-        type: "POST",
-        data: "action=getCouriers",
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            var data = $.parseJSON(jsondata);
-
-            var items = [];
-            $.each(data, function (key, val) {
-                //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
-                items.push("<li id='courier_" + val.id + "' courier_id='" + val.id + "' class='ui-widget-content ui-corner-all'>" + val.name + "</li>");
-            });
-            $("#ul_couriers").html(items);
-
-            $("#ul_couriers").selectable({
-                tolerance: "fit",
-                selected: function (event, ui) {
-                    //alert(ui.selected.id + " " + ui.selected.innerHTML);
-
-                    var y = parseInt($("#dialog").attr("row"));
-                    //$("#"+idPanel + " .order").css("visible:none;");
-                    SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
-
-                    //console.log(JSON.stringify(ar));
-                    $("#dialog").dialog("close");
-                }
-
-            });
-
-
-
-        }
-    });
-}
-
-function UpdateOrderStatusOnServer(id, status_id)
-{
-    $.ajax({
-        type: "POST",
-        data: "action=updateOrderStatus&id=" + id + "&status_id=" + status_id,
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            //$("#log").append("<br/>updated"+jsondata); 
-        }
-    });
-}
-
-function SetCourierToOrdersAndClear(fromRowNo, courier_id)
-{
-    var ar = [];
-    var panel = $("#Panel" + fromRowNo);
-    var y = fromRowNo; //parseInt(panel.attr("row"));
-
-    $("#Panel" + fromRowNo + " .order").each(function (index) {
-        //$(this).attr("status_id")
-        var order_id = $(this).attr("id");
-        //var x = index;
-        //ar.push(new Array(parseInt(order_id), x, y));
-        ar.push(order_id);
-    });
-    var json_orders = JSON.stringify(ar);
-
-    $.ajax({
-        type: "POST",
-        data: "action=SetCourierToOrders&json=" + json_orders + "&courier_id=" + courier_id,
-        url: "helper.php",
-        cache: false,
-        success: function (timestamps) {
-            $("#Panel" + fromRowNo + " > *:not('.setCourierButton')").appendTo($('#Panel4')); // remove();
-            console.log("returned timestamps: " + timestamps);
-            K_RequestServer(); //force page update
-        }
-    });
-}
-
-function SetOrderPosition(order, x, y)
-{
-//    var order = $("#" + order_id);
-    var current_y = order.parent().attr("row");
-    var current_x = order.index();
-    if (current_y !== y) {
-        order.appendTo($("#Panel" + y));
-    }
-    //$("#" + order_id).insertAfter($("#34849"));
-}
 function SetOrderPositionOnServer(order_id, x, y)
 {
 //    var ar = [];

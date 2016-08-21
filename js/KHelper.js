@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
 
-/* global al, CreateTimer, createTimer */
+/* global al, CreateTimer, createTimer, createSelectPanel */
 
 function afterSelUser(sender, id, name) {
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
-    localStorage.app = $(sender).attr("group_id");
+    //localStorage.clear();
+    localStorage.wp_id = $(sender).attr("group_id");
+    localStorage.wp_type = $(sender).attr("group_id");
     localStorage.user_id = id;
     localStorage.user_name = name;
     doInit();
@@ -266,6 +268,7 @@ function createWorkplace(type) {
     stopTimer();
     $('#workplace').empty();
     $("body").disableSelection();
+    //console.log(document.attributes);
 
     switch (type) {
         case 'O':
@@ -326,29 +329,15 @@ function createWorkplace(type) {
             break;
         case 'K':
             //var tableItems = $.parseJSON(localStorage.products);
-            var ov=createOrderViewer('ordViewer', 'orderViewer');
+            var ov = createOrderViewer('ordViewer', 'orderViewer');
             ov.appendTo($('#workplace')).fadeIn(1000);
             createTimer('timer', 'ktimer', 10, 160).appendTo(ov);
             //$('body').append(CreateLeftPanel());
 
-            var orders = getOrdersFromLS();
-            //orders.forEach(function (order, index, array) {
-            //});
 
-            var smallOrders = orders.map(function (obj) {
-                var newObj = {};
-                newObj.id = obj.id;
-                newObj.name = obj.no;
-                //newObj.count = obj.count;
-                //newObj.weight = obj.weight;
-                return newObj;
-            });
-            //console.log('items: '+JSON.stringify(smallOrders));
-
-
-            createSelectPanel('p1', 'selPanel', smallOrders, afterSelTest).appendTo('#workplace');
-            $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
-
+            createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
+            updateOrderViewer(localStorage.activeOrder);
+            updateKInterface_SelPanel();
             var divFooter = $('<div/>', {
                 id: 'footer',
                 //class: _class,
@@ -362,16 +351,47 @@ function createWorkplace(type) {
 
 }
 
+function updateKInterface_SelPanel() {
+    var orders = getOrdersFromLS();
+    //orders.forEach(function (order, index, array) {
+    //});
+
+    var smallOrders = orders.map(function (obj) {
+        var newObj = {};
+        newObj.id = obj.id;
+        newObj.name = obj.no;
+        //newObj.count = obj.count;
+        //newObj.weight = obj.weight;
+        return newObj;
+    });
+    //console.log('items: '+JSON.stringify(smallOrders));
+    var list = $('#p1 ul');
+    list.html(ArrayToLiItems(smallOrders));
+    $(list.children('li')).addClass('ui-widget-content');
+
+    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
+    list.selectable({
+        //tolerance: "fit",
+        selected:
+                function (event, ui) {
+                    afterSelTest($(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                }
+
+    });
+
+
+
+    $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
+}
+
 function clearStorage() {
     var user_id = localStorage.user_id;
     var user_name = localStorage.user_name;
-    var app = localStorage.app;
 
     localStorage.clear();
 
     localStorage.user_id = user_id;
     localStorage.user_name = user_name;
-    localStorage.app = app;
     //updateInterface_user();
 }
 
