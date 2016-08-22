@@ -31,6 +31,16 @@
         </audio>-->
         <div id="workplace"/>
         <script>
+            //get uid's,wpid's, [orders?]
+            //sent uid (via SSE(uid)
+            
+            //в таблицу с юзерами добавить колонку статус (logged in/out)
+            //в таблицу евентов вносим все изменения по базе для онлайн юзеров
+            
+            //uid   |   event       |   data
+            //123   |   ordUpdate   |   {...}
+            //123   |   ordUpdate   |   {...}
+
             var sound = ss_soundbits('s1.mp3');
             //localStorage.removeItem('user_id');
             $(document).ajaxComplete(function () {

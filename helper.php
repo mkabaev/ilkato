@@ -55,7 +55,7 @@ require_once 'database.php';
 //}
 
 function getOrders($json_orders, $query_type) {
-    $db = new DB();
+    $db = new DB_delivery();
     $queryK = "SELECT "
             . "ti.id, "
             . "ti.courier_id, "
@@ -180,7 +180,7 @@ function getOrders($json_orders, $query_type) {
 }
 
 function getCouriers() {
-    $db = new DB();
+    $db = new DB_delivery();
     $query = "SELECT id, name FROM testform_courier limit 20";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
@@ -190,7 +190,7 @@ function getCouriers() {
 
 function getUsers() {
     $db = new DB();
-    $query = "SELECT id, username as name, group_id FROM auth_user limit 20";
+    $query = "SELECT id, Name as name, idWorkplace FROM employees";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -198,7 +198,7 @@ function getUsers() {
 }
 
 function getOrderProducts($order_id) {
-    $db = new DB();
+    $db = new DB_delivery();
     $query = 'SELECT tip.product_id,
         tip.count,
         tip.price,
@@ -215,8 +215,20 @@ function getOrderProducts($order_id) {
     return json_encode($rows, JSON_UNESCAPED_UNICODE);
 }
 
-function updateOrderStatus($id, $status_id) {
+function updateUserStatus($id, $isOnline) {
     $db = new DB();
+    $query = "UPDATE employees SET isOnline=:isOnline WHERE id=:id";  
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':isOnline', $isOnline);
+    $stmt->execute();
+    return 1;
+}
+
+function updateOrderStatus($id, $status_id) {
+    $db = new DB_delivery();
     $query = "UPDATE testform_issues SET status_id=:status_id WHERE id=:id";
     //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
     $stmt = $db->conn->prepare($query);
@@ -230,7 +242,7 @@ function updateOrderStatus($id, $status_id) {
 }
 
 function SetCourierToOrders($orders_json, $courier_id) {
-    $db = new DB();
+    $db = new DB_delivery();
 // date('Y-m-d H:i:s');
 
     $query = "UPDATE testform_issues SET status_id=:status_id, courier_id=:courier_id WHERE id=:order_id";
@@ -261,7 +273,7 @@ function SetCourierToOrders($orders_json, $courier_id) {
 }
 
 function SetOrderPosition($issue_id, $x, $y) {
-    $db = new DB();
+    $db = new DB_delivery();
     $upd_stmt = $db->conn->prepare("UPDATE module_kitchen SET x=$x, y=$y WHERE id_issue=$issue_id");
 //    $upd_stmt->bindParam(':id_issue', $id);
 //    $upd_stmt->bindParam(':x', $x);
@@ -277,7 +289,7 @@ function SetOrderPosition($issue_id, $x, $y) {
 }
 
 function SetOrderProducts($issue_id, $weightR, $weightP) {
-    $db = new DB();
+    $db = new DB_delivery();
 //1271	ВЕС ПИЦЦА
 //1272	ВЕС РОЛЛЫ count=1.69   price=794.3
 //1273	ВЕС ОБЩИЙ

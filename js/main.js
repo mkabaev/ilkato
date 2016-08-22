@@ -223,7 +223,7 @@ function doInit() {
 //        eventSource.close();
 //        alert('es closed');
 //    }
-    if (localStorage.user_id === undefined) {
+    if (localStorage.uid === undefined) {
         showSelectUserDialog();
         //CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
@@ -231,10 +231,10 @@ function doInit() {
         //clearStorage();
         //loadDataToStorage();
         switch (localStorage.wp_type) {
-            case '0':
+            case '2':
                 createWorkplace('O');
                 break
-            case '1':
+            case '3':
                 createWorkplace('K');
                 break
         }

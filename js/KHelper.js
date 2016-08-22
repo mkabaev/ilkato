@@ -9,9 +9,9 @@
 function afterSelUser(sender, id, name) {
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
     //localStorage.clear();
-    localStorage.wp_id = $(sender).attr("group_id");
-    localStorage.wp_type = $(sender).attr("group_id");
-    localStorage.user_id = id;
+    localStorage.wp_id = $(sender).attr("idWorkplace");
+    localStorage.wp_type = $(sender).attr("idWorkplace");
+    localStorage.uid = id;
     localStorage.user_name = name;
     doInit();
     //updateInterface_user();
@@ -385,12 +385,12 @@ function updateKInterface_SelPanel() {
 }
 
 function clearStorage() {
-    var user_id = localStorage.user_id;
+    var uid = localStorage.uid;
     var user_name = localStorage.user_name;
 
     localStorage.clear();
 
-    localStorage.user_id = user_id;
+    localStorage.uid = uid;
     localStorage.user_name = user_name;
     //updateInterface_user();
 }
