@@ -33,14 +33,21 @@
         <script>
             var sound = ss_soundbits('s1.mp3');
             //localStorage.removeItem('user_id');
+            $(document).ajaxComplete(function () {
+                $('#settings').fadeOut().fadeIn();
+            });
 
+            $('#settings').click(function () {
+                //console.log(eventSource);
+                //eventSource.close();
+                eventSource.removeEventListener('ordUpdate', afterOrdUpdate, false);
+            });
             //проверяем есть ли юзер. 
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
             //addEventListeners(); // with session id
             doInit();
             addEventListeners();
-
             //wp.
         </script>
         <!--
