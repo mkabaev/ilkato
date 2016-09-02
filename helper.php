@@ -77,25 +77,6 @@ function getOrders($json_orders, $query_type) {
             . "FROM testform_issues ti LEFT JOIN module_kitchen mk on mk.id_issue=ti.id left join testform_person tp on tp.id=ti.client_id LEFT JOIN testform_street ts ON tp.street_id=ts.id WHERE ti.status_id=" . STATUS_ID_TODO . " or ti.status_id=" . STATUS_ID_DONE . " or ti.status_id=" . STATUS_ID_DELIVERY . " limit 80";
 //select tp.client_id, ts.name AS street, tp.building, tp.flat, tp.entrance, tp.floor, tp.code from testform_person tp LEFT JOIN testform_street ts ON tp.street_id=ts.id WHERE tp.client_id=12692;    
 //$query = "SELECT ti.id, ti.courier_id, ti.`number`, ti.client_id, ti.comment Comment, ti.status_id, DATE_FORMAT(ti.order_time, '%H:%i') order_time, tc.phone, tc.cell, tc.comment clientComment FROM testform_issues ti LEFT JOIN testform_client tc ON ti.client_id=tc.id WHERE ti.date=:date and (ti.status_id=" . STATUS_ID_ORDER . " or ti.status_id=" . STATUS_ID_DELIVERY . " or ti.status_id=" . STATUS_ID_DONE . ") limit 30";
-    $queryC = "SELECT "
-            . "ti.id, "
-            . "ti.courier_id, "
-            . "ti.`number`, "
-            . "ti.status_id, "
-            . "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
-            . "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
-            . "DATE_FORMAT(mk.stopCoocking, '%H:%i') stop_time, "
-            . "mk.timestamp ts, "
-            . "mk.x, "
-            . "mk.y, "
-            . "ti.client_id, "
-            . "ts.name AS street, "
-            . "tp.building, "
-            . "tp.flat, "
-            . "tp.entrance, "
-            . "tp.floor, "
-            . "tp.code "
-            . "FROM testform_issues ti LEFT JOIN module_kitchen mk on mk.id_issue=ti.id left join testform_person tp on tp.id=ti.client_id LEFT JOIN testform_street ts ON tp.street_id=ts.id WHERE ti.status_id=" . STATUS_ID_DONE . " or ti.status_id=" . STATUS_ID_DELIVERY . " limit 80";
     switch ($query_type) {
         case "K":
             $query = $queryK;
@@ -153,8 +134,32 @@ function getOrders($json_orders, $query_type) {
     }
 
 
+//    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return json_encode($result_orders, JSON_UNESCAPED_UNICODE); //$orders
+}
 
-
+function getActiveOrders() {
+    //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
+    //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
+    $db = new DB();
+    $query = "SELECT "
+            . "o.id, "
+            . "o.`idClient`, "
+            . "o.`no`, "
+            . "o.`idPricingType`, "
+            . "o.`idStatus`, "
+            . "o.`idCreatedBy`, "
+            . "o.`createDate`, "
+            . "o.`price`, "
+            . "o.`timestamp` as ts "
+            . "FROM orders o WHERE o.`idStatus`=" . 1 . " or o.`idStatus`=" . 2 . " limit 100";
+    $query = "SELECT * from v_orders";
+    $stmt = $db->conn->prepare($query);
+    //$stmt->bindParam(':date', $date);
+    //$date = date('Y.m.d');
+    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
+    $stmt->execute();
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
 //    $query = 'SELECT tip.product_id,
 //        tip.count,
 //        tip.discount,
@@ -176,8 +181,18 @@ function getOrders($json_orders, $query_type) {
 //    //$date = '2015.12.18';
 //    $stmt->execute();
 //    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($result_orders, JSON_UNESCAPED_UNICODE); //$orders
-}
+    //echo $orders[1]['client'];
+//    echo '<pre>';
+//    var_dump( $orders);
+//    echo '</pre>';
+
+    foreach ($orders AS $key => $order) {
+        $orders[$key]['client'] = json_decode($order['client']);
+        $orders[$key]['products'] = json_decode($order['products']);
+    }
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    }
 
 function getCouriers() {
     $db = new DB_delivery();
@@ -217,7 +232,7 @@ function getOrderProducts($order_id) {
 
 function updateUserStatus($id, $isOnline) {
     $db = new DB();
-    $query = "UPDATE employees SET isOnline=:isOnline WHERE id=:id";  
+    $query = "UPDATE employees SET isOnline=:isOnline WHERE id=:id";
     //$query = "UPDATE employees SET isOnline=true WHERE id=3";
     //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
     $stmt = $db->conn->prepare($query);
@@ -314,9 +329,19 @@ function SetOrderProducts($issue_id, $weightR, $weightP) {
 }
 
 //checkdb();
-$action = $_POST["action"];
-//$action = $_GET["action"];
+$action = filter_input(INPUT_POST, 'action');
+//$actionG = filter_input(INPUT_GET, 'action');
+//if ($actionG = 'getUsers') {
+//    echo getUsers();
+//}
+
+
+
 switch ($action) {
+    case 'login':
+        updateUserStatus($_POST["uid"], true);
+        echo getActiveOrders();
+        break;
     case 'getKOrders':
         echo getOrders($_POST["json"], "K");
         break;

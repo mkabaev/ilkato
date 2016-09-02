@@ -217,12 +217,13 @@ function updateOrderViewer(id) {
     var order = getOrderFromLS(id);
     if (order === undefined) {
         // load from server
+        console.log('ord undef');
     } else {
+        //console.log('ordViewer updating ' + order.comment);
         $('#number').html(order.no);
-        $('#ordercomment').html('new commmen ' + order.id);
-
+        $('#ordercomment').html(order.comment);
         var itemsR = order.products.filter(function (row) {
-            return row.type === 'R';
+            return row.type === 1;
         });
         itemsR = itemsR.map(function (obj) {
             var newObj = {};
@@ -234,7 +235,7 @@ function updateOrderViewer(id) {
         });
 
         var itemsP = order.products.filter(function (row) {
-            return row.type === 'P';
+            return row.type === 2;
         });
         itemsP = itemsP.map(function (obj) {
             var newObj = {};
@@ -395,26 +396,11 @@ function clearStorage() {
     //updateInterface_user();
 }
 
-function loadDataToStorage() {
-    $.getJSON("./orderJSON.json", function (data) {
-        var items = [];
-        //alert(data.toString());
-        $.each(data, function (key, val) {
-            items.push("<li id='" + key + "'>" + val + "</li>");
-
-        });
-        localStorage.setItem('o124', data);
-//        $("<ul/>", {
-//            "class": "my-new-list",
-//            html: items.join("")
-//        }).appendTo("body");
-
+function setOrderstoLS(jsondata) {
+    var data = $.parseJSON(jsondata);
+    $.each(data, function (key, val) {
+        localStorage.setItem('o_' + val.id, JSON.stringify(val));
     });
-
-    var o123 = '{"id":123,"no":9,"comment":"Как для себя"}';
-    var o123_products = '[{"id":"10","type":"R","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","type":"R","name":"Ролл 4","count":"1","weight":"150"},{"id":"17","type":"P","name":"Пицца 2","count":"1","weight":"500"}]';
-    localStorage.setItem('o123', o123);
-    localStorage.setItem('o123_products', o123_products);
 }
 
 $(document).ready(function () {

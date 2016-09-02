@@ -1,14 +1,5 @@
 /* global eventSource, afterSelUser */
 
-//1	Принят
-//2	Готовить
-//3	Готовится
-//4	Приготовлен
-//5	Доставка
-//6	В пути
-//7	Доставлен
-//8	Отказ
-
 function WorkPlace(name) {
     this.name = name;
     this._speed = 0;
@@ -69,7 +60,7 @@ function showSelectUserDialog() {
         cache: false,
         success: function (jsondata) {
             //console.log('dialog ' + id + ' found on page. items');
-            console.log('server data: ' + jsondata);
+            console.log('users loaded from server: ' + jsondata);
             $('#workplace').removeClass("ui-state-error");
             $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
             dlg.dialog('open');
@@ -219,17 +210,39 @@ function createUL(id, _class, items) {
 }
 
 function doInit() {
-//    if (eventSource!==undefined) {
-//        eventSource.close();
-//        alert('es closed');
-//    }
     if (localStorage.uid === undefined) {
         showSelectUserDialog();
-        //CreateDialogWithItems('Авторизация', null).dialog('open'); //show auth dialog
     } else {
+        //set USER ONLINE on server and then get active orders
+        $.ajax({
+            type: "POST",
+            data: "action=login&uid=" + localStorage.uid,
+            url: "helper.php?",
+            cache: false,
+            success: function (jsondata) {
+                //console.log('user ' + localStorage.user_name + ' set status online');
+                //console.log('active orders: ' + jsondata);
+                $(".ordrow").removeClass("ui-state-error");
+                // load otrders?
+                setOrderstoLS(jsondata);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log("status: " + xhr.status + " | " + thrownError);
+                $(".ordrow").addClass("ui-state-error");
+                //$("body").addClass("ui-state-error");
+//            alert(xhr.status);
+//            alert(thrownError);
+            }
+        });
+
         updateInterface_user();
         //clearStorage();
         //loadDataToStorage();
+
+
+
+
+
         switch (localStorage.wp_type) {
             case '2':
                 createWorkplace('O');
@@ -239,23 +252,6 @@ function doInit() {
                 break
         }
     }
-//    $.ajax({
-//        type: "POST",
-//        data: "action=getKOrders&json=" + json_orders,
-//        url: "helper.php",
-//        cache: false,
-//        success: function (jsondata) {
-//            $(".ordrow").removeClass("ui-state-error");
-//            ProcessOrders(jsondata);    //append(jsondata); 
-//        },
-//        error: function (xhr, ajaxOptions, thrownError) {
-//            console.log("status: " + xhr.status + " | " + thrownError);
-//            $(".ordrow").addClass("ui-state-error");
-//            //$("body").addClass("ui-state-error");
-////            alert(xhr.status);
-////            alert(thrownError);
-//        }
-//    });
 }
 
 function CreateTable(id, _class, headerItems, tableItems, footerItems) {
@@ -390,6 +386,29 @@ function getOrderFromLS(id) {
     return order;
 }
 
+function sendRequest(){
+            $.ajax({
+            type: "POST",
+            data: "action=login&uid=" + localStorage.uid,
+            url: "helper.php?",
+            cache: false,
+            success: function (jsondata) {
+                //console.log('user ' + localStorage.user_name + ' set status online');
+                //console.log('active orders: ' + jsondata);
+                $(".ordrow").removeClass("ui-state-error");
+                // load otrders?
+                setOrderstoLS(jsondata);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log("status: " + xhr.status + " | " + thrownError);
+                $(".ordrow").addClass("ui-state-error");
+                //$("body").addClass("ui-state-error");
+//            alert(xhr.status);
+//            alert(thrownError);
+            }
+        });
+
+}
 //DYNAMIC CSS and JS load
 function loadjscssfile(filename, filetype) {
     if (filetype == "js") { //if filename is a external JavaScript file

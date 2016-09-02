@@ -33,10 +33,10 @@
         <script>
             //get uid's,wpid's, [orders?]
             //sent uid (via SSE(uid)
-            
+
             //в таблицу с юзерами добавить колонку статус (logged in/out)
             //в таблицу евентов вносим все изменения по базе для онлайн юзеров
-            
+
             //uid   |   event       |   data
             //123   |   ordUpdate   |   {...}
             //123   |   ordUpdate   |   {...}
@@ -58,6 +58,11 @@
             //addEventListeners(); // with session id
             doInit();
             addEventListeners();
+            //    if (eventSource!==undefined) {
+//        eventSource.close();
+//        alert('es closed');
+//    }
+
             //wp.
         </script>
         <!--

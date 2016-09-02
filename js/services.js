@@ -15,7 +15,7 @@ function addEventListeners() {
         eventSource.close();
     }
     if (typeof (EventSource) !== "undefined") {
-        eventSource = new EventSource("events.php?uid="+localStorage.uid);
+        eventSource = new EventSource("events.php?uid=" + localStorage.uid);
 //                source.onmessage = function (event) {
 //                    document.getElementById("result").innerHTML += event.data + "<br>";
 //                };
@@ -39,30 +39,32 @@ function addEventListeners() {
             document.getElementById("result").innerHTML += "ERR:" + e.data + "<br>";
         }, false);
 
-        eventSource.addEventListener('ordUpdate', afterOrdUpdate, false);
+        eventSource.addEventListener('ordUpdate', ordUpdate, false);
 
     } else {
         alert("Sorry, your browser does not support server-sent events..., Звоните Максимке");
     }
 }
-
-function afterOrdUpdate(e) {
+function ordUpdate(e) {
+    //console.log('ordUpdate fired:' + e.data);
+    setOrderstoLS(e.data);
+//    $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
+//        $.each(data, function (key, val) {
+//            localStorage.setItem('o_' + val.id, JSON.stringify(val));
+//        });
+//    });
+    afterOrdUpdate();
+}
+function afterOrdUpdate() {
     //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
     //localStorage.products_ts = e.data;
 
     //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
     //localStorage.products_ts = e.data;
-    console.log(e.data);
-    $.getJSON('http://localhost/sxl/orderJSON.json', function (data) {
-        $.each(data, function (key, val) {
-            localStorage.setItem('o_' + val.id, JSON.stringify(val));
-        });
-    });
-    if (localStorage.wp_type === '1') {
+    if (localStorage.wp_type === '3') {
         updateOrderViewer(localStorage.activeOrder);
         updateKInterface_SelPanel();
     }
-
     //sound.playclip();
 }
 
