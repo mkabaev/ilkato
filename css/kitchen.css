@@ -35,7 +35,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
     width: 600px;
 }
 
-#o_sortable1, #o_sortable3{
+#o_ordersPanel, #o_sortable3{
     border: 1px solid #eee;
     width: 142px;
     min-height: 20px;
@@ -45,7 +45,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
     float: left;
     margin-right: 10px;
 }
-#o_sortable1 li, #o_sortable2 li, #o_sortable3 li {
+#o_ordersPanel li, #o_sortable2 li, #o_sortable3 li {
     margin: 0 5px 5px 5px;
     padding: 5px;
     font-size: 1.2em;

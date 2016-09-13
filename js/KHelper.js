@@ -272,31 +272,19 @@ function createWorkplace(type) {
     //console.log(document.attributes);
 
     switch (type) {
-        case 'O':
-            var oitems = getOrdersFromLS();
-            oitems = oitems.map(function (obj) {
-                var newObj = {};
-                newObj.id = obj.id;
-                newObj.name = obj.no;
-                newObj.ts = obj.ts;
-                return newObj;
-            });
+        case '2'://O
+
             //console.log(JSON.stringify(oitems));
 
             //$.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
 
             var ulOrders = $('<ul/>', {
-                id: 'o_sortable1',
+                id: 'o_ordersPanel',
                 class: 'connectedSortable',
                 //attr: {'title': 'caption'}
             }).appendTo($('#workplace'));
-            ulOrders.html(ArrayToLiItems(oitems));
-            ulOrders.children('li').addClass('ui-state-default');
-            ulOrders.children('li').click(function () {
-                //alert($(this).attr('item_id'));
-                createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
 
-            });
+            updateOInterface_ordersPanel();
 
             var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
             var ulRows = createUL("o_rows", undefined, ritems).appendTo('#workplace');
@@ -307,28 +295,27 @@ function createWorkplace(type) {
 //'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
 //$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
 
-            $(function () {
-                $("#o_sortable1").sortable({
-                    connectWith: ".connectedSortable",
-                    //axis: "y",
-                }).disableSelection();
+            $("#o_ordersPanel").sortable({
+                connectWith: ".connectedSortable",
+                //axis: "y",
+            }).disableSelection();
 
-                $("#o_rows").sortable({
-                    //connectWith: ".connectedSortable",
-                    axis: "y",
-                }).disableSelection();
+            $("#o_rows").sortable({
+                //connectWith: ".connectedSortable",
+                axis: "y",
+            }).disableSelection();
 
-                $("#o_sortable3").sortable({
-                    connectWith: ".connectedSortable",
-                }).disableSelection();
+            $("#o_sortable3").sortable({
+                connectWith: ".connectedSortable",
+            }).disableSelection();
 
-                $(".o_orderlist").sortable({
-                    connectWith: ".connectedSortable",
-                    //axis: "y",
-                }).disableSelection();
-            });
+            $(".o_orderlist").sortable({
+                connectWith: ".connectedSortable",
+                //axis: "y",
+            }).disableSelection();
+            
             break;
-        case 'K':
+        case '3'://K
             //var tableItems = $.parseJSON(localStorage.products);
             var ov = createOrderViewer('ordViewer', 'orderViewer');
             ov.appendTo($('#workplace')).fadeIn(1000);
@@ -385,6 +372,25 @@ function updateKInterface_SelPanel() {
     $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
 }
 
+function updateOInterface_ordersPanel() {
+    var oitems = getOrdersFromLS();
+    oitems = oitems.map(function (obj) {
+        var newObj = {};
+        newObj.id = obj.id;
+        newObj.name = obj.no;
+//                newObj.ts = obj.ts;
+        newObj.price = obj.price;
+        return newObj;
+    });
+    var ulOrders = $('#o_ordersPanel');
+    ulOrders.html(ArrayToLiItems(oitems));
+    ulOrders.children('li').addClass('ui-state-default');
+    ulOrders.children('li').click(function () {
+        //alert($(this).attr('item_id'));
+        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+    });
+}
+
 function clearStorage() {
     var uid = localStorage.uid;
     var user_name = localStorage.user_name;
@@ -396,10 +402,24 @@ function clearStorage() {
     //updateInterface_user();
 }
 
-function setOrderstoLS(jsondata) {
-    var data = $.parseJSON(jsondata);
+//copy data to LS and update interface if needed
+function setOrderstoLS(data) {
     $.each(data, function (key, val) {
+        //console.log(val.id);
         localStorage.setItem('o_' + val.id, JSON.stringify(val));
+
+        switch (localStorage.wp_type) {
+            case '1'://adm
+                break;
+            case '2'://operator
+                break;
+            case '3'://kitch
+                if (val.id === localStorage.activeOrder) {
+                    updateOrderViewer(localStorage.activeOrder);
+                    updateKInterface_SelPanel();
+                }
+                break;
+        }
     });
 }
 

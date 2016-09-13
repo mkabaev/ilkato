@@ -57,7 +57,6 @@
             //если нет, то авторизуемся
             //addEventListeners(); // with session id
             doInit();
-            addEventListeners();
             //    if (eventSource!==undefined) {
 //        eventSource.close();
 //        alert('es closed');

@@ -216,15 +216,32 @@ function doInit() {
         //set USER ONLINE on server and then get active orders
         $.ajax({
             type: "POST",
-            data: "action=login&uid=" + localStorage.uid,
+            data: "action=login&uid=" + localStorage.uid + "&wid=" + localStorage.wp_id+ "&old_sid=" + localStorage.id_session,
             url: "helper.php?",
             cache: false,
             success: function (jsondata) {
                 //console.log('user ' + localStorage.user_name + ' set status online');
-                //console.log('active orders: ' + jsondata);
+
+//console.log('data: ' + jsondata);
                 $(".ordrow").removeClass("ui-state-error");
-                // load otrders?
-                setOrderstoLS(jsondata);
+                // remove orders from LS
+                $.each(localStorage, function (key, value) {
+                    if (key.startsWith('o_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                //save actual orders to LS
+                var data = $.parseJSON(jsondata);
+                localStorage.id_session = data.id_session;
+                setOrderstoLS(data.orders);
+
+                updateInterface_user();
+                //clearStorage();
+                //loadDataToStorage();
+
+                createWorkplace(localStorage.wp_type);
+
+                addEventListeners();
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log("status: " + xhr.status + " | " + thrownError);
@@ -235,22 +252,6 @@ function doInit() {
             }
         });
 
-        updateInterface_user();
-        //clearStorage();
-        //loadDataToStorage();
-
-
-
-
-
-        switch (localStorage.wp_type) {
-            case '2':
-                createWorkplace('O');
-                break
-            case '3':
-                createWorkplace('K');
-                break
-        }
     }
 }
 
@@ -386,27 +387,27 @@ function getOrderFromLS(id) {
     return order;
 }
 
-function sendRequest(){
-            $.ajax({
-            type: "POST",
-            data: "action=login&uid=" + localStorage.uid,
-            url: "helper.php?",
-            cache: false,
-            success: function (jsondata) {
-                //console.log('user ' + localStorage.user_name + ' set status online');
-                //console.log('active orders: ' + jsondata);
-                $(".ordrow").removeClass("ui-state-error");
-                // load otrders?
-                setOrderstoLS(jsondata);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log("status: " + xhr.status + " | " + thrownError);
-                $(".ordrow").addClass("ui-state-error");
-                //$("body").addClass("ui-state-error");
+function sendRequest() {
+    $.ajax({
+        type: "POST",
+        data: "action=login&uid=" + localStorage.uid,
+        url: "helper.php?",
+        cache: false,
+        success: function (jsondata) {
+            //console.log('user ' + localStorage.user_name + ' set status online');
+            //console.log('active orders: ' + jsondata);
+            $(".ordrow").removeClass("ui-state-error");
+            // load otrders?
+            setOrderstoLS($.parseJSON(jsondata));
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log("status: " + xhr.status + " | " + thrownError);
+            $(".ordrow").addClass("ui-state-error");
+            //$("body").addClass("ui-state-error");
 //            alert(xhr.status);
 //            alert(thrownError);
-            }
-        });
+        }
+    });
 
 }
 //DYNAMIC CSS and JS load

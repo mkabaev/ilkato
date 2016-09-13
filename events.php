@@ -4,19 +4,22 @@
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header('Connection: keep-alive'); /////
-$uid = isset($_GET['uid']) ? (int) $_GET['uid'] : null;
-
+$id_session = filter_input(INPUT_GET, 'id_session'); // isset($_GET['uid']) ? (int) $_GET['uid'] : null;
 // установить в базе статус онлайн для этого юзера
 require_once 'helper.php';
 //updateUserStatus($uid, true);
 
-$i = 0;
+//$i = 0;
 
-while ($i < 3) {
-    $i = $i + 1;
+while (true) { //$i < 3
+    //$i = $i + 1;
     echo "event: ordUpdate" . PHP_EOL;
     // TODO: send changed orders only
-    echo "data: " . getActiveOrders() . "\n\n";
+    $updates = getSessionUpdates($id_session);
+    $json = $updates['data'];
+    if (count($updates) > 0) {
+        echo "data: " . "[" . $updates[0]['data'] . "]" . "\n\n";
+    }
     //echo "data: msg\n\n";
 //echo PHP_EOL;
     ob_end_flush();

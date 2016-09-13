@@ -15,7 +15,7 @@ function addEventListeners() {
         eventSource.close();
     }
     if (typeof (EventSource) !== "undefined") {
-        eventSource = new EventSource("events.php?uid=" + localStorage.uid);
+        eventSource = new EventSource("events.php?id_session=" + localStorage.id_session);
 //                source.onmessage = function (event) {
 //                    document.getElementById("result").innerHTML += event.data + "<br>";
 //                };
@@ -46,14 +46,14 @@ function addEventListeners() {
     }
 }
 function ordUpdate(e) {
-    //console.log('ordUpdate fired:' + e.data);
-    setOrderstoLS(e.data);
+    console.log('ordUpdate fired:' + e.data);
+    setOrderstoLS($.parseJSON(e.data));
+    afterOrdUpdate();
 //    $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
 //        $.each(data, function (key, val) {
 //            localStorage.setItem('o_' + val.id, JSON.stringify(val));
 //        });
 //    });
-    afterOrdUpdate();
 }
 function afterOrdUpdate() {
     //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
@@ -61,10 +61,16 @@ function afterOrdUpdate() {
 
     //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
     //localStorage.products_ts = e.data;
-    if (localStorage.wp_type === '3') {
-        updateOrderViewer(localStorage.activeOrder);
-        updateKInterface_SelPanel();
+    switch (localStorage.wp_type) {
+        case '2':
+            updateOInterface_ordersPanel();
+            break;
+        case '3':
+            updateOrderViewer(localStorage.activeOrder);
+            updateKInterface_SelPanel();
+            break;
     }
+
     //sound.playclip();
 }
 
