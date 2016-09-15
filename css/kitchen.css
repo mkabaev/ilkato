@@ -50,13 +50,13 @@ tr:nth-child(even) {background-color: #f2f2f2}
     padding: 5px;
     font-size: 1.2em;
     width: 120px;
-    height: 20px;
+    height: 64px;
 }
 
 .o_orderlist{
     border: 1px solid red;
-    min-height: 32px;
-    height: 32px;
+    min-height: 64px;
+    height: 84px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
@@ -65,6 +65,16 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 .o_orderlist li{
     display: inline;
+}
+
+.o_price{
+    font-size: 0.5em;
+    position: relative;
+    left:60px;
+    top:-26px;
+}
+.o_price:after{
+    content: " руб";
 }
 
 /*KITCHEN*/
@@ -90,6 +100,20 @@ tr:nth-child(even) {background-color: #f2f2f2}
 .selItems { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 .selItems li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
 .ui-selectable-helper{display:none;}
+
+div.imgRoll {
+    /*   background-image:url(../bg_japan.png);*/
+    content:url(../bg_japan.png);
+    width:15px;
+    height:15px;
+}​
+
+div.imgPizza {
+    /*   background-image:url(../bg_japan.png);*/
+    content:url(../bg_italian.png);
+    width:15px;
+    height:15px;
+}​
 
 .orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
 #userinfo{position: absolute; top:0; right: 30px;}

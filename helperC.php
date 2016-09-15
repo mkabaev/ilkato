@@ -22,15 +22,6 @@ function getCouriers() {
     return json_encode($items, JSON_UNESCAPED_UNICODE);
 }
 
-function getUsers() {
-    $db = new DB();
-    $query = "SELECT id, Name as name, idWorkplace FROM employees";
-    $stmt = $db->conn->prepare($query);
-    $stmt->execute();
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($items, JSON_UNESCAPED_UNICODE);
-}
-
 function DBLog($data) {
     $db = new DB();
     $query = "INSERT into log (`data`, data2) VALUES (:d,:d2)";

@@ -19,6 +19,7 @@ function afterSelUser(sender, id, name) {
 
 function afterSelTest(id, name) {
     //var ov=$('#ordViewer');
+    //stopTimer();
     updateOrderViewer(id);
 }
 
@@ -223,7 +224,7 @@ function updateOrderViewer(id) {
         $('#number').html(order.no);
         $('#ordercomment').html(order.comment);
         var itemsR = order.products.filter(function (row) {
-            return row.type === 1;
+            return row.idType === 1;
         });
         itemsR = itemsR.map(function (obj) {
             var newObj = {};
@@ -235,7 +236,7 @@ function updateOrderViewer(id) {
         });
 
         var itemsP = order.products.filter(function (row) {
-            return row.type === 2;
+            return row.idType === 2;
         });
         itemsP = itemsP.map(function (obj) {
             var newObj = {};
@@ -313,7 +314,7 @@ function createWorkplace(type) {
                 connectWith: ".connectedSortable",
                 //axis: "y",
             }).disableSelection();
-            
+
             break;
         case '3'://K
             //var tableItems = $.parseJSON(localStorage.products);
@@ -340,11 +341,16 @@ function createWorkplace(type) {
 }
 
 function updateKInterface_SelPanel() {
-    var orders = getOrdersFromLS();
+
+    // загружаем из LS заказы со статусом Готовить
+    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+        return currentValue.idStatus == 2;
+    });
+
     //orders.forEach(function (order, index, array) {
     //});
 
-    var smallOrders = orders.map(function (obj) {
+    var mappedOrders = orders.map(function (obj) {
         var newObj = {};
         newObj.id = obj.id;
         newObj.name = obj.no;
@@ -354,7 +360,31 @@ function updateKInterface_SelPanel() {
     });
     //console.log('items: '+JSON.stringify(smallOrders));
     var list = $('#p1 ul');
-    list.html(ArrayToLiItems(smallOrders));
+    var items = ArrayToLiItems(mappedOrders);
+
+    var li;
+    $(orders).each(function (indx, order) {
+        var rCount = 0;
+        var pCount = 0;
+        if (order.products !== null) {
+            rCount = order.products.filter(function (currentValue, index, arr) {
+                return currentValue.idType == 1;
+            }).length;
+
+            pCount = order.products.filter(function (currentValue, index, arr) {
+                return currentValue.idType == 2;
+            }).length;
+        }
+
+        li = $(items[indx]);
+//        console.log('R:'+rCount);
+//        console.log('P:'+pCount);
+        li.html(order.no); //'<div class="imgRoll"/>'
+        items[indx] = li;
+    });
+
+
+    list.html(items);
     $(list.children('li')).addClass('ui-widget-content');
 
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
@@ -373,8 +403,12 @@ function updateKInterface_SelPanel() {
 }
 
 function updateOInterface_ordersPanel() {
-    var oitems = getOrdersFromLS();
-    oitems = oitems.map(function (obj) {
+    // загружаем из LS заказы со статусом Готовить
+    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+        return currentValue.idStatus == 1;
+    });
+
+    var mappedOrders = orders.map(function (obj) {
         var newObj = {};
         newObj.id = obj.id;
         newObj.name = obj.no;
@@ -382,10 +416,36 @@ function updateOInterface_ordersPanel() {
         newObj.price = obj.price;
         return newObj;
     });
-    var ulOrders = $('#o_ordersPanel');
-    ulOrders.html(ArrayToLiItems(oitems));
-    ulOrders.children('li').addClass('ui-state-default');
-    ulOrders.children('li').click(function () {
+
+    var list = $('#o_ordersPanel');
+    var items = ArrayToLiItems(mappedOrders);
+
+    var li;
+    $(orders).each(function (indx, order) {
+        var rCount = 0;
+        var pCount = 0;
+        if (order.products !== null) {
+            rCount = order.products.filter(function (currentValue, index, arr) {
+                return currentValue.idType == 1;
+            }).length;
+
+            pCount = order.products.filter(function (currentValue, index, arr) {
+                return currentValue.idType == 2;
+            }).length;
+        }
+
+        li = $(items[indx]);
+//        console.log('R:'+rCount);
+//        console.log('P:'+pCount);
+        li.html(order.no+'<br/><div class=o_price>'+order.price+'</div>'); //'<div class="imgRoll"/>'
+        items[indx] = li;
+    });
+    list.html(items);
+
+
+
+    list.children('li').addClass('ui-state-default');
+    list.children('li').click(function () {
         //alert($(this).attr('item_id'));
         createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
     });

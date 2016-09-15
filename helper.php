@@ -137,49 +137,49 @@ function getSessionUpdates($id_session) {
     return $updates;
 }
 
-function getCouriers() {
-    $db = new DB_delivery();
-    $query = "SELECT id, name FROM testform_courier limit 20";
-    $stmt = $db->conn->prepare($query);
-    $stmt->execute();
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($items, JSON_UNESCAPED_UNICODE);
-}
-
 function getUsers() {
     $db = new DB();
-    $query = "SELECT id, Name as name, idWorkplace FROM employees";
+    $query = "SELECT idPerson, Name as name, idWorkplace FROM employees";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return json_encode($items, JSON_UNESCAPED_UNICODE);
 }
 
-function getOrderProducts($order_id) {
-    $db = new DB_delivery();
-    $query = 'SELECT tip.product_id,
-        tip.count,
-        tip.price,
-        tip.comment,
-        tip.income_date_time,
-        tp.name,
-        tp.comment ProductComment,
-        tp.picture_id FROM testform_issue_products tip LEFT JOIN testform_menu_products tp ON tip.product_id=tp.id WHERE tip.issue_id=:order_id';
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':order_id', $order_id);
-    //$date = '2015.12.18';
-    $stmt->execute();
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($rows, JSON_UNESCAPED_UNICODE);
-}
+//function getCouriers() {
+//    $db = new DB_delivery();
+//    $query = "SELECT id, name FROM testform_courier limit 20";
+//    $stmt = $db->conn->prepare($query);
+//    $stmt->execute();
+//    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    return json_encode($items, JSON_UNESCAPED_UNICODE);
+//}
 
-function updateUserStatus($id, $isOnline) {
+//function getOrderProducts($order_id) {
+//    $db = new DB_delivery();
+//    $query = 'SELECT tip.product_id,
+//        tip.count,
+//        tip.price,
+//        tip.comment,
+//        tip.income_date_time,
+//        tp.name,
+//        tp.comment ProductComment,
+//        tp.picture_id FROM testform_issue_products tip LEFT JOIN testform_menu_products tp ON tip.product_id=tp.id WHERE tip.issue_id=:order_id';
+//    $stmt = $db->conn->prepare($query);
+//    $stmt->bindParam(':order_id', $order_id);
+//    //$date = '2015.12.18';
+//    $stmt->execute();
+//    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    return json_encode($rows, JSON_UNESCAPED_UNICODE);
+//}
+
+function updateUserStatus($idPerson, $isOnline) {
     $db = new DB();
-    $query = "UPDATE employees SET isOnline=:isOnline WHERE id=:id";
+    $query = "UPDATE employees SET isOnline=:isOnline WHERE idPerson=:idPerson";
     //$query = "UPDATE employees SET isOnline=true WHERE id=3";
     //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
     $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':idPerson', $idPerson);
     $stmt->bindParam(':isOnline', $isOnline);
     $stmt->execute();
     return 1;
@@ -203,100 +203,98 @@ function registerNewSession($uid, $wid) {
     return $db->conn->lastInsertId();
 }
 
-function updateOrderStatus($id, $status_id) {
-    $db = new DB_delivery();
-    $query = "UPDATE testform_issues SET status_id=:status_id WHERE id=:id";
-    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':status_id', $status_id);
-    //$id = '2015.12.18';
-    $stmt->execute();
-    //$db->conn->query("UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id");
-    //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
-}
-
-function SetCourierToOrders($orders_json, $courier_id) {
-    $db = new DB_delivery();
-// date('Y-m-d H:i:s');
-
-    $query = "UPDATE testform_issues SET status_id=:status_id, courier_id=:courier_id WHERE id=:order_id";
-    $stmt = $db->conn->prepare($query);
-    $status_id = STATUS_ID_DELIVERY;
-    $order_id = NULL;
-    $stmt->bindParam(':status_id', $status_id);
-    $stmt->bindParam(':courier_id', $courier_id);
-    $stmt->bindParam(':order_id', $order_id);
+//function updateOrderStatus($id, $status_id) {
+//    $db = new DB_delivery();
+//    $query = "UPDATE testform_issues SET status_id=:status_id WHERE id=:id";
+//    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+//    $stmt = $db->conn->prepare($query);
+//    $stmt->bindParam(':id', $id);
+//    $stmt->bindParam(':status_id', $status_id);
 //    //$id = '2015.12.18';
-
-    $array = json_decode($orders_json, true);
-    $ar_timestamps = array();
-    foreach ($array as $value) {
-        $order_id = $value;
-        $stmt->execute();
-
-        $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$order_id");
-        $sel_stmt->execute();
-        $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
-        $ar_timestamps[$order_id] = $res;
-    }
-    $db->conn->query("call RecalcOrdersPosition()");
-//$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-    return json_encode($ar_timestamps, JSON_UNESCAPED_UNICODE);
-}
-
-function SetOrderPosition($issue_id, $x, $y) {
-    $db = new DB_delivery();
-    $upd_stmt = $db->conn->prepare("UPDATE module_kitchen SET x=$x, y=$y WHERE id_issue=$issue_id");
-//    $upd_stmt->bindParam(':id_issue', $id);
-//    $upd_stmt->bindParam(':x', $x);
-//    $upd_stmt->bindParam(':y', $y);
-    $upd_stmt->execute();
-
-    $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$issue_id");
-    $sel_stmt->execute();
-
-    $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
-    //$res['timestamp']
-    return $res; //json_encode($rows, JSON_UNESCAPED_UNICODE);
-}
-
-function SetOrderProducts($issue_id, $weightR, $weightP) {
-    $db = new DB_delivery();
-//1271	ВЕС ПИЦЦА
-//1272	ВЕС РОЛЛЫ count=1.69   price=794.3
-//1273	ВЕС ОБЩИЙ
-    //CALL InsertOrUpdateProduct (34847,1272,'12123','3121');
-    if ($weightR > 0) {
-        $sel_stmt = $db->conn->prepare("SELECT price FROM testform_menu_products WHERE id=1272");
-        $sel_stmt->execute();
-        $priceR = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
-        $totalR = $weightR * $priceR;
-        $upd_stmt = $db->conn->query("CALL InsertOrUpdateProduct ($issue_id,1272,$weightR,$totalR)");
-        $upd_stmt->execute();
-    }
-    if ($weightP > 0) {
-        $sel_stmt = $db->conn->prepare("SELECT price FROM testform_menu_products WHERE id=1271");
-        $sel_stmt->execute();
-        $priceP = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
-        $totalP = $weightP * $priceP;
-        $upd_stmt = $db->conn->query("CALL InsertOrUpdateProduct ($issue_id,1271,$weightP,$totalP)");
-        $upd_stmt->execute();
-    }
-    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
-}
-
-//checkdb();
-$action = filter_input(INPUT_POST, 'action');
-//$actionG = filter_input(INPUT_GET, 'action');
-//if ($actionG = 'getUsers') {
-//    echo getUsers();
+//    $stmt->execute();
+//    //$db->conn->query("UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id");
+//    //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
 //}
 
+//function SetCourierToOrders($orders_json, $courier_id) {
+//    $db = new DB_delivery();
+// date('Y-m-d H:i:s');
 
+//    $query = "UPDATE testform_issues SET status_id=:status_id, courier_id=:courier_id WHERE id=:order_id";
+//    $stmt = $db->conn->prepare($query);
+//    $status_id = STATUS_ID_DELIVERY;
+//    $order_id = NULL;
+//    $stmt->bindParam(':status_id', $status_id);
+//    $stmt->bindParam(':courier_id', $courier_id);
+//    $stmt->bindParam(':order_id', $order_id);
+////    //$id = '2015.12.18';
+
+//    $array = json_decode($orders_json, true);
+//    $ar_timestamps = array();
+//    foreach ($array as $value) {
+//        $order_id = $value;
+//        $stmt->execute();
+
+//        $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$order_id");
+//        $sel_stmt->execute();
+//        $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
+//        $ar_timestamps[$order_id] = $res;
+//    }
+//    $db->conn->query("call RecalcOrdersPosition()");
+////$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+//    return json_encode($ar_timestamps, JSON_UNESCAPED_UNICODE);
+//}
+
+//function SetOrderPosition($issue_id, $x, $y) {
+//   $db = new DB_delivery();
+//    $upd_stmt = $db->conn->prepare("UPDATE module_kitchen SET x=$x, y=$y WHERE id_issue=$issue_id");
+////    $upd_stmt->bindParam(':id_issue', $id);
+////    $upd_stmt->bindParam(':x', $x);
+////    $upd_stmt->bindParam(':y', $y);
+//    $upd_stmt->execute();
+
+//    $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$issue_id");
+//    $sel_stmt->execute();
+
+//    $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
+//    //$res['timestamp']
+//    return $res; //json_encode($rows, JSON_UNESCAPED_UNICODE);
+//}
+
+//function SetOrderProducts($issue_id, $weightR, $weightP) {
+//    $db = new DB_delivery();
+////1271	ВЕС ПИЦЦА
+////1272	ВЕС РОЛЛЫ count=1.69   price=794.3
+////1273	ВЕС ОБЩИЙ
+//    //CALL InsertOrUpdateProduct (34847,1272,'12123','3121');
+//    if ($weightR > 0) {
+//        $sel_stmt = $db->conn->prepare("SELECT price FROM testform_menu_products WHERE id=1272");
+//        $sel_stmt->execute();
+//        $priceR = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
+//        $totalR = $weightR * $priceR;
+//        $upd_stmt = $db->conn->query("CALL InsertOrUpdateProduct ($issue_id,1272,$weightR,$totalR)");
+//        $upd_stmt->execute();
+//    }
+//    if ($weightP > 0) {
+//        $sel_stmt = $db->conn->prepare("SELECT price FROM testform_menu_products WHERE id=1271");
+//        $sel_stmt->execute();
+//        $priceP = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
+//        $totalP = $weightP * $priceP;
+//        $upd_stmt = $db->conn->query("CALL InsertOrUpdateProduct ($issue_id,1271,$weightP,$totalP)");
+//        $upd_stmt->execute();
+//    }
+//    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
+//}
+
+////checkdb();
+$action = filter_input(INPUT_POST, 'action');
+////$actionG = filter_input(INPUT_GET, 'action');
+////if ($actionG = 'getUsers') {
+////    echo getUsers();
+////}
 
 switch ($action) {
     case 'login':
