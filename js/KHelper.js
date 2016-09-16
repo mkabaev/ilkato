@@ -284,6 +284,14 @@ function createWorkplace(type) {
                 class: 'connectedSortable',
                 //attr: {'title': 'caption'}
             }).appendTo($('#workplace'));
+            
+            var pnlActiveOrders = $('<div/>', {
+                //id: 'o_ordersPanel',
+                class: 'o_ordersPanel',
+                //attr: {'title': 'caption'}
+            });
+            pnlActiveOrders.append(CreateGroupPanel());
+            pnlActiveOrders.appendTo($('#workplace'))
 
             updateOInterface_ordersPanel();
 
@@ -437,7 +445,9 @@ function updateOInterface_ordersPanel() {
         li = $(items[indx]);
 //        console.log('R:'+rCount);
 //        console.log('P:'+pCount);
-        li.html(order.no+'<br/><div class=o_price>'+order.price+'</div>'); //'<div class="imgRoll"/>'
+
+        li.html('<div class="order">'+order.no+'<br/><div class=o_price>'+order.price+'</div></div>'); //'<div class="imgRoll"/>'
+        li.html('<div class="order">asdasd d</div>'); //'<div class="imgRoll"/>'
         items[indx] = li;
     });
     list.html(items);

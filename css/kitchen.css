@@ -1,7 +1,7 @@
 /** { margin: 0; padding: 0; }
 p { padding: 10px; }*/
 *{font-family: sans-serif; margin: 0; padding: 0; color:#494437;}
-/*div, li{border:1px dotted #d34d17}*/
+div, li{border:1px dotted #d34d17}
 table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
@@ -16,6 +16,15 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 
 /*OPERATOR*/
+#o_ordersPanel{
+    border: 1px solid #eee;
+    width: 600px;
+    min-height: 200px;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+}
 
 #o_rows{
     border: 1px solid #eee;
@@ -35,10 +44,11 @@ tr:nth-child(even) {background-color: #f2f2f2}
     width: 600px;
 }
 
+
 #o_ordersPanel, #o_sortable3{
     border: 1px solid #eee;
     width: 142px;
-    min-height: 20px;
+    min-height: 64px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
@@ -56,7 +66,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
 .o_orderlist{
     border: 1px solid red;
     min-height: 64px;
-    height: 84px;
+    height: 64px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
@@ -65,6 +75,11 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 .o_orderlist li{
     display: inline;
+    height: 60px;
+    width: 60px;
+    float: top;
+    min-height: 60px;
+    line-height: 60px;
 }
 
 .o_price{

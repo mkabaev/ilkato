@@ -352,11 +352,11 @@ function ArrayToLiItems(items) {
     return _items;
 }
 
-function MakePanelHTML(panel_id, row) {
+function CreateGroupPanel() {
     var divPanel = $('<div/>', {
-        id: panel_id,
-        class: 'ordrow ui-state-active',
-        attr: {'row': row, 'bla': 'blllaa'}
+        //id: panel_id,
+        class: 'o_orderGroupPanel ui-state-active',
+        //attr: {'row': row, 'bla': 'blllaa'}
     });
     return divPanel;
 }

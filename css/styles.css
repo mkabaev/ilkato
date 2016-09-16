@@ -20,26 +20,29 @@ body {
     overflow-y: hidden;
     /*    padding-bottom: 100px;*/
 }
-.order {
-    margin: 0.4em;
-    /*padding: 0.3em;*/
-    width: 200px;
-    height: 200px;
-    /*float: left;*/
-    display:inline-block;
+/*.order {
+        margin: 0.2em;
+    padding: 0.3em;
+    width: 64px;
+    height: 64px;
+    float: left;
+}*/
+
+#o_ordersPanel .order{
+    background-color: red;
+    width:120px;
 }
+
 .order:hover {
     border-color: red;
     /*background-color: yellow;*/
 }
 
-#Panel5 .order {
-    width:140px;
-    height:140px;
-}
-
-#Panel5 .order .order-content {
-    font-size: 0.8em;
+.o_orderlist .order {
+    display:inline-block;
+    width:120px;
+    height:64px;
+    background-color: lightgreen;
 }
 
 .order-header {
@@ -122,8 +125,8 @@ body {
 .ul_selectItems {
     height: 480px;
     -webkit-column-count: 3;
-       -moz-column-count: 3;
-            column-count: 3; /*3 in those rules is just placeholder -- can be anything*/
+    -moz-column-count: 3;
+    column-count: 3; /*3 in those rules is just placeholder -- can be anything*/
 }
 .ul_selectItems li {
     display: inline-block; /*necessary*/
@@ -156,9 +159,9 @@ body {
     #divPrint, #divPrint * {
         visibility: visible;
     }
-/*    #divPrint {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }*/
+    /*    #divPrint {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }*/
 }
