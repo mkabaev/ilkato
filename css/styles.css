@@ -20,30 +20,6 @@ body {
     overflow-y: hidden;
     /*    padding-bottom: 100px;*/
 }
-/*.order {
-        margin: 0.2em;
-    padding: 0.3em;
-    width: 64px;
-    height: 64px;
-    float: left;
-}*/
-
-#o_ordersPanel .order{
-    background-color: red;
-    width:120px;
-}
-
-.order:hover {
-    border-color: red;
-    /*background-color: yellow;*/
-}
-
-.o_orderlist .order {
-    display:inline-block;
-    width:120px;
-    height:64px;
-    background-color: lightgreen;
-}
 
 .order-header {
     padding: 0.1em;
@@ -69,17 +45,11 @@ body {
     left: -25px;
 }
 
-.setCourierButton {
-    float: left;
-    width: 50px;
-    height: 100%;
-}
-
 .order-header .time{
-    padding: 0.2em 0.3em;
+    padding: 0.3em 0.3em;
     /*    margin-bottom: 0.5em;
         position: relative;*/
-    font-size: 0.4em;
+    font-size: 0.3em;
     position: absolute;
     right: 4px;
     top: 4px;
@@ -104,7 +74,7 @@ body {
     border: 1px dotted black;
     margin: 1em 1em 1em 1em;
     width: 30px;
-    height: 200px;
+    height: 130px;
     /*float: left;*/
     display: inline-block;
 }

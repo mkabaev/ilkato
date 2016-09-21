@@ -16,77 +16,63 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 
 /*OPERATOR*/
+
+.order {
+    /*    width:auto;*/
+    width: 130px;
+    height:130px;
+    margin: 5px;
+    position: relative;
+}
+
 #o_ordersPanel{
     border: 1px solid #eee;
-    width: 600px;
-    min-height: 200px;
-    margin: 0;
-    padding: 5px 0 0 0;
-    float: left;
-    margin-right: 10px;
-}
-
-#o_rows{
-    border: 1px solid #eee;
-    width: 600px;
-    min-height: 200px;
-    list-style-type: none;
-    margin: 0;
-    padding: 5px 0 0 0;
-    float: left;
-    margin-right: 10px;
-}
-
-#o_rows li{
-    margin: 0 5px 5px 5px;
-    padding: 5px;
-    font-size: 1.2em;
-    width: 600px;
-}
-
-
-#o_ordersPanel, #o_sortable3{
-    border: 1px solid #eee;
     width: 142px;
-    min-height: 64px;
-    list-style-type: none;
+    min-height: 180px;
     margin: 0;
     padding: 5px 0 0 0;
     float: left;
     margin-right: 10px;
 }
-#o_ordersPanel li, #o_sortable2 li, #o_sortable3 li {
-    margin: 0 5px 5px 5px;
-    padding: 5px;
-    font-size: 1.2em;
-    width: 120px;
-    height: 64px;
+
+.order:hover {
+    border-color: red;
+    /*background-color: yellow;*/
 }
 
-.o_orderlist{
-    border: 1px solid red;
-    min-height: 64px;
-    height: 64px;
-    list-style-type: none;
+#o_ordersPanel .order {
+    /*    width:auto;*/
+
+}
+
+#o_activeOrdersPanel{
+    border: 1px solid #eee;
+    width: 820px;
+    min-height: 160px;
     margin: 0;
     padding: 5px 0 0 0;
-    margin-left: 20px;
+    float: left;
+    margin-right: 10px;
+    overflow-x: auto;
 }
 
-.o_orderlist li{
-    display: inline;
-    height: 60px;
-    width: 60px;
-    float: top;
-    min-height: 60px;
-    line-height: 60px;
+.o_orderGroupPanel{
+    height: 160px;
+    border: 1px solid #eee;
+    margin: 5px;
+    width: auto;
+}
+
+.o_orderGroupPanel .order {
+    display:inline-block;
 }
 
 .o_price{
-    font-size: 0.5em;
-    position: relative;
-    left:60px;
-    top:-26px;
+    font-size: 0.7em;
+    position: absolute;
+    bottom:0px;
+    right:0px;
+    width: auto;
 }
 .o_price:after{
     content: " руб";

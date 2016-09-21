@@ -355,7 +355,7 @@ function ArrayToLiItems(items) {
 function CreateGroupPanel() {
     var divPanel = $('<div/>', {
         //id: panel_id,
-        class: 'o_orderGroupPanel ui-state-active',
+        class: 'o_orderGroupPanel connectedSortable ui-state-default',
         //attr: {'row': row, 'bla': 'blllaa'}
     });
     return divPanel;

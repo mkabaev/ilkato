@@ -275,53 +275,57 @@ function createWorkplace(type) {
     switch (type) {
         case '2'://O
 
-            //console.log(JSON.stringify(oitems));
+//            //console.log(JSON.stringify(oitems));
+//
+//            //$.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
 
-            //$.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
+//            var ulOrders = $('<ul/>', {
+//                id: 'o_ordersPanel',
+//                class: 'connectedSortable',
+//                //attr: {'title': 'caption'}
+//            }).appendTo($('#workplace'));
 
-            var ulOrders = $('<ul/>', {
+            var pnlOrders = $('<div/>', {
                 id: 'o_ordersPanel',
                 class: 'connectedSortable',
                 //attr: {'title': 'caption'}
-            }).appendTo($('#workplace'));
-            
-            var pnlActiveOrders = $('<div/>', {
-                //id: 'o_ordersPanel',
-                class: 'o_ordersPanel',
-                //attr: {'title': 'caption'}
             });
-            pnlActiveOrders.append(CreateGroupPanel());
-            pnlActiveOrders.appendTo($('#workplace'))
-
+            pnlOrders.appendTo($('#workplace'))
             updateOInterface_ordersPanel();
 
-            var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
-            var ulRows = createUL("o_rows", undefined, ritems).appendTo('#workplace');
-            $(ulRows).children('li').addClass('ui-state-default');
+            var pnlActiveOrders = $('<div/>', {
+                id: 'o_activeOrdersPanel',
+                //class: 'connectedSortable',
+                //attr: {'title': 'caption'}
+            });
+            //var pnlActiveOrders = CreateGroupPanel();
+            pnlActiveOrders.appendTo($('#workplace'));
+            pnlActiveOrders.append(CreateGroupPanel());
+            pnlActiveOrders.append(CreateGroupPanel());
+//            var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
+//            var ulRows = createUL("o_rows", undefined, ritems).appendTo('#workplace');
+//            $(ulRows).children('li').addClass('ui-state-default');
 
-            $(ulRows).children('li').html(createUL(undefined, 'o_orderlist connectedSortable', undefined)); //ritems
-            $(ulRows).children('li').prepend('<div style="float:left;padding:0;margin:0;top:10px;" class="ui-icon ui-icon-grip-dotted-vertical"></div>');
-//'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
-//$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
+//            $(ulRows).children('li').html(createUL(undefined, 'o_orderlist connectedSortable', undefined)); //ritems
+//            $(ulRows).children('li').prepend('<div style="float:left;padding:0;margin:0;top:10px;" class="ui-icon ui-icon-grip-dotted-vertical"></div>');
+////'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
+////$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
 
             $("#o_ordersPanel").sortable({
                 connectWith: ".connectedSortable",
                 //axis: "y",
             }).disableSelection();
 
-            $("#o_rows").sortable({
+            $(".o_orderGroupPanel").sortable({
+                connectWith: ".connectedSortable",
+                //axis: "y",
+            }).disableSelection();
+
+            $("#o_activeOrdersPanel").sortable({
                 //connectWith: ".connectedSortable",
                 axis: "y",
             }).disableSelection();
 
-            $("#o_sortable3").sortable({
-                connectWith: ".connectedSortable",
-            }).disableSelection();
-
-            $(".o_orderlist").sortable({
-                connectWith: ".connectedSortable",
-                //axis: "y",
-            }).disableSelection();
 
             break;
         case '3'://K
@@ -425,10 +429,11 @@ function updateOInterface_ordersPanel() {
         return newObj;
     });
 
-    var list = $('#o_ordersPanel');
-    var items = ArrayToLiItems(mappedOrders);
+    var pnlOrders = $('#o_ordersPanel');
+    pnlOrders.empty();
+    //var items = ArrayToLiItems(mappedOrders);
 
-    var li;
+    var pnlOrder;
     $(orders).each(function (indx, order) {
         var rCount = 0;
         var pCount = 0;
@@ -442,23 +447,24 @@ function updateOInterface_ordersPanel() {
             }).length;
         }
 
-        li = $(items[indx]);
-//        console.log('R:'+rCount);
-//        console.log('P:'+pCount);
+        pnlOrder = $('<div/>', {
+            id: order.id,
+            class: 'order ui-state-default',
+            //attr: {'status_id': status_id, 'ts': timestamp}
+        });
+        pnlOrder.html(order.no + '<div class=o_price>' + order.price + '</div>'); //'<div class="imgRoll"/>'
+        pnlOrders.append(CreateOrder(order));
 
-        li.html('<div class="order">'+order.no+'<br/><div class=o_price>'+order.price+'</div></div>'); //'<div class="imgRoll"/>'
-        li.html('<div class="order">asdasd d</div>'); //'<div class="imgRoll"/>'
-        items[indx] = li;
     });
-    list.html(items);
+    //list.html(items);
 
 
 
-    list.children('li').addClass('ui-state-default');
-    list.children('li').click(function () {
-        //alert($(this).attr('item_id'));
-        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
-    });
+    //list.children('li').addClass('ui-state-default');
+    //list.children('li').click(function () {
+    //    //alert($(this).attr('item_id'));
+    //    createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+    //});
 }
 
 function clearStorage() {
@@ -491,6 +497,148 @@ function setOrderstoLS(data) {
                 break;
         }
     });
+}
+
+/**
+ * Create order object
+ * @param order {Object} Order Object
+ * @return {Object} div order
+ */
+function CreateOrder(order) {
+//order_id, number, status_id, Comment, start_time, stop_time, timestamp, address
+    //var js_date_str = d.substr(0,10)+'T'+d.substr(11,8);
+    var divOrder = $('<div/>', {
+        id: order.id,
+        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
+        //attr: {'status_id': status_id, 'ts': timestamp}
+    });
+
+//    if (order.idStatus == 4) {
+//        divOrder.addClass('ui-state-disabled');
+//    }
+//    if (status_id == 5) {
+//        divOrder.addClass('ui-state-default');
+//    }
+
+    var divOrderHeader = $('<div/>', {
+        //id: order_id,
+        class: 'order-header ui-widget-header ui-corner-top',
+        text: order.no
+    });
+
+
+//    if (stop_time == null) {
+//        stop_time = '-'
+//    };
+    //var curDate = new Date();
+    var divTime = $('<div/>', {
+        class: 'time ui-corner-tr',
+        html: 'Принят в <span class="startTime">' + 55 + '</span><br/>Готов в <span class="stopTime">' + 58 + '</span>'//order_time
+    });
+    divOrderHeader.append(divTime);
+
+
+//var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
+    var divOrderContent = $('<div/>', {
+        //id: "content_"+order_id,
+        class: 'order-content',
+        html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + 'address' + '</div>'
+    });
+
+    $('<label for="' + 'chkDone' + order.id + '">Готов</label>').appendTo(divOrderContent);
+    var chkDone = $("<input/>", {
+        type: 'checkbox',
+        id: 'chkDone' + order.id,
+        name: 'n' + order.id,
+        class: 'orderDoneButton'
+    });
+//    SetOrderProducts(order_id);
+    $(chkDone).appendTo(divOrderContent);
+    $(chkDone).button({
+        icons: {
+            primary: "ui-icon-check",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+    $(chkDone).click(function (event) {
+        var order = $(event.target).parent().parent();
+        order.toggleClass('ui-state-disabled');
+
+        order.attr('status_id', function (index, attr) {
+            return attr == 3 ? 4 : 3;
+        });
+//        UpdateOrderStatusOnServer(order.attr("id"), order.attr("status_id"));
+
+
+        //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+//                        switch (ui.item.parent().attr("id")) {
+//                            case "mainPanel":
+//                                ui.item.attr("status_id", 2);
+//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
+//                                break;
+//                            case "donePanel":
+//                                ui.item.attr("status_id", 5);
+//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
+//                                break;
+//                        }
+        order.fadeOut(200);
+        order.fadeIn(400);
+    });
+
+//$("<button>Редактор</button>").button({
+//      icons: {
+//        primary: "ui-icon-locked"
+//      },
+//      text: false
+//  }).appendTo(divOrderContent);;
+
+
+    $('<label for="' + 'bEdit' + order.id + '">Редактор</label>').appendTo(divOrderContent);
+    var bEdit = $("<button/>", {
+        type: 'checkbox',
+        id: 'bEdit' + order.id,
+        name: 'n' + order.id,
+        class: 'orderDoneButton'
+    });
+
+//    SetOrderProducts(order_id);
+    $(bEdit).appendTo(divOrderContent);
+    $(bEdit).button({
+        icons: {
+            primary: "ui-icon-pencil",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+
+    $(bEdit).click(function (event) {
+
+        //var order = $(event.target).parent().parent();
+        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
+        var order_id = $(event.target).parent().parent().attr("id");
+//        $("#scanr").text("");
+//        $("#scanp").text("");
+//        $("#weight").text("");
+        weightR = 0;
+        weightP = 0;
+        //LoadOrderProducts(order_id);
+        $("#dlgEdit").attr("order_id", order_id);
+        $("#dlgEdit").dialog("open");
+    });
+    //divOrderContent.append(btnDone);
+
+//    $('<button/>')
+//            .text('Test')
+//            .click(function () {
+//                alert('hi');
+//            }).appendTo(divOrderContent);
+
+    divOrder.append(divOrderHeader);
+    //divOrder.append(divOrderContent);
+    return divOrder;
 }
 
 $(document).ready(function () {
