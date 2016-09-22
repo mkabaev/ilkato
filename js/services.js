@@ -71,7 +71,7 @@ function afterOrdUpdate() {
             break;
     }
 
-    //sound.playclip();
+    sound.playclip();
 }
 
 function LoadOrderProducts(order_id)
