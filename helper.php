@@ -139,7 +139,7 @@ function getSessionUpdates($id_session) {
 
 function getUsers() {
     $db = new DB();
-    $query = "SELECT idPerson, Name as name, idWorkplace FROM employees";
+    $query = "SELECT idPerson, Name, idWorkplace FROM employees";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);

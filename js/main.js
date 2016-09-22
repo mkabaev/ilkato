@@ -10,7 +10,7 @@ function WorkPlace(name) {
     this.smallOrders = this.orders.map(function (obj) {
         var newObj = {};
         newObj.id = obj.id;
-        newObj.name = obj.no;
+        newObj.Name = obj.No;
         //newObj.count = obj.count;
         //newObj.weight = obj.weight;
         return newObj;
@@ -310,7 +310,7 @@ function ArrayToTableItems(tableItems) {
         row = "<tr item_id=" + val.id + ">";
 
         $.each(val, function (key2, val2) {
-            if (key2 != 'id') {
+            if (key2 !== 'id') {
                 row = row + "<td>" + val2 + "</td>";
             }
         });
@@ -337,7 +337,7 @@ function ArrayToLiItems(items) {
                     s = s + " item_id=" + val2;
                     break
 
-                case 'name':  // if (x === 'value2')
+                case 'Name':  // if (x === 'value2')
                     t = val2;
                     break
                 default:
@@ -422,7 +422,7 @@ function loadjscssfile(filename, filetype) {
         fileref.setAttribute("type", "text/css")
         fileref.setAttribute("href", filename)
     }
-    if (typeof fileref != "undefined")
+    if (typeof fileref !== "undefined")
         document.getElementsByTagName("head")[0].appendChild(fileref)
 }
 

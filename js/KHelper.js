@@ -222,16 +222,16 @@ function updateOrderViewer(id) {
     } else {
         //console.log('ordViewer updating ' + order.comment);
         $('#number').html(order.no);
-        $('#ordercomment').html(order.comment);
+        $('#ordercomment').html(order.Comment);
         var itemsR = order.products.filter(function (row) {
             return row.idType === 1;
         });
         itemsR = itemsR.map(function (obj) {
             var newObj = {};
             newObj.id = obj.id;
-            newObj.name = obj.name;
-            newObj.count = obj.count;
-            newObj.weight = obj.weight;
+            newObj.Name = obj.Name;
+            newObj.Count = obj.Count;
+            newObj.Weight = obj.Weight;
             return newObj;
         });
 
@@ -241,9 +241,9 @@ function updateOrderViewer(id) {
         itemsP = itemsP.map(function (obj) {
             var newObj = {};
             newObj.id = obj.id;
-            newObj.name = obj.name;
-            newObj.count = obj.count;
-            newObj.weight = obj.weight;
+            newObj.Name = obj.Name;
+            newObj.Count = obj.Count;
+            newObj.Weight = obj.Weight;
             return newObj;
         });
 
@@ -365,7 +365,7 @@ function updateKInterface_SelPanel() {
     var mappedOrders = orders.map(function (obj) {
         var newObj = {};
         newObj.id = obj.id;
-        newObj.name = obj.no;
+        newObj.Name = obj.No;
         //newObj.count = obj.count;
         //newObj.weight = obj.weight;
         return newObj;
@@ -423,9 +423,9 @@ function updateOInterface_ordersPanel() {
     var mappedOrders = orders.map(function (obj) {
         var newObj = {};
         newObj.id = obj.id;
-        newObj.name = obj.no;
+        newObj.Name = obj.No;
 //                newObj.ts = obj.ts;
-        newObj.price = obj.price;
+        newObj.Price = obj.Price;
         return newObj;
     });
 
