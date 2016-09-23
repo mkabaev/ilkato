@@ -222,7 +222,7 @@ function doInit() {
             success: function (jsondata) {
                 //console.log('user ' + localStorage.user_name + ' set status online');
 
-//console.log('data: ' + jsondata);
+//console.log('init data: ' + jsondata);
                 $(".ordrow").removeClass("ui-state-error");
                 // remove orders from LS
                 $.each(localStorage, function (key, value) {

@@ -354,7 +354,7 @@ function createWorkplace(type) {
 
 function updateKInterface_SelPanel() {
 
-    // загружаем из LS заказы со статусом Готовить
+  console.log("--загружаем из LS заказы со статусом Готовить");
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
         return currentValue.idStatus == 2;
     });
@@ -415,7 +415,8 @@ function updateKInterface_SelPanel() {
 }
 
 function updateOInterface_ordersPanel() {
-    // загружаем из LS заказы со статусом Готовить
+    console.log("--загружаем из LS заказы со статусом Принят");
+        console.log(getOrdersFromLS());
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
         return currentValue.idStatus == 1;
     });
@@ -438,11 +439,11 @@ function updateOInterface_ordersPanel() {
         var rCount = 0;
         var pCount = 0;
         if (order.products !== null) {
-            rCount = order.products.filter(function (currentValue, index, arr) {
+            rCount = order.Products.filter(function (currentValue, index, arr) {
                 return currentValue.idType == 1;
             }).length;
 
-            pCount = order.products.filter(function (currentValue, index, arr) {
+            pCount = order.Products.filter(function (currentValue, index, arr) {
                 return currentValue.idType == 2;
             }).length;
         }
@@ -452,7 +453,7 @@ function updateOInterface_ordersPanel() {
             class: 'order ui-state-default',
             //attr: {'status_id': status_id, 'ts': timestamp}
         });
-        pnlOrder.html(order.no + '<div class=o_price>' + order.price + '</div>'); //'<div class="imgRoll"/>'
+        pnlOrder.html(order.No + '<div class=o_price>' + order.Price + '</div>'); //'<div class="imgRoll"/>'
         pnlOrders.append(CreateOrder(order));
 
     });
@@ -481,9 +482,10 @@ function clearStorage() {
 //copy data to LS and update interface if needed
 function setOrderstoLS(data) {
     $.each(data, function (key, val) {
-        //console.log(val.id);
+        console.log('saving order to LS:'+JSON.stringify(val));
         localStorage.setItem('o_' + val.id, JSON.stringify(val));
 
+//then update interface
         switch (localStorage.wp_type) {
             case '1'://adm
                 break;
@@ -523,7 +525,7 @@ function CreateOrder(order) {
     var divOrderHeader = $('<div/>', {
         //id: order_id,
         class: 'order-header ui-widget-header ui-corner-top',
-        text: order.no
+        text: order.No
     });
 
 
@@ -533,7 +535,7 @@ function CreateOrder(order) {
     //var curDate = new Date();
     var divTime = $('<div/>', {
         class: 'time ui-corner-tr',
-        html: 'Принят в <span class="startTime">' + 55 + '</span><br/>Готов в <span class="stopTime">' + 58 + '</span>'//order_time
+        html: 'Принят в <span class="startTime">' + order.CreateDate + '</span><br/>Готов в <span class="stopTime">' + "" + '</span>'//order_time
     });
     divOrderHeader.append(divTime);
 
@@ -637,7 +639,7 @@ function CreateOrder(order) {
 //            }).appendTo(divOrderContent);
 
     divOrder.append(divOrderHeader);
-    //divOrder.append(divOrderContent);
+    divOrder.append(divOrderContent);
     return divOrder;
 }
 

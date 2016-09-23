@@ -47,6 +47,7 @@ function addEventListeners() {
 }
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
+    //console.log($.parseJSON(e.data));
     setOrderstoLS($.parseJSON(e.data));
     afterOrdUpdate();
 //    $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {

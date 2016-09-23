@@ -103,8 +103,8 @@ function getActiveOrders() {
 //    echo '</pre>';
 
     foreach ($orders AS $key => $order) {
-        $orders[$key]['client'] = json_decode($order['client']);
-        $orders[$key]['products'] = json_decode($order['products']);
+        $orders[$key]['Client'] = json_decode($order['Client']);
+        $orders[$key]['Products'] = json_decode($order['Products']);
     }
     //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
     return $orders;
