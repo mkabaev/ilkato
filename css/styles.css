@@ -35,7 +35,7 @@ body {
 .ui-state-disabled .order-content ul {
     list-style: none;
 }
-.ui-state-disabled .order-content ul li {
+/*.ui-state-disabled .order-content ul li {
     position: relative;
 }
 .ui-state-disabled .order-content ul li:after {
@@ -43,7 +43,7 @@ body {
     position: absolute;
     top: -3px;
     left: -25px;
-}
+}*/
 
 .order-header .time{
     padding: 0.3em 0.3em;
@@ -55,15 +55,19 @@ body {
     top: 4px;
     /*background-color: red;*/
 }
-.order-toggle {
+/*.order-toggle {
     position: absolute;
     top: 50%;
     right: 0;
     margin-top: -8px;
-}
+}*/
 .order-content {
     padding: 0 0 0 0.4em;
     white-space: normal;
+    font-size: 0.7em;
+    overflow: auto;
+    margin-bottom: 0.2em;
+    height:80px;
 }
 /*.ui-button{
     bottom: 0;
@@ -79,13 +83,13 @@ body {
     display: inline-block;
 }
 
-.products{
-    /*border: 1px dotted black;*/ 
+/*.products{
+    border: 1px dotted black; 
     font-size: 0.7em;
     height: 100px;
     overflow: auto;
     margin-bottom: 0.2em;
-}
+}*/
 
 .ul_selectItems .ui-selecting { background: #FECA40; }
 .ul_selectItems .ui-selected { background: #F39814; color: white; }

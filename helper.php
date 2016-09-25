@@ -69,7 +69,7 @@ function getActiveOrders() {
 //            . "o.`price`, "
 //            . "o.`timestamp` as ts "
 //            . "FROM orders o WHERE o.`idStatus`=" . 1 . " or o.`idStatus`=" . 2 . " limit 100";
-    $query = "SELECT * from v_orders";
+    $query = "SELECT * from v_orders where idStatus<7";
     $stmt = $db->conn->prepare($query);
     //$stmt->bindParam(':date', $date);
     //$date = date('Y.m.d');

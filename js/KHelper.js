@@ -216,51 +216,56 @@ function createOrderViewer(id, _class) {
 function updateOrderViewer(id) {
     localStorage.activeOrder = id;
     var order = getOrderFromLS(id);
-    if (order === undefined) {
+    if (order == undefined) {
         // load from server
         console.log('ord undef');
     } else {
         //console.log('ordViewer updating ' + order.comment);
-        $('#number').html(order.no);
+        $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
-        var itemsR = order.products.filter(function (row) {
-            return row.idType === 1;
-        });
-        itemsR = itemsR.map(function (obj) {
-            var newObj = {};
-            newObj.id = obj.id;
-            newObj.Name = obj.Name;
-            newObj.Count = obj.Count;
-            newObj.Weight = obj.Weight;
-            return newObj;
-        });
+        if (order.Products) {
+            var itemsR = order.Products.filter(function (row) {
+                return row.idType === 1;
+            });
+            itemsR = itemsR.map(function (obj) {
+                var newObj = {};
+                newObj.id = obj.id;
+                newObj.Name = obj.Name;
+                newObj.Count = obj.Count;
+                newObj.Weight = obj.Weight;
+                return newObj;
+            });
 
-        var itemsP = order.products.filter(function (row) {
-            return row.idType === 2;
-        });
-        itemsP = itemsP.map(function (obj) {
-            var newObj = {};
-            newObj.id = obj.id;
-            newObj.Name = obj.Name;
-            newObj.Count = obj.Count;
-            newObj.Weight = obj.Weight;
-            return newObj;
-        });
+            var itemsP = order.Products.filter(function (row) {
+                return row.idType === 2;
+            });
+            itemsP = itemsP.map(function (obj) {
+                var newObj = {};
+                newObj.id = obj.id;
+                newObj.Name = obj.Name;
+                newObj.Count = obj.Count;
+                newObj.Weight = obj.Weight;
+                return newObj;
+            });
 
 //            $.each(products, function (key, val) {
-        //if (val.type=='R'){
+            //if (val.type=='R'){
 //                itemsR.push(new Array(val.id, val.name, val.count, val.weight));
-        //}
+            //}
 //                if (val.type == 'P') {
 //                    itemsP.push(val);
-        //localStorage.setItem('o_' + val.id, JSON.stringify(val));
+            //localStorage.setItem('o_' + val.id, JSON.stringify(val));
 //                }
 //            });
 
-        $('#tableR tbody').html(ArrayToTableItems(itemsR));
-        $('#tableP tbody').html(ArrayToTableItems(itemsP));
+            $('#tableR tbody').html(ArrayToTableItems(itemsR));
+            $('#tableP tbody').html(ArrayToTableItems(itemsP));
 
-//    $('body').append(localStorage.getItem(localStorage.key(i)));
+//    $('body').append(localStorage.getItem(localStorage.key(i))); 
+        } else {
+            console.log("ERROR: Заказ " + order.No + " не содержит продуктов");
+        }
+
 
 
     }
@@ -354,9 +359,18 @@ function createWorkplace(type) {
 
 function updateKInterface_SelPanel() {
 
-  console.log("--загружаем из LS заказы со статусом Готовить");
+    console.log("--загружаем из LS заказы со статусом Готовить, Готовится, Приготовлен");
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idStatus == 2;
+        return currentValue.idStatus == 2 || currentValue.idStatus == 3 || currentValue.idStatus == 4;
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+
     });
 
     //orders.forEach(function (order, index, array) {
@@ -378,12 +392,12 @@ function updateKInterface_SelPanel() {
     $(orders).each(function (indx, order) {
         var rCount = 0;
         var pCount = 0;
-        if (order.products !== null) {
-            rCount = order.products.filter(function (currentValue, index, arr) {
+        if (order.Products !== null) {
+            rCount = order.Products.filter(function (currentValue, index, arr) {
                 return currentValue.idType == 1;
             }).length;
 
-            pCount = order.products.filter(function (currentValue, index, arr) {
+            pCount = order.Products.filter(function (currentValue, index, arr) {
                 return currentValue.idType == 2;
             }).length;
         }
@@ -415,10 +429,18 @@ function updateKInterface_SelPanel() {
 }
 
 function updateOInterface_ordersPanel() {
-    console.log("--загружаем из LS заказы со статусом Принят");
-        console.log(getOrdersFromLS());
+    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен");
+//        console.log(getOrdersFromLS());
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idStatus == 1;
+        return currentValue.idStatus >= 1 && currentValue.idStatus <= 6;
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
     });
 
     var mappedOrders = orders.map(function (obj) {
@@ -438,7 +460,7 @@ function updateOInterface_ordersPanel() {
     $(orders).each(function (indx, order) {
         var rCount = 0;
         var pCount = 0;
-        if (order.products !== null) {
+        if (order.Products !== null) {
             rCount = order.Products.filter(function (currentValue, index, arr) {
                 return currentValue.idType == 1;
             }).length;
@@ -482,7 +504,7 @@ function clearStorage() {
 //copy data to LS and update interface if needed
 function setOrderstoLS(data) {
     $.each(data, function (key, val) {
-        console.log('saving order to LS:'+JSON.stringify(val));
+        console.log('saving order to LS:' + JSON.stringify(val));
         localStorage.setItem('o_' + val.id, JSON.stringify(val));
 
 //then update interface
@@ -511,7 +533,7 @@ function CreateOrder(order) {
     //var js_date_str = d.substr(0,10)+'T'+d.substr(11,8);
     var divOrder = $('<div/>', {
         id: order.id,
-        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
+        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top id-workplace-1',
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
@@ -533,61 +555,68 @@ function CreateOrder(order) {
 //        stop_time = '-'
 //    };
     //var curDate = new Date();
+    var dt = new Date(order.CreateDate)
     var divTime = $('<div/>', {
         class: 'time ui-corner-tr',
-        html: 'Принят в <span class="startTime">' + order.CreateDate + '</span><br/>Готов в <span class="stopTime">' + "" + '</span>'//order_time
+        //dt.getHours()+':'+dt.getMinutes() 
+        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span>'//order_time
     });
     divOrderHeader.append(divTime);
 
 
 //var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
+    var strAddress = 'адрес не указан';
+    if (order.Client) {
+        order.Client.Street + ', ' + order.Client.Building;
+    }
     var divOrderContent = $('<div/>', {
         //id: "content_"+order_id,
         class: 'order-content',
-        html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + 'address' + '</div>'
+        //html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + order.Client.Street + ', ' + order.Client.Building + '</div>'
+        html: '<div><span class=comment>' + order.Comment + '</span><hr/>' + strAddress + '</div>'
     });
 
-    $('<label for="' + 'chkDone' + order.id + '">Готов</label>').appendTo(divOrderContent);
-    var chkDone = $("<input/>", {
-        type: 'checkbox',
-        id: 'chkDone' + order.id,
-        name: 'n' + order.id,
-        class: 'orderDoneButton'
-    });
-//    SetOrderProducts(order_id);
-    $(chkDone).appendTo(divOrderContent);
-    $(chkDone).button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-        text: false
-    }
-    );
-    $(chkDone).click(function (event) {
-        var order = $(event.target).parent().parent();
-        order.toggleClass('ui-state-disabled');
-
-        order.attr('status_id', function (index, attr) {
-            return attr == 3 ? 4 : 3;
-        });
-//        UpdateOrderStatusOnServer(order.attr("id"), order.attr("status_id"));
-
-
-        //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
-//                        switch (ui.item.parent().attr("id")) {
-//                            case "mainPanel":
-//                                ui.item.attr("status_id", 2);
-//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
-//                                break;
-//                            case "donePanel":
-//                                ui.item.attr("status_id", 5);
-//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
-//                                break;
-//                        }
-        order.fadeOut(200);
-        order.fadeIn(400);
-    });
+//    $('<label for="' + 'chkDone' + order.id + '">Готов</label>').appendTo(divOrderContent);
+//    var chkDone = $("<input/>", {
+//        type: 'checkbox',
+//        id: 'chkDone' + order.id,
+//        name: 'n' + order.id,
+//        class: 'orderDoneButton'
+//    });
+////    SetOrderProducts(order_id);
+//    $(chkDone).appendTo(divOrderContent);
+//    $(chkDone).button({
+//        icons: {
+//            primary: "ui-icon-check",
+//            //secondary: "ui-icon-triangle-1-s"
+//        },
+//        text: false
+//    }
+//    );
+//    $(chkDone).click(function (event) {
+//        var order = $(event.target).parent().parent();
+//        order.toggleClass('ui-state-disabled');
+//
+//        order.attr('status_id', function (index, attr) {
+//            return attr == 3 ? 4 : 3;
+//        });
+////        UpdateOrderStatusOnServer(order.attr("id"), order.attr("status_id"));
+//
+//
+//        //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+////                        switch (ui.item.parent().attr("id")) {
+////                            case "mainPanel":
+////                                ui.item.attr("status_id", 2);
+////                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
+////                                break;
+////                            case "donePanel":
+////                                ui.item.attr("status_id", 5);
+////                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
+////                                break;
+////                        }
+//        order.fadeOut(200);
+//        order.fadeIn(400);
+//    });
 
 //$("<button>Редактор</button>").button({
 //      icons: {
@@ -597,12 +626,12 @@ function CreateOrder(order) {
 //  }).appendTo(divOrderContent);;
 
 
-    $('<label for="' + 'bEdit' + order.id + '">Редактор</label>').appendTo(divOrderContent);
+    //$('<label for="' + 'bEdit' + order.id + '">Редактор</label>').appendTo(divOrderContent);
     var bEdit = $("<button/>", {
         type: 'checkbox',
         id: 'bEdit' + order.id,
-        name: 'n' + order.id,
-        class: 'orderDoneButton'
+        name: 'n' + order.id
+                //class: 'orderDoneButton'
     });
 
 //    SetOrderProducts(order_id);
@@ -617,18 +646,18 @@ function CreateOrder(order) {
     );
 
     $(bEdit).click(function (event) {
-
-        //var order = $(event.target).parent().parent();
-        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
-        var order_id = $(event.target).parent().parent().attr("id");
-//        $("#scanr").text("");
-//        $("#scanp").text("");
-//        $("#weight").text("");
-        weightR = 0;
-        weightP = 0;
-        //LoadOrderProducts(order_id);
-        $("#dlgEdit").attr("order_id", order_id);
-        $("#dlgEdit").dialog("open");
+        alert('в разработке...');
+//        //var order = $(event.target).parent().parent();
+//        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
+//        var order_id = $(event.target).parent().parent().attr("id");
+////        $("#scanr").text("");
+////        $("#scanp").text("");
+////        $("#weight").text("");
+//        weightR = 0;
+//        weightP = 0;
+//        //LoadOrderProducts(order_id);
+//        $("#dlgEdit").attr("order_id", order_id);
+//        $("#dlgEdit").dialog("open");
     });
     //divOrderContent.append(btnDone);
 
