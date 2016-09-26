@@ -110,6 +110,49 @@ function getActiveOrders() {
     return $orders;
 }
 
+function getActiveBatches() {
+    $db = new DB();
+    $query = "SELECT b.* from v_batches b where idStatus<7";
+    $stmt = $db->conn->prepare($query);
+    //$stmt->bindParam(':date', $date);
+    //$date = date('Y.m.d');
+    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
+    $stmt->execute();
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
+//    $query = 'SELECT tip.product_id,
+//        tip.count,
+//        tip.discount,
+//        tip.price,
+//        tip.mark_deleted,
+//        tip.comment,
+//        tip.income_date_time,
+//        tip.complete_date_time,
+//        tp.name,
+//        tp.category_id,
+//        tp.price,
+//        tp.weight,
+//        tp.minimum_quantity,
+//        tp.measure_id,
+//        tp.comment ProductComment,
+//        tp.picture_id FROM testform_issue_products tip LEFT JOIN testform_menu_products tp ON tip.product_id=tp.id WHERE tip.issue_id=:order_id';
+//    $stmt = $db->conn->prepare($query);
+//    $stmt->bindParam(':order_id', $order_id);
+//    //$date = '2015.12.18';
+//    $stmt->execute();
+//    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //echo $orders[1]['client'];
+//    echo '<pre>';
+//    var_dump( $orders);
+//    echo '</pre>';
+
+    foreach ($orders AS $key => $order) {
+        $orders[$key]['Client'] = json_decode($order['Client']);
+        $orders[$key]['Products'] = json_decode($order['Products']);
+    }
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    return $orders;
+}
+
 function getSessionUpdates($id_session) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "

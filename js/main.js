@@ -35,7 +35,6 @@ WorkPlace.prototype.stop = function () {
 var wp = new WorkPlace('blaa');
 
 
-
 function printHTML(html) {
     var divPrint = $('#divPrint');
     if (!divPrint.length) {
@@ -352,15 +351,6 @@ function ArrayToLiItems(items) {
     return _items;
 }
 
-function CreateGroupPanel() {
-    var divPanel = $('<div/>', {
-        //id: panel_id,
-        class: 'o_orderGroupPanel connectedSortable ui-state-default',
-        //attr: {'row': row, 'bla': 'blllaa'}
-    });
-    return divPanel;
-}
-
 function updateInterface_user() {
     $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }
@@ -385,6 +375,17 @@ function getOrderFromLS(id) {
         }
     }
     return order;
+}
+
+function afterSelUser(sender, id, name) {
+    //alert(ui.selected.id + " " + ui.selected.innerHTML);
+    //localStorage.clear();
+    localStorage.wp_id = $(sender).attr("idWorkplace");
+    localStorage.wp_type = $(sender).attr("idWorkplace");
+    localStorage.uid = id;
+    localStorage.user_name = name;
+    doInit();
+    //updateInterface_user();
 }
 
 function sendRequest() {

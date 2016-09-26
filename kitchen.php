@@ -6,6 +6,7 @@
         <!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
         <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/operator.css">
         <link rel="stylesheet" href="css/kitchen.css">
 
         <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
@@ -18,6 +19,7 @@
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>
         <script src="js/KHelper.js"></script>
+        <script src="js/OHelper.js"></script>
         <script src="js/timer.js"></script>
     </head>
     <body>
@@ -40,6 +42,23 @@
             //uid   |   event       |   data
             //123   |   ordUpdate   |   {...}
             //123   |   ordUpdate   |   {...}
+            function createWorkplace(type) {
+                stopTimer();
+                $('#workplace').empty();
+                $("body").disableSelection();
+                //console.log(document.attributes);
+                switch (type) {
+                    case '2':
+                        createOperatorInterface();
+                        break;
+                    case '3':
+                        createKitchenInterface();
+                        break;
+                    default:
+                        alert('select interface type');
+                        break;
+                }
+            }
 
             var sound = ss_soundbits('s1.mp3');
             //localStorage.removeItem('user_id');

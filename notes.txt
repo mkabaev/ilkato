@@ -41,3 +41,69 @@ order.toggleClass('ui-state-disabled');
             . "FROM testform_issues ti LEFT JOIN module_kitchen mk on mk.id_issue=ti.id left join testform_person tp on tp.id=ti.client_id LEFT JOIN testfor$
 //select tp.client_id, ts.name AS street, tp.building, tp.flat, tp.entrance, tp.floor, tp.code from testform_person tp LEFT JOIN testform_street ts ON tp.st$
 //$query = "SELECT ti.id, ti.courier_id, ti.`number`, ti.client_id, ti.comment Comment, ti.status_id, DATE_FORMAT(ti.order_time, '%H:%i') order_time, tc.pho$
+
+
+
+
+
+
+
+
+    $("#rightpanel").sortable({
+        connectWith: "#rightpanel",
+        axis: "y",
+        handle: ".order-header, .order-content",
+        cancel: ".order-toggle",
+        placeholder: "order-placeholder ui-corner-all",
+        //helper: "clone"
+        //opacity: 0.8,
+        //revert:true
+        cursor: "move",
+        //disabled: true
+        delay: 150,
+        revert: 150,
+//                    start: function (event, ui) {
+//                        var currPos1 = ui.item.index();
+//                    },
+//                    change: function (event, ui) {
+//                        var currPos2 = ui.item.index();
+//                        //alert("done");
+//                    },
+
+//                    update: function (event, ui) {
+//                        //$('#sortable li').removeClass('highlights');
+//
+//                        if (ui.sender) {
+//                        //ui.item.attr("status_id");
+//                            $("#log").append("<br/>Done" + ui.sender)
+//                        }
+//
+//                    }
+
+        receive: function (event, ui) {
+            //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+//                        switch (ui.item.parent().attr("id")) {
+//                            case "mainPanel":
+//                                ui.item.attr("status_id", 2);
+//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
+//                                break;
+//                            case "donePanel":
+//                                ui.item.attr("status_id", 5);
+//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
+//                                break;
+//                        }
+            //console.log(("order "+ui.item.attr("id")+" to row"+ui.item.parent().attr("row")));
+            var newrow = ui.item.parent().attr("row");
+            var newstatus;
+            if (newrow == 5) {
+                newstatus = 5;
+            } else {
+                newstatus = 3;
+            }
+            SetOrderPositionOnServer(ui.item.attr("id"), 1, ui.item.parent().attr("row"));
+            UpdateOrderStatusOnServer(ui.item.attr("id"), newstatus);
+            ui.item.fadeOut(200);
+            ui.item.fadeIn(600);
+        }
+
+    });

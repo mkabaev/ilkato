@@ -1,21 +1,21 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+function createKitchenInterface() {
+    //var tableItems = $.parseJSON(localStorage.products);
+    var ov = createOrderViewer('ordViewer', 'orderViewer');
+    ov.appendTo($('#workplace')).fadeIn(1000);
+    createTimer('timer', 'ktimer', 10, 160).appendTo(ov);
+    //$('body').append(CreateLeftPanel());
 
-/* global al, CreateTimer, createTimer, createSelectPanel */
 
-function afterSelUser(sender, id, name) {
-    //alert(ui.selected.id + " " + ui.selected.innerHTML);
-    //localStorage.clear();
-    localStorage.wp_id = $(sender).attr("idWorkplace");
-    localStorage.wp_type = $(sender).attr("idWorkplace");
-    localStorage.uid = id;
-    localStorage.user_name = name;
-    doInit();
-    //updateInterface_user();
+    createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
+    updateOrderViewer(localStorage.activeOrder);
+    updateKInterface_SelPanel();
+    var divFooter = $('<div/>', {
+        id: 'footer',
+        //class: _class,
+        attr: {'title': 'caption'}
+    }).appendTo($('#ordViewer'));
 }
+
 
 function afterSelTest(id, name) {
     //var ov=$('#ordViewer');
@@ -23,100 +23,6 @@ function afterSelTest(id, name) {
     updateOrderViewer(id);
 }
 
-function K_RequestServer()
-//send orders timestamps to server and recive changes
-{
-
-    var ar = [];
-    //var y = parseInt(panel.attr("row"));
-    $(".order").each(function (index) {
-        //$(this).attr("status_id")
-        //var x = index;
-        ar.push(new Array(parseInt($(this).attr("id")), $(this).attr("ts")));
-        //ar.push(order_id);
-    });
-    var json_orders = JSON.stringify(ar);
-    //console.log('send to server: '+json_orders);
-
-    $.ajax({
-        type: "POST",
-        data: "action=getKOrders&json=" + json_orders,
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            $(".ordrow").removeClass("ui-state-error");
-            ProcessOrders(jsondata);    //append(jsondata); 
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.log("status: " + xhr.status + " | " + thrownError);
-            $(".ordrow").addClass("ui-state-error");
-            //$("body").addClass("ui-state-error");
-//            alert(xhr.status);
-//            alert(thrownError);
-        }
-    });
-}
-
-$(function () {
-    $("#rightpanel").sortable({
-        connectWith: "#rightpanel",
-        axis: "y",
-        handle: ".order-header, .order-content",
-        cancel: ".order-toggle",
-        placeholder: "order-placeholder ui-corner-all",
-        //helper: "clone"
-        //opacity: 0.8,
-        //revert:true
-        cursor: "move",
-        //disabled: true
-        delay: 150,
-        revert: 150,
-//                    start: function (event, ui) {
-//                        var currPos1 = ui.item.index();
-//                    },
-//                    change: function (event, ui) {
-//                        var currPos2 = ui.item.index();
-//                        //alert("done");
-//                    },
-
-//                    update: function (event, ui) {
-//                        //$('#sortable li').removeClass('highlights');
-//
-//                        if (ui.sender) {
-//                        //ui.item.attr("status_id");
-//                            $("#log").append("<br/>Done" + ui.sender)
-//                        }
-//
-//                    }
-
-        receive: function (event, ui) {
-            //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
-//                        switch (ui.item.parent().attr("id")) {
-//                            case "mainPanel":
-//                                ui.item.attr("status_id", 2);
-//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
-//                                break;
-//                            case "donePanel":
-//                                ui.item.attr("status_id", 5);
-//                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
-//                                break;
-//                        }
-            //console.log(("order "+ui.item.attr("id")+" to row"+ui.item.parent().attr("row")));
-            var newrow = ui.item.parent().attr("row");
-            var newstatus;
-            if (newrow == 5) {
-                newstatus = 5;
-            } else {
-                newstatus = 3;
-            }
-            SetOrderPositionOnServer(ui.item.attr("id"), 1, ui.item.parent().attr("row"));
-            UpdateOrderStatusOnServer(ui.item.attr("id"), newstatus);
-            ui.item.fadeOut(200);
-            ui.item.fadeIn(600);
-        }
-
-    });
-});
 
 /**
  * Create module with table and buttons
@@ -271,91 +177,6 @@ function updateOrderViewer(id) {
     }
 }
 
-function createWorkplace(type) {
-    stopTimer();
-    $('#workplace').empty();
-    $("body").disableSelection();
-    //console.log(document.attributes);
-
-    switch (type) {
-        case '2'://O
-
-//            //console.log(JSON.stringify(oitems));
-//
-//            //$.parseJSON('[{"id":"3","name":"11","count":"2"},{"id":"10","name":"12","count":"2"},{"id":"11","name":"33","count":"2"},{"id":"12","name":"14","count":"2"},{"id":"13","name":"45","count":"2"}]');
-
-//            var ulOrders = $('<ul/>', {
-//                id: 'o_ordersPanel',
-//                class: 'connectedSortable',
-//                //attr: {'title': 'caption'}
-//            }).appendTo($('#workplace'));
-
-            var pnlOrders = $('<div/>', {
-                id: 'o_ordersPanel',
-                class: 'connectedSortable',
-                //attr: {'title': 'caption'}
-            });
-            pnlOrders.appendTo($('#workplace'))
-            updateOInterface_ordersPanel();
-
-            var pnlActiveOrders = $('<div/>', {
-                id: 'o_activeOrdersPanel',
-                //class: 'connectedSortable',
-                //attr: {'title': 'caption'}
-            });
-            //var pnlActiveOrders = CreateGroupPanel();
-            pnlActiveOrders.appendTo($('#workplace'));
-            pnlActiveOrders.append(CreateGroupPanel());
-            pnlActiveOrders.append(CreateGroupPanel());
-//            var ritems = ArrayToLiItems($.parseJSON('[{"id":"1"},{"id":"2"},{"id":"3"},{"id":"4"},{"id":"5"}]'));
-//            var ulRows = createUL("o_rows", undefined, ritems).appendTo('#workplace');
-//            $(ulRows).children('li').addClass('ui-state-default');
-
-//            $(ulRows).children('li').html(createUL(undefined, 'o_orderlist connectedSortable', undefined)); //ritems
-//            $(ulRows).children('li').prepend('<div style="float:left;padding:0;margin:0;top:10px;" class="ui-icon ui-icon-grip-dotted-vertical"></div>');
-////'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
-////$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
-
-            $("#o_ordersPanel").sortable({
-                connectWith: ".connectedSortable",
-                //axis: "y",
-            }).disableSelection();
-
-            $(".o_orderGroupPanel").sortable({
-                connectWith: ".connectedSortable",
-                //axis: "y",
-            }).disableSelection();
-
-            $("#o_activeOrdersPanel").sortable({
-                //connectWith: ".connectedSortable",
-                axis: "y",
-            }).disableSelection();
-
-
-            break;
-        case '3'://K
-            //var tableItems = $.parseJSON(localStorage.products);
-            var ov = createOrderViewer('ordViewer', 'orderViewer');
-            ov.appendTo($('#workplace')).fadeIn(1000);
-            createTimer('timer', 'ktimer', 10, 160).appendTo(ov);
-            //$('body').append(CreateLeftPanel());
-
-
-            createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
-            updateOrderViewer(localStorage.activeOrder);
-            updateKInterface_SelPanel();
-            var divFooter = $('<div/>', {
-                id: 'footer',
-                //class: _class,
-                attr: {'title': 'caption'}
-            }).appendTo($('#ordViewer'));
-            break;
-        default:
-            alert('select interface type');
-            break;
-    }
-
-}
 
 function updateKInterface_SelPanel() {
 
@@ -443,14 +264,14 @@ function updateOInterface_ordersPanel() {
 //8	Отказ
     });
 
-    var mappedOrders = orders.map(function (obj) {
-        var newObj = {};
-        newObj.id = obj.id;
-        newObj.Name = obj.No;
-//                newObj.ts = obj.ts;
-        newObj.Price = obj.Price;
-        return newObj;
-    });
+//    var mappedOrders = orders.map(function (obj) {
+//        var newObj = {};
+//        newObj.id = obj.id;
+//        newObj.Name = obj.No;
+////                newObj.ts = obj.ts;
+//        newObj.Price = obj.Price;
+//        return newObj;
+//    });
 
     var pnlOrders = $('#o_ordersPanel');
     pnlOrders.empty();
@@ -458,36 +279,8 @@ function updateOInterface_ordersPanel() {
 
     var pnlOrder;
     $(orders).each(function (indx, order) {
-        var rCount = 0;
-        var pCount = 0;
-        if (order.Products !== null) {
-            rCount = order.Products.filter(function (currentValue, index, arr) {
-                return currentValue.idType == 1;
-            }).length;
-
-            pCount = order.Products.filter(function (currentValue, index, arr) {
-                return currentValue.idType == 2;
-            }).length;
-        }
-
-        pnlOrder = $('<div/>', {
-            id: order.id,
-            class: 'order ui-state-default',
-            //attr: {'status_id': status_id, 'ts': timestamp}
-        });
-        pnlOrder.html(order.No + '<div class=o_price>' + order.Price + '</div>'); //'<div class="imgRoll"/>'
         pnlOrders.append(CreateOrder(order));
-
     });
-    //list.html(items);
-
-
-
-    //list.children('li').addClass('ui-state-default');
-    //list.children('li').click(function () {
-    //    //alert($(this).attr('item_id'));
-    //    createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
-    //});
 }
 
 function clearStorage() {
@@ -533,7 +326,7 @@ function CreateOrder(order) {
     //var js_date_str = d.substr(0,10)+'T'+d.substr(11,8);
     var divOrder = $('<div/>', {
         id: order.id,
-        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top id-workplace-1',
+        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
         //attr: {'status_id': status_id, 'ts': timestamp}
     });
 
@@ -547,7 +340,7 @@ function CreateOrder(order) {
     var divOrderHeader = $('<div/>', {
         //id: order_id,
         class: 'order-header ui-widget-header ui-corner-top',
-        text: order.No
+        html: order.No //+'<div class="imgRoll"/>'
     });
 
 
@@ -558,7 +351,7 @@ function CreateOrder(order) {
 //var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
     var strAddress = 'адрес не указан';
     if (order.Client) {
-        strAddress=order.Client.Street + ', ' + order.Client.Building;
+        strAddress = order.Client.Street + ', ' + order.Client.Building;
     }
     var divOrderContent = $('<div/>', {
         //id: "content_"+order_id,
@@ -566,7 +359,7 @@ function CreateOrder(order) {
         //html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + order.Client.Street + ', ' + order.Client.Building + '</div>'
         html: '<div><span class=comment>' + order.Comment + '</span><hr/>' + strAddress + '</div>'
     });
-    
+
     //var curDate = new Date();
     var dt = new Date(order.CreateDate)
     var divTime = $('<div/>', {
@@ -633,11 +426,9 @@ function CreateOrder(order) {
         id: 'bEdit' + order.id,
         name: 'n' + order.id
                 //class: 'orderDoneButton'
-    });
+    }).appendTo(divOrderContent);
 
-//    SetOrderProducts(order_id);
-    $(bEdit).appendTo(divOrderContent);
-    $(bEdit).button({
+    bEdit.button({
         icons: {
             primary: "ui-icon-pencil",
             //secondary: "ui-icon-triangle-1-s"
@@ -646,8 +437,8 @@ function CreateOrder(order) {
     }
     );
 
-    $(bEdit).click(function (event) {
-        alert('в разработке...');
+    bEdit.click(function (event) {
+        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
 //        //var order = $(event.target).parent().parent();
 //        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
 //        var order_id = $(event.target).parent().parent().attr("id");
@@ -668,19 +459,27 @@ function CreateOrder(order) {
 //                alert('hi');
 //            }).appendTo(divOrderContent);
 
-    var bEdit = $("<button/>", {
-        type: 'checkbox',
-        id: 'bEdit' + order.id,
-        name: 'n' + order.id
-                //class: 'orderDoneButton'
-    });
-    
-     var tt=$('<div/>', {
-        class:'kplace',
-        html:'<button class="ui-button ui-widget bGreen">П</button><button class="ui-button ui-widget bOrange">НС</button>'
+
+
+    var tt = $('<div/>', {
+        class: 'kplace',
+        html: '<button class="ui-button ui-widget bGreen">П</button><button class="ui-button ui-widget bOrange">НС</button>'
     }).appendTo(divOrderContent);
 
-    
+    var rCount = 0;
+    var pCount = 0;
+    if (order.Products !== null) {
+        rCount = order.Products.filter(function (currentValue, index, arr) {
+            return currentValue.idType == 1;
+        }).length;
+
+        pCount = order.Products.filter(function (currentValue, index, arr) {
+            return currentValue.idType == 2;
+        }).length;
+    }
+
+
+
 //    var fs=$('<fieldset/>', {
 //        class:'rg-kplace'
 //    }).appendTo(divOrderContent);
@@ -707,7 +506,7 @@ function CreateOrder(order) {
 //    <label for="radio-3">London</label>
 //    <input type="radio" name="radio-1" id="radio-3">
 //  </fieldset>
-  
+
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
     return divOrder;
