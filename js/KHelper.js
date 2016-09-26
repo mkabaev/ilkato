@@ -554,20 +554,11 @@ function CreateOrder(order) {
 //    if (stop_time == null) {
 //        stop_time = '-'
 //    };
-    //var curDate = new Date();
-    var dt = new Date(order.CreateDate)
-    var divTime = $('<div/>', {
-        class: 'time ui-corner-tr',
-        //dt.getHours()+':'+dt.getMinutes() 
-        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span>'//order_time
-    });
-    divOrderHeader.append(divTime);
-
 
 //var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
     var strAddress = 'адрес не указан';
     if (order.Client) {
-        order.Client.Street + ', ' + order.Client.Building;
+        strAddress=order.Client.Street + ', ' + order.Client.Building;
     }
     var divOrderContent = $('<div/>', {
         //id: "content_"+order_id,
@@ -575,6 +566,16 @@ function CreateOrder(order) {
         //html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + order.Client.Street + ', ' + order.Client.Building + '</div>'
         html: '<div><span class=comment>' + order.Comment + '</span><hr/>' + strAddress + '</div>'
     });
+    
+    //var curDate = new Date();
+    var dt = new Date(order.CreateDate)
+    var divTime = $('<div/>', {
+        class: 'time',
+        //dt.getHours()+':'+dt.getMinutes() 
+        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span>'//order_time
+    });
+    divOrderHeader.append(divTime);
+
 
 //    $('<label for="' + 'chkDone' + order.id + '">Готов</label>').appendTo(divOrderContent);
 //    var chkDone = $("<input/>", {
@@ -667,6 +668,46 @@ function CreateOrder(order) {
 //                alert('hi');
 //            }).appendTo(divOrderContent);
 
+    var bEdit = $("<button/>", {
+        type: 'checkbox',
+        id: 'bEdit' + order.id,
+        name: 'n' + order.id
+                //class: 'orderDoneButton'
+    });
+    
+     var tt=$('<div/>', {
+        class:'kplace',
+        html:'<button class="ui-button ui-widget bGreen">П</button><button class="ui-button ui-widget bOrange">НС</button>'
+    }).appendTo(divOrderContent);
+
+    
+//    var fs=$('<fieldset/>', {
+//        class:'rg-kplace'
+//    }).appendTo(divOrderContent);
+//    
+//     fs.append('<legend>Select a Location: </legend>');       
+//     fs.append('<label for="radio-1">А</label>');       
+//     fs.append('<input type="radio" name="radio-1" id="radio-1">');       
+//     fs.append('<label for="radio-2">НС</label>');       
+//     fs.append('<input type="radio" name="radio-1" id="radio-2">');  
+//     fs.children('input').checkboxradio();
+//     
+//     var tt=$('<div/>', {
+//        class:'rg-kplace',
+//        html:'<input type="radio" name="r" value=l>1<input type="radio" name="r" value=2/>2'
+//    }).appendTo(divOrderHeader);
+
+//<fieldset>
+//    <legend>Select a Location: </legend>
+//    <label for="radio-1">New York</label>
+//    <input type="radio" name="radio-1" id="radio-1">
+//    
+//    <label for="radio-2">Paris</label>
+//    <input type="radio" name="radio-1" id="radio-2">
+//    <label for="radio-3">London</label>
+//    <input type="radio" name="radio-1" id="radio-3">
+//  </fieldset>
+  
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
     return divOrder;

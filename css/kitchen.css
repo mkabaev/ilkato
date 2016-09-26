@@ -27,12 +27,14 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 #o_ordersPanel{
     border: 1px solid #eee;
-    width: 142px;
+    width: 162px;
     min-height: 180px;
     margin: 0;
+    height: 600px;
     padding: 5px 0 0 0;
     float: left;
     margin-right: 10px;
+    overflow-y: auto;
 }
 
 /*.order:hover {
@@ -62,7 +64,24 @@ tr:nth-child(even) {background-color: #f2f2f2}
     padding: 5px 0 0 0;
     float: left;
     margin-right: 10px;
-    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.kplace{
+    font-size: 0.8em;
+    position: absolute;
+    bottom:0px;
+    width: 112px;
+}
+.kplace .bGreen{
+    width: 54px;
+    background: none;
+    background-color: lightgreen;
+}
+.kplace .bOrange{
+    width: 54px;
+    background: none;
+    background-color: lightsalmon;
 }
 
 .o_orderGroupPanel{
