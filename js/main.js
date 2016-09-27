@@ -427,6 +427,52 @@ function loadjscssfile(filename, filetype) {
         document.getElementsByTagName("head")[0].appendChild(fileref)
 }
 
+function clearStorage() {
+    var uid = localStorage.uid;
+    var user_name = localStorage.user_name;
+
+    localStorage.clear();
+
+    localStorage.uid = uid;
+    localStorage.user_name = user_name;
+    //updateInterface_user();
+}
+
+//copy data to LS and update interface if needed
+function setOrderstoLS(data) {
+    $.each(data, function (key, val) {
+        console.log('saving order to LS:' + JSON.stringify(val));
+        if (val){
+        localStorage.setItem('o_' + val.id, JSON.stringify(val));            
+        }else{
+            console.log('ERROR setOrderstoLS: val is null');
+        }
+            
+
+//then update interface
+        switch (localStorage.wp_type) {
+            case '1'://adm
+                break;
+            case '2'://operator
+                break;
+            case '3'://kitch
+                if (val.id === localStorage.activeOrder) {
+                    updateOrderViewer(localStorage.activeOrder);
+                    updateKInterface_SelPanel();
+                }
+                break;
+        }
+    });
+}
+
+$(document).ready(function () {
+    //K_RequestServer();
+    //LoadCouriers();
+    //setInterval('K_RequestServer()', 3000);
+    //$(".left").append(MakePanelHTML('pane12', 12));
+    ////$('#mainRange').append(DrawOrderCartHTML(3,123,6));
+
+});
 //loadjscssfile("myscript.js", "js") //dynamically load and add this .js file
 //loadjscssfile("javascript.php", "js") //dynamically load "javascript.php" as a JavaScript file
 //loadjscssfile("mystyle.css", "css") ////dynamically load and add this .css file

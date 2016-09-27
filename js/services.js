@@ -48,15 +48,16 @@ function addEventListeners() {
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
     //console.log($.parseJSON(e.data));
-    setOrderstoLS($.parseJSON(e.data));
-    afterOrdUpdate();
+    var orders=$.parseJSON(e.data);
+    setOrderstoLS(orders);
+    afterOrdUpdate(orders);
 //    $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
 //        $.each(data, function (key, val) {
 //            localStorage.setItem('o_' + val.id, JSON.stringify(val));
 //        });
 //    });
 }
-function afterOrdUpdate() {
+function afterOrdUpdate(orders) {
     //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
     //localStorage.products_ts = e.data;
 
@@ -64,7 +65,8 @@ function afterOrdUpdate() {
     //localStorage.products_ts = e.data;
     switch (localStorage.wp_type) {
         case '2':
-            updateOInterface_ordersPanel();
+            //updateOInterface_ordersPanel();
+            updateOInterface_orders(orders);
             break;
         case '3':
             updateOrderViewer(localStorage.activeOrder);

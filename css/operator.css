@@ -7,7 +7,7 @@
 }
 
 .order:hover {
-    border-color: red;
+/*    border-color: red;*/
 /*    background-color: yellow;*/
 }
 
@@ -24,12 +24,12 @@
     overflow-y: auto;
 }
 
-.id-workplace-1{
-    border-color: green;
+.ord-workplace-3{
+    border: 4px double green;
     background-color: lightgreen;
 }
-.id-workplace-2{
-    border-color: red;
+.ord-workplace-4{
+    border: 4px double red;
     background-color: lightsalmon;
 }
 
@@ -51,13 +51,18 @@
 }
 
 .kplace{
-    font-size: 0.8em;
     position: absolute;
     bottom:0px;
-    width: 112px;
+    left:0;
+    width: 120px;
+    font-size: 0.8em;
+    padding: 0 0px 0 4px;
 }
-.kplace .bGreen{
+.kplace button{
     width: 54px;
+    margin: 0px 6px 0 0;
+}
+/*.kplace .bGreen{
     background: none;
     background-color: lightgreen;
 }
@@ -65,7 +70,7 @@
     width: 54px;
     background: none;
     background-color: lightsalmon;
-}
+}*/
 
 .o_orderBatchPanel{
     height: 160px;

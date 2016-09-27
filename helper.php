@@ -170,7 +170,7 @@ function getSessionUpdates($id_session) {
     $stmt->bindParam(':id_session', $id_session);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
-    $stmt->execute();
+    $res=$stmt->execute();
 
     //foreach ($orders AS $key => $order) {
     //    $orders[$key]['client'] = json_decode($order['client']);
@@ -224,8 +224,20 @@ function updateUserStatus($idPerson, $isOnline) {
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idPerson', $idPerson);
     $stmt->bindParam(':isOnline', $isOnline);
-    $stmt->execute();
-    return 1;
+    $res=$stmt->execute();
+    return $res;
+}
+
+function updateOrderKithcenID($idOrder, $idKitchen) {
+    $db = new DB();
+    $query = "UPDATE ilkato.orders SET idKitchen=:idKitchen WHERE id=:idOrder";
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':idOrder', $idOrder);
+    $stmt->bindParam(':idKitchen', $idKitchen);
+    $res=$stmt->execute();
+    return $res;
 }
 
 function registerNewSession($uid, $wid) {
@@ -376,6 +388,11 @@ switch ($action) {
         break;
     case 'SetOrderProducts':
         echo SetOrderProducts($_POST["issue_id"], $_POST["weightR"], $_POST["weightP"]);
+        break;
+    case 'updateOrderKithcenID':
+        $idOrder = filter_input(INPUT_POST, 'idOrder');
+        $idKitchen = filter_input(INPUT_POST, 'idKitchen');
+        echo updateOrderKithcenID($idOrder,$idKitchen);
         break;
     default:
         break;

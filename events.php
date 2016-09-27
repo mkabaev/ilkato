@@ -18,7 +18,13 @@ while (true) { //$i < 3
     $updates = getSessionUpdates($id_session);
     $json = $updates['data'];
     if (count($updates) > 0) {
-        echo "data: " . "[" . $updates[0]['data'] . "]" . "\n\n";
+        $data=$updates[0]['data'];
+        if($data==NULL){
+        echo "data: " . "[" . 'null' . "]" . "\n\n";
+        }else{
+        echo "data: " . "[" . $data . "]" . "\n\n";
+            
+        }
     }
     //echo "data: msg\n\n";
 //echo PHP_EOL;
