@@ -84,7 +84,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
     var divChefs = $('<div/>', {
         id: 'divChefs' + modType,
         //class: 'ui-widget-',
-    }).appendTo(divHeader).append('<span class="ui-icon ui-icon-person"></span>Илья | Егор | Василий').css({"float": "right", "padding": "5px"});
+    }).appendTo(divHeader).append('<span class="ui-icon ui-icon-person"></span>Повара').css({"float": "right", "padding": "5px"});
 
     return divModule;
 }

@@ -35,8 +35,6 @@ div.imgPizza {
 }​
 
 .orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
-#userinfo{position: absolute; top:0; right: 30px;}
-#settings{position: absolute; top:0; right: 200px;}
 
 .ktimer {
     position: absolute;

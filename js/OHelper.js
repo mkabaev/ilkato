@@ -77,19 +77,30 @@ function createOperatorInterface() {
 
     }).disableSelection();
 
-    $(".o_orderBatchPanel").sortable({
+    $(".o_itemsPanel").sortable({
         connectWith: ".connectedSortable",
         receive: function (event, ui) {
             console.log("Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
         }
     }).disableSelection();
 
-
-
     $("#o_activeOrdersPanel").sortable({
         //connectWith: ".connectedSortable",
         axis: "y",
     }).disableSelection();
+
+    var fs = $('<fieldset/>', {
+        class: 'rg-kplace'
+    }).prependTo($('#topwidget'));
+    //fs.append('<legend>Фильтр: </legend>');
+    fs.append('<label for="chkP">Печерская</label>');
+    fs.append('<input type="checkbox" name="chkP" id="chkP">');
+    fs.append('<label for="chkNS">Ново-Садовая</label>');
+    fs.append('<input type="checkbox" name="chkNS" id="chkNS">');
+    fs.children('input').checkboxradio({
+        icon: false
+    });
+
 }
 
 /**
@@ -105,7 +116,7 @@ function CreateOrder(order) {
         //attr: {'idKitchen': order.idKitchen, 'ts': timestamp}
     });
     if (order.idKitchen) {
-        divOrder.attr('idKitchen',order.idKitchen);
+        divOrder.attr('idKitchen', order.idKitchen);
         divOrder.addClass('ord-workplace-' + order.idKitchen);
     }
 
@@ -246,7 +257,7 @@ function CreateOrder(order) {
     }).appendTo(divOrderContent);
     tt.children('button').click(function () {
         var idOrder = $(this).parent().parent().parent().attr('id');
-        var idKitchen=$(this).attr('idKitchen');
+        var idKitchen = $(this).attr('idKitchen');
 //        change order.idKitchen on Server
         $.ajax({
             type: "POST",
@@ -256,9 +267,9 @@ function CreateOrder(order) {
             success: function (data) {
                 //$(".ordrow").removeClass("ui-state-error");
                 //setOrderstoLS($.parseJSON(jsondata));
-                var order=$.parseJSON(localStorage.getItem('o_'+idOrder));
-                order.idKitchen=$(this).parent().parent().parent().attr('idKitchen');
-                localStorage['o_'+idOrder]=JSON.stringify(order);
+                var order = $.parseJSON(localStorage.getItem('o_' + idOrder));
+                order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
+                localStorage['o_' + idOrder] = JSON.stringify(order);
                 //console.log('DONE');
                 updateOInterface_orders([getOrderFromLS(idOrder)]);
             },
@@ -282,35 +293,6 @@ function CreateOrder(order) {
         }).length;
     }
 
-
-
-//    var fs=$('<fieldset/>', {
-//        class:'rg-kplace'
-//    }).appendTo(divOrderContent);
-//    
-//     fs.append('<legend>Select a Location: </legend>');       
-//     fs.append('<label for="radio-1">А</label>');       
-//     fs.append('<input type="radio" name="radio-1" id="radio-1">');       
-//     fs.append('<label for="radio-2">НС</label>');       
-//     fs.append('<input type="radio" name="radio-1" id="radio-2">');  
-//     fs.children('input').checkboxradio();
-//     
-//     var tt=$('<div/>', {
-//        class:'rg-kplace',
-//        html:'<input type="radio" name="r" value=l>1<input type="radio" name="r" value=2/>2'
-//    }).appendTo(divOrderHeader);
-
-//<fieldset>
-//    <legend>Select a Location: </legend>
-//    <label for="radio-1">New York</label>
-//    <input type="radio" name="radio-1" id="radio-1">
-//    
-//    <label for="radio-2">Paris</label>
-//    <input type="radio" name="radio-1" id="radio-2">
-//    <label for="radio-3">London</label>
-//    <input type="radio" name="radio-1" id="radio-3">
-//  </fieldset>
-
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
     return divOrder;
@@ -319,9 +301,52 @@ function CreateOrder(order) {
 function CreateBatchPanel() {
     var divPanel = $('<div/>', {
         //id: panel_id,
-        class: 'o_orderBatchPanel connectedSortable ui-state-default',
+        class: 'o_orderBatchPanel',
         //attr: {'row': row, 'bla': 'blllaa'}
+        //html:'<div class="o_orderBatchPanelButtons">asd</div>'
     });
+
+    var divButtonsPanel = $('<div/>', {
+        //id: panel_id,
+        class: 'o_orderBatchPanelButtons',
+        //attr: {'row': row, 'bla': 'blllaa'}
+        //html:'<span class="ui-icon ui-icon-grip-dotted-vertical"></span>'
+    }).appendTo(divPanel);
+
+    var bAdd = $("<button/>", {
+        //type: 'checkbox',
+        //id: 'bAdd' + order.id,
+        //name: 'n' + order.id
+        //class: 'orderDoneButton'
+    }).appendTo(divButtonsPanel);
+
+    bAdd.button({
+        icons: {
+            primary: "ui-icon-plus",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+    bAdd.css({'width' : '25px', 'height':'25px',})
+
+    bAdd.click(function (event) {
+//        $(event.target).parent().
+        $('#o_activeOrdersPanel').append(CreateBatchPanel());
+
+    });
+
+
+
+
+
+
+    var divItemsPanel = $('<div/>', {
+        //id: panel_id,
+        class: 'o_itemsPanel connectedSortable ui-state-hover',
+        //attr: {'row': row, 'bla': 'blllaa'}
+        //html:'<h3>asd</h3>'
+    }).appendTo(divPanel);
     return divPanel;
 }
 

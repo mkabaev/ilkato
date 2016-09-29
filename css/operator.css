@@ -40,8 +40,8 @@
 
 
 #o_activeOrdersPanel{
-    border: 1px solid #eee;
-    width: 820px;
+    border: 1px solid #e78f08ee;
+    width: 80%;
     min-height: 160px;
     margin: 0;
     padding: 5px 0 0 0;
@@ -49,6 +49,33 @@
     margin-right: 10px;
     overflow-y: auto;
 }
+
+.o_orderBatchPanel{
+    height: 160px;
+    border: 1px solid #eee;
+    margin: 5px;
+    width: auto;    
+}
+
+.o_itemsPanel{
+    height: 158px;
+    border: 1px solid #eee;
+/*    width: auto;*/
+width:900px;
+float:left;
+    
+}
+
+.o_orderBatchPanelButtons {
+    width:30px;
+    height: 158px;
+    float:left;
+}
+
+.o_orderBatchPanel .order {
+    display:inline-block;
+}
+
 
 .kplace{
     position: absolute;
@@ -71,17 +98,17 @@
     background: none;
     background-color: lightsalmon;
 }*/
-
-.o_orderBatchPanel{
-    height: 160px;
-    border: 1px solid #eee;
-    margin: 5px;
-    width: auto;
+#topwidget{
+    font-size: 0.5em;
+    float:right;
+    margin-right: 100px;
 }
 
-.o_orderBatchPanel .order {
-    display:inline-block;
+#topwidget .ui-checkboxradio-checked{
+    background:none;
+    background-color: #FECA40;
 }
+
 
 .o_price{
     font-size: 0.7em;

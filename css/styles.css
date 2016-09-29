@@ -26,6 +26,10 @@ tr:nth-child(even) {background-color: #f2f2f2}
 body {
     /*min-width: 520px;*/
 }
+
+#userinfo{float:right; margin-right: 10px;}
+#settings{float:right; margin-right: 10px;}
+
 .ordrow {
     width: 100%;
     height: 230px;

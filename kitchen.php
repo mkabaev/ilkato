@@ -24,8 +24,9 @@
     </head>
     <body>
         <div id="topmenu" class="ui-widget ui-state-focus" style="height:24px;">
-            <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
             <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
+            <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
+            <div id="topwidget"></div>
         </div>
 
         <!--<audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg" autoplay>
