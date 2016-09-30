@@ -2,7 +2,7 @@ function createKitchenInterface() {
     //var tableItems = $.parseJSON(localStorage.products);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
-    createTimer('timer', 'ktimer', 10, 160).appendTo(ov);
+    createTimer('timer', 'ktimer', 10, 140).appendTo($('#workplace'));
     //$('body').append(CreateLeftPanel());
 
 

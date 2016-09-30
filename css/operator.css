@@ -7,8 +7,8 @@
 }
 
 .order:hover {
-/*    border-color: red;*/
-/*    background-color: yellow;*/
+    /*    border-color: red;*/
+    /*    background-color: yellow;*/
 }
 
 /*принятые*/
@@ -51,25 +51,29 @@
 }
 
 .o_orderBatchPanel{
-    height: 160px;
+    height: 147px;
     border: 1px solid #eee;
     margin: 5px;
-    width: auto;    
 }
 
 .o_itemsPanel{
-    height: 158px;
+    height: 145px;
     border: 1px solid #eee;
-/*    width: auto;*/
-width:900px;
-float:left;
-    
+    width:900px;
+    float:left;
 }
 
 .o_orderBatchPanelButtons {
-    width:30px;
-    height: 158px;
+    width:25px;
+    height: 145px;
     float:left;
+    position: relative;
+    bottom:0;
+    font-size: 0.5em;
+}
+.o_orderBatchPanelButtons button{
+    bottom:0;
+    position: absolute;
 }
 
 .o_orderBatchPanel .order {

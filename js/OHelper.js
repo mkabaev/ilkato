@@ -208,26 +208,7 @@ function CreateOrder(order) {
 //      },
 //      text: false
 //  }).appendTo(divOrderContent);;
-
-
-    //$('<label for="' + 'bEdit' + order.id + '">Редактор</label>').appendTo(divOrderContent);
-    var bEdit = $("<button/>", {
-        type: 'checkbox',
-        id: 'bEdit' + order.id,
-        name: 'n' + order.id
-                //class: 'orderDoneButton'
-    }).appendTo(divOrderContent);
-
-    bEdit.button({
-        icons: {
-            primary: "ui-icon-pencil",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-        text: false
-    }
-    );
-
-    bEdit.click(function (event) {
+    divOrder.dblclick(function (event) {
         createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
 //        //var order = $(event.target).parent().parent();
 //        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
@@ -241,14 +222,6 @@ function CreateOrder(order) {
 //        $("#dlgEdit").attr("order_id", order_id);
 //        $("#dlgEdit").dialog("open");
     });
-    //divOrderContent.append(btnDone);
-
-//    $('<button/>')
-//            .text('Test')
-//            .click(function () {
-//                alert('hi');
-//            }).appendTo(divOrderContent);
-
 
 
     var tt = $('<div/>', {

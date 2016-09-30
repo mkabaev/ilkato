@@ -51,4 +51,3 @@ require_once 'database.php';
 //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //echo json_encode($rows, JSON_UNESCAPED_UNICODE);
 //try {
-

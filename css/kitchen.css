@@ -1,9 +1,30 @@
-#leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
+/*#leftpanel {z-index:2; position: fixed; width: 80px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}*/
 
-.orderViewer {position:absolute; top:40px; bottom:10px; left:80px; right:10px; display:none;}
+/*.orderViewer {position:absolute; top:40px; bottom:10px; left:80px; right:10px; display:none;}*/
+.orderViewer {
+    display:none;
+    position:absolute;
+    width:1035px;
+    top:40px;
+    bottom:10px;
+    left:80px;
+/*    right:10px;*/
+}
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
-.mk {float: left; width:40%; padding-top:6px; margin-left: 10px; overflow-y:auto}
-.mk .tProducts{position: relative; margin-left: auto; margin-right: auto; width: 90%;}
+.mk {
+    float: left;
+    width:500px;
+    padding-top:6px; 
+    margin-left: 10px; 
+    height: 90%;
+    overflow-y:auto;
+}
+.mk .tProducts{
+    position: relative; 
+    margin-left: auto; 
+    margin-right: auto;
+    width: 90%;
+}
 /*background-color: #F39814;*/
 .mk .doneButton{
     font-size: 2em;
@@ -45,7 +66,7 @@ div.imgPizza {
     margin-bottom: 10px;
     text-align: center;
     right:10px;
-    top: 10px;    
+    top: 20px;    
     font-size: 40px;
     font-weight:bold;
 }

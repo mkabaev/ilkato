@@ -107,3 +107,50 @@ order.toggleClass('ui-state-disabled');
         }
 
     });
+
+
+
+
+
+
+
+
+
+
+//$('<label for="' + 'bEdit' + order.id + '">Редактор</label>').appendTo(divOrderContent);
+    var bEdit = $("<button/>", {
+        type: 'checkbox',
+        id: 'bEdit' + order.id,
+        name: 'n' + order.id
+                //class: 'orderDoneButton'
+    }).appendTo(divOrderContent);
+
+    bEdit.button({
+        icons: {
+            primary: "ui-icon-pencil",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+
+    bEdit.click(function (event) {
+        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+//        //var order = $(event.target).parent().parent();
+//        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
+//        var order_id = $(event.target).parent().parent().attr("id");
+////        $("#scanr").text("");
+////        $("#scanp").text("");
+////        $("#weight").text("");
+//        weightR = 0;
+//        weightP = 0;
+//        //LoadOrderProducts(order_id);
+//        $("#dlgEdit").attr("order_id", order_id);
+//        $("#dlgEdit").dialog("open");
+    });
+
+//    $('<button/>')
+//            .text('Test')
+//            .click(function () {
+//                alert('hi');
+//            }).appendTo(divOrderContent);
