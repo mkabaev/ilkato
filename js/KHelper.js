@@ -177,7 +177,6 @@ function updateOrderViewer(id) {
     }
 }
 
-
 function updateKInterface_SelPanel() {
 
     console.log("--загружаем из LS заказы со статусом Готовить, Готовится, Приготовлен");

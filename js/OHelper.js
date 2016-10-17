@@ -209,7 +209,15 @@ function CreateOrder(order) {
 //      text: false
 //  }).appendTo(divOrderContent);;
     divOrder.dblclick(function (event) {
-        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+//        var ov = $('#ordViewer');
+//        if (!ov) {
+//            alert('create');
+            createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+//        }else{
+//            ov.fadeIn(1000);
+//        }
+        updateOrderViewer(order.id);
+
 //        //var order = $(event.target).parent().parent();
 //        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
 //        var order_id = $(event.target).parent().parent().attr("id");
@@ -301,7 +309,7 @@ function CreateBatchPanel() {
         text: false
     }
     );
-    bAdd.css({'width' : '25px', 'height':'25px',})
+    bAdd.css({'width': '25px', 'height': '25px', })
 
     bAdd.click(function (event) {
 //        $(event.target).parent().

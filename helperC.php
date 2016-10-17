@@ -1,80 +1,86 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-if (version_compare(PHP_VERSION, '5.6.0') <= 0) {
-    define('JSON_UNESCAPED_UNICODE', 256);
-}
-date_default_timezone_set('Europe/Samara');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-require_once 'database.php';
+$post_action = filter_input(INPUT_POST, 'action');
+$get_action = filter_input(INPUT_GET, 'action');
 
-function getCouriers() {
-    $db = new DB_delivery();
-    $query = "SELECT id, name FROM testform_courier limit 20";
-    $stmt = $db->conn->prepare($query);
-    $stmt->execute();
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($items, JSON_UNESCAPED_UNICODE);
+$action=null;
+
+//страничку можно вызвать либо с параметрами ГЕТ либо ПОСТ. Одновременно нельзя 'by design'
+
+
+//проверим есть ли ПОСТ параметры
+if ($post_action!=NULL) {
+    $action = $post_action;
 }
 
-function DBLog($data) {
-    $db = new DB();
-    $query = "INSERT into log (`data`, data2) VALUES (:d,:d2)";
-    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
-    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':d', $data);
-    $stmt->bindParam(':d2', $data);
-    $stmt->execute();
-    return 1;
+//проверим есть ли ГЕТ параметры
+if ($get_action!=NULL) {
+    $action = $get_action;
 }
-
-//checkdb();
-$action = filter_input(INPUT_POST, 'action');
-//$actionG = filter_input(INPUT_GET, 'action');
-//if ($actionG = 'getUsers') {
-//    echo getUsers();
-//}
-
-
 
 switch ($action) {
-    case 'setCouriers':
-        var_dump($_POST);
-        DBLog(json_encode($_POST));
+    case NULL: //если форма без параметров вызвана и action остался null
+        echo 'Э, а где параметры?';
         break;
-    case 'getKOrders':
-        echo getOrders($_POST["json"], "K");
+    case 'getText':
+        echo 'Это не закодированный в JSON текст';
         break;
-    case 'getCOrders':
-        echo getOrders($_POST["json"], "C");
+    case 'getOneObject':
+        echo funcGetObject();
         break;
-    case 'getOrderProducts':
-        echo getOrderProducts($_POST["order_id"]);
+    case 'getObjectWithOneObjElement':
+        echo funcGetObject2();
         break;
-    case 'updateOrderStatus':
-        echo updateOrderStatus($_POST["id"], $_POST["status_id"]);
+    case 'getArrayOfObjects':
+        echo funcGetArrayOfObjects();
         break;
-    case 'SetCourierToOrders':
-        echo SetCourierToOrders($_POST["json"], $_POST["courier_id"]);
+    default: //не описанные параметры
+        echo 'э бля, чето я не знаю такого параметра';
         break;
-    case 'getCouriers':
-        echo getCouriers();
-        break;
-    case 'getUsers':
-        echo getUsers();
-        break;
-    case 'SetOrderPosition':
-        echo SetOrderPosition($_POST["issue_id"], $_POST["x"], $_POST["y"]);
-        break;
-    case 'SetOrderProducts':
-        echo SetOrderProducts($_POST["issue_id"], $_POST["weightR"], $_POST["weightP"]);
-        break;
-    default:
-        break;
+}
+
+//возвращает JSON строку в виде объекта {..,..,..}
+function funcGetObject() {
+    $arr = [
+        "Name" => "Вася",
+        "CoordY" => 2593,
+        "CoordX" => 1777,
+        "Comment" => "Быстрый курьер. Знает город воще пепец как",
+    ];
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+//возвращает JSON строку в виде объекта, один из элементов представляект собой массив {..,[..]..,..}
+function funcGetObject2() {
+    $arrCoords1 = ["x" => 123, "y" => 674];
+    $arr = [
+        "Name" => "Вася",
+        "Coords" => $arrCoords1,
+        "Comment" => "Быстрый курьер. Знает город воще пепец как",
+    ];
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+//возвращает JSON строку в виде массива из объектов [{..,[..]..,..}, {..,[..]..,..}, {..,[..]..,..}]
+function funcGetArrayOfObjects() {
+    $arrCoords1 = ["x" => 123, "y" => 674];
+    $arr1 = [
+        "Name" => "Вася",
+        "Coords" => $arrCoords1,
+        "Comment" => "Быстрый курьер. Знает город воще пепец как",
+    ];
+
+
+    $arrCoords2 = ["x" => 333, "y" => 467];
+    $arr2 = [
+        "Name" => "Петя",
+        "Coords" => $arrCoords2,
+        "Comment" => "Тормозной курьер из Мухосранска",
+    ];
+
+
+
+    $arr = [$arr1, $arr2];
+
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
 }

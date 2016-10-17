@@ -10,8 +10,7 @@ define('DB_PORT', 3306);
 //define('STATUS_ID_ORDER', 2); //Принят
 
 // оператор выставляет
-define('STATUS_ID_TODO', 3); //готовить
-//
+define('STATUS_ID_TODO', 3); //готовить 27
 // повар выставляет
-define('STATUS_ID_DELIVERY', 5); //Доставка
-define('STATUS_ID_DONE', 4); //приготовлен
+define('STATUS_ID_DONE', 4); //приготовлен 28
+define('STATUS_ID_DELIVERY', 5); //доставка 29
