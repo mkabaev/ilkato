@@ -14,14 +14,69 @@ function createOperatorInterface() {
         class: 'connectedSortable',
         //attr: {'title': 'caption'}
     });
-    pnlOrders.appendTo($('#workplace'))
-    updateOInterface_ordersPanel();
+    pnlOrders.appendTo($('#workplace'));
+
+
+    //updateOInterface_ordersPanel();
+    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен");
+//        console.log(getOrdersFromLS());
+    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+        return currentValue.idStatus >= 1 && currentValue.idStatus <= 6;
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+    });
+
+    $(orders).each(function (indx, order) {
+        pnlOrders.append(CreateOrder(order));
+    });
+
+
+
+    //updateOInterface_ordersPanel();
+    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен");
+//        console.log(getOrdersFromLS());
+    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+        return currentValue.idStatus >= 1 && currentValue.idStatus <= 6;
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+    });
+
+    updateOInterface_orders(orders);
+
+
+
+
+
+
+
+
+
+
+
 
     var pnlActiveOrders = $('<div/>', {
         id: 'o_activeOrdersPanel',
         //class: 'connectedSortable',
         //attr: {'title': 'caption'}
     });
+
+    pnlActiveOrders.sortable({
+        //connectWith: ".connectedSortable",
+        axis: "y",
+    }).disableSelection();
+
     //var pnlActiveOrders = CreateGroupPanel();
     pnlActiveOrders.appendTo($('#workplace'));
     pnlActiveOrders.append(CreateBatchPanel());
@@ -73,21 +128,8 @@ function createOperatorInterface() {
             console.log("Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
         }
 
-
-
     }).disableSelection();
 
-    $(".o_itemsPanel").sortable({
-        connectWith: ".connectedSortable",
-        receive: function (event, ui) {
-            console.log("Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
-        }
-    }).disableSelection();
-
-    $("#o_activeOrdersPanel").sortable({
-        //connectWith: ".connectedSortable",
-        axis: "y",
-    }).disableSelection();
 
     var fs = $('<fieldset/>', {
         class: 'rg-kplace'
@@ -115,10 +157,10 @@ function CreateOrder(order) {
         class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
         //attr: {'idKitchen': order.idKitchen, 'ts': timestamp}
     });
-    if (order.idKitchen) {
-        divOrder.attr('idKitchen', order.idKitchen);
-        divOrder.addClass('ord-workplace-' + order.idKitchen);
-    }
+//    if (order.idKitchen) {
+//        divOrder.attr('idKitchen', order.idKitchen);
+//        divOrder.addClass('ord-workplace-' + order.idKitchen);
+//    }
 
 //    if (order.idStatus == 4) {
 //        divOrder.addClass('ui-state-disabled');
@@ -212,7 +254,7 @@ function CreateOrder(order) {
 //        var ov = $('#ordViewer');
 //        if (!ov) {
 //            alert('create');
-            createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
+        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
 //        }else{
 //            ov.fadeIn(1000);
 //        }
@@ -328,50 +370,58 @@ function CreateBatchPanel() {
         //attr: {'row': row, 'bla': 'blllaa'}
         //html:'<h3>asd</h3>'
     }).appendTo(divPanel);
+
+    divItemsPanel.sortable({
+        connectWith: ".connectedSortable",
+        receive: function (event, ui) {
+            console.log("Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+        }
+    }).disableSelection();
+
     return divPanel;
-}
-
-function updateOInterface_ordersPanel() {
-    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен");
-//        console.log(getOrdersFromLS());
-    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idStatus >= 1 && currentValue.idStatus <= 6;
-//1	Принят
-//2	Готовить
-//3	Готовится
-//4	Приготовлен
-//5	Доставка
-//6	В пути
-//7	Доставлен
-//8	Отказ
-    });
-
-//    var mappedOrders = orders.map(function (obj) {
-//        var newObj = {};
-//        newObj.id = obj.id;
-//        newObj.Name = obj.No;
-////                newObj.ts = obj.ts;
-//        newObj.Price = obj.Price;
-//        return newObj;
-//    });
-
-    var pnlOrders = $('#o_ordersPanel');
-    pnlOrders.empty();
-    //var items = ArrayToLiItems(mappedOrders);
-
-    var pnlOrder;
-    $(orders).each(function (indx, order) {
-        pnlOrders.append(CreateOrder(order));
-    });
 }
 
 function updateOInterface_orders(orders) {
     $(orders).each(function (indx, order) {
         var divOrder = $('#' + order.id);
+        if (!divOrder) {
+            divOrder = CreateOrder(order);
+            $('#o_ordersPanel').append(divOrder);
+        }
+
+
         if (divOrder) {
             divOrder.removeClass('ord-workplace-3 ord-workplace-4');
             divOrder.addClass('ord-workplace-' + order.idKitchen);
             //console.log('try: '+order.id);
+            
+switch (order.idStatus) {
+  case 1://Принят
+    divOrder.addClass('ui-state-disabled');
+    break;
+  case 2://Готовить
+    divOrder.addClass('ui-state-default');
+    break;
+  case 3://Готовится
+      divOrder.addClass('ui-state-disabled');
+    break;
+  case 4://Приготовлен
+      divOrder.addClass('ui-state-disabled');
+    break;
+  case 5://Доставка
+      divOrder.addClass('ui-state-disabled');
+    break;
+  case 6://В пути
+      divOrder.addClass('ui-state-disabled');
+    break;
+  case 7://Доставлен
+      divOrder.addClass('ui-state-disabled');
+    break;
+  default:
+    //alert( 'Я таких значений не знаю' );
+}
+
+
         }
         //pnlOrders.append(CreateOrder(order));
     });
