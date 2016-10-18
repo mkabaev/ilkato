@@ -115,8 +115,9 @@ function createSelectPanel(id, _class, items, callback) {
 
 function CreateDialog(id, caption, _class) {
     var divDialog = $('<div/>', {
-        id: 'dlg_' + id,
-        class: _class,
+        //id: 'dlg_' + id,
+        id: id,
+        //class: _class,
         attr: {'title': caption}
     });
     //$('body').append(divDialog);
@@ -140,7 +141,7 @@ function CreateDialog(id, caption, _class) {
                 divDialog.dialog('close');
             })
         },
-        dialogClass: "noclose"
+        dialogClass: "noclose "+_class
     });
     return divDialog;
 }

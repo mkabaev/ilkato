@@ -194,3 +194,9 @@
     overflow: auto;
     margin-bottom: 0.2em;
 }*/
+
+.o_orderViewerDlg {
+    width: 20%;
+    height: 20%;
+    left:100px;
+}

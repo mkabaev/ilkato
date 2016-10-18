@@ -251,14 +251,13 @@ function CreateOrder(order) {
 //      text: false
 //  }).appendTo(divOrderContent);;
     divOrder.dblclick(function (event) {
-//        var ov = $('#ordViewer');
-//        if (!ov) {
-//            alert('create');
-        createOrderViewer('ordViewer', 'orderViewer').appendTo($('#workplace')).fadeIn(1000);
-//        }else{
-//            ov.fadeIn(1000);
-//        }
+        var dlgV=$('#dlgV');
+        if (!dlgV.length) {
+            var dlgV=CreateDialog('dlgV','Заказ','o_orderViewerDlg');
+            dlgV.append(createOrderViewer('ordViewer', 'orderViewer').fadeIn(1000));
+        }
         updateOrderViewer(order.id);
+        dlgV.dialog('open');
 
 //        //var order = $(event.target).parent().parent();
 //        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
@@ -394,32 +393,32 @@ function updateOInterface_orders(orders) {
             divOrder.removeClass('ord-workplace-3 ord-workplace-4');
             divOrder.addClass('ord-workplace-' + order.idKitchen);
             //console.log('try: '+order.id);
-            
-switch (order.idStatus) {
-  case 1://Принят
-    divOrder.addClass('ui-state-disabled');
-    break;
-  case 2://Готовить
-    divOrder.addClass('ui-state-default');
-    break;
-  case 3://Готовится
-      divOrder.addClass('ui-state-disabled');
-    break;
-  case 4://Приготовлен
-      divOrder.addClass('ui-state-disabled');
-    break;
-  case 5://Доставка
-      divOrder.addClass('ui-state-disabled');
-    break;
-  case 6://В пути
-      divOrder.addClass('ui-state-disabled');
-    break;
-  case 7://Доставлен
-      divOrder.addClass('ui-state-disabled');
-    break;
-  default:
-    //alert( 'Я таких значений не знаю' );
-}
+
+            switch (order.idStatus) {
+                case 1://Принят
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                case 2://Готовить
+                    divOrder.addClass('ui-state-default');
+                    break;
+                case 3://Готовится
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                case 4://Приготовлен
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                case 5://Доставка
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                case 6://В пути
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                case 7://Доставлен
+                    divOrder.addClass('ui-state-disabled');
+                    break;
+                default:
+                    //alert( 'Я таких значений не знаю' );
+            }
 
 
         }
