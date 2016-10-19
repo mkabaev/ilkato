@@ -195,8 +195,12 @@
     margin-bottom: 0.2em;
 }*/
 
-.o_orderViewerDlg {
-    width: 20%;
-    height: 20%;
-    left:100px;
+.o_orderViewerDlg .orderViewer{
+    left:0;
+    right: 0;
+    top:"10px";
+}
+.o_orderViewerDlg .orderViewer #orderheader{
+    visibility: hidden;
+    height: 0;
 }

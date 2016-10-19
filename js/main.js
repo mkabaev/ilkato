@@ -117,14 +117,16 @@ function CreateDialog(id, caption, _class) {
     var divDialog = $('<div/>', {
         //id: 'dlg_' + id,
         id: id,
-        //class: _class,
+        class: _class,
         attr: {'title': caption}
     });
     //$('body').append(divDialog);
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
 
     divDialog.dialog({
-        width: "900px",
+        width: 900,
+        height: 600,
+        //width: "auto",
         autoOpen: false,
         modal: true,
         resizable: false,
@@ -139,9 +141,10 @@ function CreateDialog(id, caption, _class) {
         open: function () {
             $('.ui-widget-overlay').bind('click', function () {
                 divDialog.dialog('close');
+                divDialog.dialog('destroy');
             })
         },
-        dialogClass: "noclose "+_class
+        dialogClass: "noclose"
     });
     return divDialog;
 }

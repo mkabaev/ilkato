@@ -5,6 +5,7 @@
     display:none;
     position:absolute;
     width:1035px;
+    min-height: 480px;
     top:40px;
     bottom:10px;
     left:80px;

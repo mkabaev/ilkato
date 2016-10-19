@@ -251,25 +251,8 @@ function CreateOrder(order) {
 //      text: false
 //  }).appendTo(divOrderContent);;
     divOrder.dblclick(function (event) {
-        var dlgV=$('#dlgV');
-        if (!dlgV.length) {
-            var dlgV=CreateDialog('dlgV','Заказ','o_orderViewerDlg');
-            dlgV.append(createOrderViewer('ordViewer', 'orderViewer').fadeIn(1000));
-        }
-        updateOrderViewer(order.id);
-        dlgV.dialog('open');
-
-//        //var order = $(event.target).parent().parent();
-//        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
-//        var order_id = $(event.target).parent().parent().attr("id");
-////        $("#scanr").text("");
-////        $("#scanp").text("");
-////        $("#weight").text("");
-//        weightR = 0;
-//        weightP = 0;
-//        //LoadOrderProducts(order_id);
-//        $("#dlgEdit").attr("order_id", order_id);
-//        $("#dlgEdit").dialog("open");
+        showOrderDialog(order);
+        //showSelectUserDialog();
     });
 
 
@@ -318,6 +301,62 @@ function CreateOrder(order) {
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
     return divOrder;
+}
+
+function showOrderDialog(order) {
+    
+        //var dlgV=$('#dlgV');
+        //if (!dlgV.length) {
+            var dlgV=CreateDialog('dlgV','Заказ '+order.No,'o_orderViewerDlg');
+            //dlgV.dialog( "option", "resizable", true );
+            dlgV.dialog( "option", "height", 600 );
+            dlgV.dialog( "option", "width", 1100 );
+            
+            var ov=createOrderViewer('ordViewer', 'orderViewer');
+            //ov.addClass('ul_selec');
+            dlgV.append(ov.fadeIn(1000));
+        //}
+        updateOrderViewer(order.id);
+        dlgV.dialog('open');
+
+//        //var order = $(event.target).parent().parent();
+//        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));
+//        var order_id = $(event.target).parent().parent().attr("id");
+////        $("#scanr").text("");
+////        $("#scanp").text("");
+////        $("#weight").text("");
+//        weightR = 0;
+//        weightP = 0;
+//        //LoadOrderProducts(order_id);
+//        $("#dlgEdit").attr("order_id", order_id);
+//        $("#dlgEdit").dialog("open");
+
+
+
+//    var dlg = $('#dlg_selUsers');
+//    if (!dlg.length) {
+//        dlg = CreateSelectDialog('SelUsers', 'Авторизация', undefined, undefined, afterSelUser);
+//    }
+//    $.ajax({
+//        type: "POST",
+//        data: "action=getUsers",
+//        url: "helper.php",
+//        cache: false,
+//        success: function (jsondata) {
+//            //console.log('dialog ' + id + ' found on page. items');
+//            console.log('users loaded from server: ' + jsondata);
+//            $('#workplace').removeClass("ui-state-error");
+//            $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
+//            //dlg.dialog('open');
+//        },
+//        error: function (xhr, ajaxOptions, thrownError) {
+//            console.log("status: " + xhr.status + " | " + thrownError);
+//            $("#workplace").addClass("ui-state-error");
+//            //$("body").addClass("ui-state-error");
+////            alert(xhr.status);
+////            alert(thrownError);
+//        }
+//    });
 }
 
 function CreateBatchPanel() {
