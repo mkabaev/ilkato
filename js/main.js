@@ -236,7 +236,7 @@ function doInit() {
                 //save actual orders to LS
                 var data = $.parseJSON(jsondata);
                 localStorage.id_session = data.id_session;
-                setOrderstoLS(data.orders);
+                setItemsToLS('o_',data.orders);
 
                 updateInterface_user();
                 //clearStorage();
@@ -359,27 +359,44 @@ function updateInterface_user() {
     $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }
 
-function getOrdersFromLS() {
-    var orders = [];
+function getItemFromLS(prefix,id) {
+    var item = undefined;
     //console.log('LS items count: '+localStorage.length);
     for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i).substr(0, 2) === 'o_') {
-            orders.push($.parseJSON(localStorage[localStorage.key(i)]));
+        if (localStorage.key(i) === prefix + id) {
+            item = $.parseJSON(localStorage[localStorage.key(i)]);
         }
     }
-    return orders;
+    return item;
+}
+
+function getItemsFromLS(prefix) {
+    var items = [];
+    //console.log('LS items count: '+localStorage.length);
+    for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).substr(0, 2) === prefix) {
+            items.push($.parseJSON(localStorage[localStorage.key(i)]));
+        }
+    }
+    return items;
 }
 
 function getOrderFromLS(id) {
-    var order = undefined;
-    //console.log('LS items count: '+localStorage.length);
-    for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i) === 'o_' + id) {
-            order = $.parseJSON(localStorage[localStorage.key(i)]);
-        }
-    }
-    return order;
+    return getItemFromLS("o_",id);
 }
+
+function getOrdersFromLS() {
+    return getItemsFromLS('o_');
+}
+
+function getBatchFromLS(id) {
+    return getItemFromLS("b_",id);
+}
+
+function getBatchesFromLS() {
+    return getItemsFromLS('b_');
+}
+
 
 function afterSelUser(sender, id, name) {
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
@@ -403,7 +420,7 @@ function sendRequest() {
             //console.log('active orders: ' + jsondata);
             $(".ordrow").removeClass("ui-state-error");
             // load otrders?
-            setOrderstoLS($.parseJSON(jsondata));
+            setItemsToLS('o_',$.parseJSON(jsondata));
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
@@ -443,13 +460,13 @@ function clearStorage() {
 }
 
 //copy data to LS and update interface if needed
-function setOrderstoLS(data) {
+function setItemsToLS(prefix,data) {
     $.each(data, function (key, val) {
-        console.log('saving order to LS:' + JSON.stringify(val));
+        console.log('saving '+prefix+' to LS:' + JSON.stringify(val));
         if (val){
-        localStorage.setItem('o_' + val.id, JSON.stringify(val));            
+        localStorage.setItem(prefix + val.id, JSON.stringify(val));            
         }else{
-            console.log('ERROR setOrderstoLS: val is null');
+            console.log('ERROR setItemstoLS: val is null');
         }
             
 
@@ -468,6 +485,22 @@ function setOrderstoLS(data) {
         }
     });
 }
+
+
+//ANIMATE ELEMENT
+var notLocked = true;
+$.fn.animateHighlight = function(highlightColor, duration) {
+    var highlightBg = highlightColor || "#FFFF9C";
+    var animateMs = duration || 1500;
+    var originalBg = this.css("backgroundColor");
+    if (notLocked) {
+        notLocked = false;
+        this.stop().css("background-color", highlightBg)
+            .animate({backgroundColor: originalBg}, animateMs);
+        setTimeout( function() { notLocked = true; }, animateMs);
+    }
+};//using //.animateHighlight("#dd0000", 1000);
+
 
 $(document).ready(function () {
     //K_RequestServer();

@@ -40,6 +40,7 @@ function addEventListeners() {
         }, false);
 
         eventSource.addEventListener('ordUpdate', ordUpdate, false);
+        eventSource.addEventListener('batchUpdate', batchUpdate, false);
 
     } else {
         alert("Sorry, your browser does not support server-sent events..., Звоните Максимке");
@@ -47,25 +48,21 @@ function addEventListeners() {
 }
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
-    //console.log($.parseJSON(e.data));
-    var orders=$.parseJSON(e.data);
-    setOrderstoLS(orders);
-    afterOrdUpdate(orders);
-//    $.getJSON('http://localhost/ilkato/orderJSON.json', function (data) {
-//        $.each(data, function (key, val) {
-//            localStorage.setItem('o_' + val.id, JSON.stringify(val));
-//        });
-//    });
+    var items = $.parseJSON(e.data);
+    setItemsToLS("o_",items);
+    afterOrdUpdate(items);
 }
-function afterOrdUpdate(orders) {
-    //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
-    //localStorage.products_ts = e.data;
 
-    //localStorage.products = '[{"id":"3","name":"Ролл 1' + e.data + ' ","count":"2","weight":"250"},{"id":"10","name":"Ролл 2","count":"2","weight":"250"},{"id":"11","name":"Ролл 3","count":"2","weight":"250"},{"id":"12","name":"Ролл 4","count":"2","weight":"250"},{"id":"13","name":"Ролл 5","count":"2","weight":"250"},{"id":"17","name":"Ролл 6","count":"2","weight":"250"},{"id":"19","name":"Ролл 7","count":"2","weight":"250"},{"id":"20","name":"Ролл 8","count":"2","weight":"250"}]';
-    //localStorage.products_ts = e.data;
+function batchUpdate(e) {
+    console.log('batchUpdate fired:' + e.data);
+    var items = $.parseJSON(e.data);
+    setItemsToLS("b_", items);
+    afterBatchUpdate(items);
+}
+
+function afterOrdUpdate(orders) {
     switch (localStorage.wp_type) {
         case '2':
-            //updateOInterface_ordersPanel();
             updateOInterface_orders(orders);
             break;
         case '3':
@@ -73,49 +70,23 @@ function afterOrdUpdate(orders) {
             updateKInterface_SelPanel();
             break;
     }
-
     sound.playclip();
 }
 
-function LoadOrderProducts(order_id)
-{
-    return $.ajax({
-        type: "POST",
-        data: "action=getOrderProducts&order_id=" + order_id,
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            console.log("Loading products. Server response is " + jsondata);
-            var data = $.parseJSON(jsondata);
-            var items = [];
-            var sum = 0;
-            //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
-            weightP = 0;
-            weightR = 0;
-            $.each(data, function (key, val) {
-                var id_string = "";
-                sum = sum + parseFloat(val.price);
-                switch (val.product_id) {
-                    case '1271':
-                        id_string = "id='scanp'";
-                        weightP = parseFloat(val.count);
-                        break;
-                    case '1272':
-                        id_string = "id='scanr'";
-                        weightR = parseFloat(val.count);
-                        break;
-                    case '1273':
-                        id_string = "id='weight'";
-                        break;
-                }
-                items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td " + id_string + ">" + val.count + "</td><td>" + val.price + "</td></tr>");
+function afterBatchUpdate(batches) {
+    switch (localStorage.wp_type) {
+        case '2':
+            updateOInterface_batches(batches);
+            $.each(batches, function (key, batch) {
+                $("#b" + batch.id).effect("pulsate", {times: 2}, 2000);
             });
-            //items.push("<tr><tfoot>sum</tfoot><tfoot>Кол-во</tfoot><tfoot>"+sum+"</tfoot></tr>");
-            $("#weight").text((weightP + weightR));
-            $("#tProducts tbody").html(items);
-            $("#totalPrice").html(sum);
-        }
-    });
+            break;
+        case '3': //TODO: batches in kitchen
+            //updateOrderViewer(localStorage.activeOrder);
+            //updateKInterface_SelPanel();
+            break;
+    }
+    sound.playclip();
 }
 
 function LoadOrderProducts(order_id)
