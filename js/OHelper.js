@@ -155,7 +155,7 @@ function CreateOrder(order) {
     var divTime = $('<div/>', {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
-        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><span class="status">'+order.idStatus+'</span>'//order_time
+        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">'+order.idStatus+'</span>'//order_time
     });
     divOrderHeader.append(divTime);
 
@@ -380,31 +380,31 @@ function updateOInterface_orders(orders) {
             $('#o_ordersPanel').append(divOrder);
         }
 
-        if (divOrder.length) {
+        //if (divOrder) {
             divOrder.removeClass('ord-workplace-3 ord-workplace-4');
             divOrder.addClass('ord-workplace-' + order.idKitchen);
             //console.log('try: '+order.id);
             switch (order.idStatus) {
-                case 1://Принят
+                case "1"://Принят
                     //divOrder.addClass('ui-state-disabled');
                     divOrder.find("span.status").text("Принят");
                     break;
-                case 2://Готовить
+                case "2"://Готовить
                     divOrder.find("span.status").text("Готовить");
                     break;
-                case 3://Готовится
+                case "3"://Готовится
                     divOrder.find("span.status").text("Готовится");
                     break;
-                case 4://Приготовлен
+                case "4"://Приготовлен
                     divOrder.find("span.status").text("Приготовлен");
                     break;
-                case 5://Доставка
+                case "5"://Доставка
                     divOrder.find("span.status").text("Доставка");
                     break;
-                case 6://В пути
+                case "6"://В пути
                     divOrder.find("span.status").text("В пути");
                     break;
-                case 7://Доставлен
+                case "7"://Доставлен
                     divOrder.find("span.status").text("Доставлен");
                     break;
                 default:
@@ -412,7 +412,7 @@ function updateOInterface_orders(orders) {
             }
 
 
-        }
+        //}
         //pnlOrders.append(CreateOrder(order));
         $("#" + order.id).effect("bounce", "slow");
     });

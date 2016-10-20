@@ -109,24 +109,25 @@ function createOrderViewer(id, _class) {
 
     divHeader.append(divNumber);
     divOrderViewer.append(divHeader);
-    divOrderViewer.append('<div id=ordercomment class="comment">' + 'comment' + '</div>');
+    divOrderViewer.append('<div id=ordlog></div><div id=ordercomment class="comment">' + 'comment' + '</div>');
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
     divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
     divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
-
+divOrderViewer.append('<div id="ordlog"></div>');
     return divOrderViewer;
 }
 
 function updateOrderViewer(id) {
     localStorage.activeOrder = id;
     var order = getOrderFromLS(id);
-    if (order == undefined) {
+    if (order === undefined) {
         // load from server
         console.log('ord undef');
     } else {
         //console.log('ordViewer updating ' + order.comment);
+        //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
         if (order.Products) {

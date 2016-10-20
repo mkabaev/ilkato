@@ -237,7 +237,7 @@ function doInit() {
                 var data = $.parseJSON(jsondata);
                 localStorage.id_session = data.id_session;
                 setItemsToLS('o_',data.orders);
-
+                setItemsToLS('b_',data.batches);
                 updateInterface_user();
                 //clearStorage();
                 //loadDataToStorage();

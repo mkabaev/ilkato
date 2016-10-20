@@ -75,7 +75,7 @@ function getActiveOrders() {
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
 //    $query = 'SELECT tip.product_id,
 //        tip.count,
 //        tip.discount,
@@ -102,56 +102,26 @@ function getActiveOrders() {
 //    var_dump( $orders);
 //    echo '</pre>';
 
-    foreach ($orders AS $key => $order) {
-        $orders[$key]['Client'] = json_decode($order['Client']);
-        $orders[$key]['Products'] = json_decode($order['Products']);
-        $orders[$key]['Log'] = json_decode($order['Log']);
+    foreach ($items AS $key => $order) {
+        $items[$key]['Client'] = json_decode($order['Client']);
+        $items[$key]['Products'] = json_decode($order['Products']);
+        $items[$key]['Log'] = json_decode($order['Log']);
     }
     //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
-    return $orders;
+    return $items;
 }
 
 function getActiveBatches() {
     $db = new DB();
-    $query = "SELECT b.* from v_batches b where idStatus<7";
+    $query = "SELECT * from v_batches";
     $stmt = $db->conn->prepare($query);
     //$stmt->bindParam(':date', $date);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
-//    $query = 'SELECT tip.product_id,
-//        tip.count,
-//        tip.discount,
-//        tip.price,
-//        tip.mark_deleted,
-//        tip.comment,
-//        tip.income_date_time,
-//        tip.complete_date_time,
-//        tp.name,
-//        tp.category_id,
-//        tp.price,
-//        tp.weight,
-//        tp.minimum_quantity,
-//        tp.measure_id,
-//        tp.comment ProductComment,
-//        tp.picture_id FROM testform_issue_products tip LEFT JOIN testform_menu_products tp ON tip.product_id=tp.id WHERE tip.issue_id=:order_id';
-//    $stmt = $db->conn->prepare($query);
-//    $stmt->bindParam(':order_id', $order_id);
-//    //$date = '2015.12.18';
-//    $stmt->execute();
-//    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //echo $orders[1]['client'];
-//    echo '<pre>';
-//    var_dump( $orders);
-//    echo '</pre>';
-
-    foreach ($orders AS $key => $order) {
-        $orders[$key]['Client'] = json_decode($order['Client']);
-        $orders[$key]['Products'] = json_decode($order['Products']);
-    }
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
     //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
-    return $orders;
+    return $items;
 }
 
 function getSessionUpdates($id_session) {
@@ -358,9 +328,8 @@ switch ($action) {
         $wid = filter_input(INPUT_POST, 'wid');
         updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
-
-        $orders = getActiveOrders();
-        $data = ['id_session' => $id_session, 'orders' => $orders];
+        
+        $data = ['id_session' => $id_session, 'orders' => getActiveOrders(), 'batches' => getActiveBatches()];
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'getKOrders':
