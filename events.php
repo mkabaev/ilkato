@@ -8,30 +8,31 @@ $id_session = filter_input(INPUT_GET, 'id_session'); // isset($_GET['uid']) ? (i
 // установить в базе статус онлайн для этого юзера
 require_once 'helper.php';
 //updateUserStatus($uid, true);
-
 //$i = 0;
 
 while (true) { //$i < 3
-    //$i = $i + 1;
-    echo "event: ordUpdate" . PHP_EOL;
-    // TODO: send changed orders only
     $updates = getSessionUpdates($id_session);
-    $json = $updates['data'];
-    if (count($updates) > 0) {
-        $data=$updates[0]['data'];
-        if($data==NULL){
-        echo "data: " . "[" . 'null' . "]" . "\n\n";
-        }else{
-        echo "data: " . "[" . $data . "]" . "\n\n";
-            
-        }
-    }
-    //echo "data: msg\n\n";
-//echo PHP_EOL;
-    ob_end_flush();
-    flush();
-    sleep(1);
 
+    foreach ($updates as $update) {
+        echo "event: ".$update['event']. PHP_EOL;
+        // TODO: send changed orders only
+        //$json = $update['data'];
+        //if (count($updates) > 0) {
+            $data = $update['data'];
+            if ($data == NULL) {
+                echo "data: " . "[" . 'null' . "]" . "\n\n";
+            } else {
+                echo "data: " . "[" . $data . "]" . "\n\n";
+            }
+        //}
+        //echo "data: msg\n\n";
+//echo PHP_EOL;
+        ob_end_flush();
+        flush();
+        sleep(1);
+    }
+
+    //$i = $i + 1;
 //            echo "data: msg\n\n";
 //echo PHP_EOL;
 //            echo ": heartbeat\n\n";

@@ -113,7 +113,7 @@ function getActiveOrders() {
 
 function getActiveBatches() {
     $db = new DB();
-    $query = "SELECT * from v_batches";
+    $query = "SELECT * from batches where isActive=1";
     $stmt = $db->conn->prepare($query);
     //$stmt->bindParam(':date', $date);
     //$date = date('Y.m.d');
@@ -207,6 +207,19 @@ function updateOrderKithcenID($idOrder, $idKitchen) {
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idOrder', $idOrder);
     $stmt->bindParam(':idKitchen', $idKitchen);
+    $res=$stmt->execute();
+    return $res;
+}
+
+function updateBatch($id, $idCourier, $QueueNo) {
+    $db = new DB();
+    $query = "UPDATE ilkato.batches SET idCourier=:idCourier, QueueNo=:QueueNo WHERE id=:id";
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':idCourier', $idCourier);
+    $stmt->bindParam(':QueueNo', $QueueNo);
     $res=$stmt->execute();
     return $res;
 }
@@ -363,6 +376,13 @@ switch ($action) {
         $idOrder = filter_input(INPUT_POST, 'idOrder');
         $idKitchen = filter_input(INPUT_POST, 'idKitchen');
         echo updateOrderKithcenID($idOrder,$idKitchen);
+        break;
+    case 'updateBatch':
+        $id = filter_input(INPUT_POST, 'id');
+        $idCourier = filter_input(INPUT_POST, 'idCourier');
+        $QueueNo = filter_input(INPUT_POST, 'QueueNo');
+        $result=updateBatch($id, $idCourier, $QueueNo);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
     default:
         break;

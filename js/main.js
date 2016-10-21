@@ -229,7 +229,7 @@ function doInit() {
                 $(".ordrow").removeClass("ui-state-error");
                 // remove orders from LS
                 $.each(localStorage, function (key, value) {
-                    if (key.startsWith('o_')) {
+                    if (key.startsWith('o_') | key.startsWith('b_')) {
                         localStorage.removeItem(key);
                     }
                 });
@@ -462,7 +462,7 @@ function clearStorage() {
 //copy data to LS and update interface if needed
 function setItemsToLS(prefix,data) {
     $.each(data, function (key, val) {
-        console.log('saving '+prefix+' to LS:' + JSON.stringify(val));
+        //console.log('saving '+prefix+' to LS:' + JSON.stringify(val));
         if (val){
         localStorage.setItem(prefix + val.id, JSON.stringify(val));            
         }else{

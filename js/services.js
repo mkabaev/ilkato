@@ -77,9 +77,6 @@ function afterBatchUpdate(batches) {
     switch (localStorage.wp_type) {
         case '2':
             updateOInterface_batches(batches);
-            $.each(batches, function (key, batch) {
-                $("#b" + batch.id).effect("pulsate", {times: 2}, 2000);
-            });
             break;
         case '3': //TODO: batches in kitchen
             //updateOrderViewer(localStorage.activeOrder);
