@@ -141,7 +141,7 @@ function getSessionUpdates($id_session) {
     $stmt->bindParam(':id_session', $id_session);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
-    $res=$stmt->execute();
+    $res = $stmt->execute();
 
     //foreach ($orders AS $key => $order) {
     //    $orders[$key]['client'] = json_decode($order['client']);
@@ -168,7 +168,6 @@ function getUsers() {
 //    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //    return json_encode($items, JSON_UNESCAPED_UNICODE);
 //}
-
 //function getOrderProducts($order_id) {
 //    $db = new DB_delivery();
 //    $query = 'SELECT tip.product_id,
@@ -195,7 +194,7 @@ function updateUserStatus($idPerson, $isOnline) {
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idPerson', $idPerson);
     $stmt->bindParam(':isOnline', $isOnline);
-    $res=$stmt->execute();
+    $res = $stmt->execute();
     return $res;
 }
 
@@ -207,7 +206,20 @@ function updateOrderKithcenID($idOrder, $idKitchen) {
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idOrder', $idOrder);
     $stmt->bindParam(':idKitchen', $idKitchen);
-    $res=$stmt->execute();
+    $res = $stmt->execute();
+    return $res;
+}
+
+function updateOrderIdBatch($idOrder, $idBatch) {
+    $db = new DB();
+    $query = "UPDATE ilkato.orders SET idBatch=:idBatch WHERE id=:idOrder";
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':idOrder', $idOrder);
+    $stmt->bindParam(':idBatch', $idBatch, PDO::PARAM_INT);
+    //bindValue(":null", null, PDO::PARAM_NULL);;
+    $res = $stmt->execute();
     return $res;
 }
 
@@ -220,7 +232,19 @@ function updateBatch($id, $idCourier, $QueueNo) {
     $stmt->bindParam(':id', $id);
     $stmt->bindParam(':idCourier', $idCourier);
     $stmt->bindParam(':QueueNo', $QueueNo);
-    $res=$stmt->execute();
+    $res = $stmt->execute();
+    return $res;
+}
+
+function updateBatchQueueNo($id, $QueueNo) {
+    $db = new DB();
+    $query = "UPDATE ilkato.batches SET QueueNo=:QueueNo WHERE id=:id";
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':QueueNo', $QueueNo);
+    $res = $stmt->execute();
     return $res;
 }
 
@@ -255,11 +279,9 @@ function registerNewSession($uid, $wid) {
 //    //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
 //}
-
 //function SetCourierToOrders($orders_json, $courier_id) {
 //    $db = new DB_delivery();
 // date('Y-m-d H:i:s');
-
 //    $query = "UPDATE testform_issues SET status_id=:status_id, courier_id=:courier_id WHERE id=:order_id";
 //    $stmt = $db->conn->prepare($query);
 //    $status_id = STATUS_ID_DELIVERY;
@@ -268,13 +290,11 @@ function registerNewSession($uid, $wid) {
 //    $stmt->bindParam(':courier_id', $courier_id);
 //    $stmt->bindParam(':order_id', $order_id);
 ////    //$id = '2015.12.18';
-
 //    $array = json_decode($orders_json, true);
 //    $ar_timestamps = array();
 //    foreach ($array as $value) {
 //        $order_id = $value;
 //        $stmt->execute();
-
 //        $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$order_id");
 //        $sel_stmt->execute();
 //        $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
@@ -282,11 +302,8 @@ function registerNewSession($uid, $wid) {
 //    }
 //    $db->conn->query("call RecalcOrdersPosition()");
 ////$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 //    return json_encode($ar_timestamps, JSON_UNESCAPED_UNICODE);
 //}
-
 //function SetOrderPosition($issue_id, $x, $y) {
 //   $db = new DB_delivery();
 //    $upd_stmt = $db->conn->prepare("UPDATE module_kitchen SET x=$x, y=$y WHERE id_issue=$issue_id");
@@ -294,15 +311,12 @@ function registerNewSession($uid, $wid) {
 ////    $upd_stmt->bindParam(':x', $x);
 ////    $upd_stmt->bindParam(':y', $y);
 //    $upd_stmt->execute();
-
 //    $sel_stmt = $db->conn->prepare("SELECT `timestamp` FROM module_kitchen WHERE id_issue=$issue_id");
 //    $sel_stmt->execute();
-
 //    $res = $sel_stmt->fetch(PDO::FETCH_COLUMN, 0);
 //    //$res['timestamp']
 //    return $res; //json_encode($rows, JSON_UNESCAPED_UNICODE);
 //}
-
 //function SetOrderProducts($issue_id, $weightR, $weightP) {
 //    $db = new DB_delivery();
 ////1271	ВЕС ПИЦЦА
@@ -327,7 +341,6 @@ function registerNewSession($uid, $wid) {
 //    }
 //    return 1; //json_encode($rows, JSON_UNESCAPED_UNICODE);
 //}
-
 ////checkdb();
 $action = filter_input(INPUT_POST, 'action');
 ////$actionG = filter_input(INPUT_GET, 'action');
@@ -341,7 +354,7 @@ switch ($action) {
         $wid = filter_input(INPUT_POST, 'wid');
         updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
-        
+
         $data = ['id_session' => $id_session, 'orders' => getActiveOrders(), 'batches' => getActiveBatches()];
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
@@ -375,13 +388,27 @@ switch ($action) {
     case 'updateOrderKithcenID':
         $idOrder = filter_input(INPUT_POST, 'idOrder');
         $idKitchen = filter_input(INPUT_POST, 'idKitchen');
-        echo updateOrderKithcenID($idOrder,$idKitchen);
+        echo updateOrderKithcenID($idOrder, $idKitchen);
+        break;
+    case 'updateOrderIdBatch':
+        $idOrder = filter_input(INPUT_POST, 'idOrder');
+        $idBatch = filter_input(INPUT_POST, 'idBatch');
+        if ($idBatch == 'NULL') {
+            $idBatch = null;
+        }
+        echo updateOrderIdBatch($idOrder, $idBatch);
         break;
     case 'updateBatch':
         $id = filter_input(INPUT_POST, 'id');
         $idCourier = filter_input(INPUT_POST, 'idCourier');
         $QueueNo = filter_input(INPUT_POST, 'QueueNo');
-        $result=updateBatch($id, $idCourier, $QueueNo);
+        $result = updateBatch($id, $idCourier, $QueueNo);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        break;
+        case 'updateBatchQueueNo':
+        $id = filter_input(INPUT_POST, 'id');
+        $QueueNo = filter_input(INPUT_POST, 'QueueNo');
+        $result = updateBatchQueueNo($id, $QueueNo);
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
     default:

@@ -28,9 +28,18 @@ function createOperatorInterface() {
     pnlActiveOrders.sortable({
         //connectWith: ".connectedSortable",
         axis: "y",
-        update: function( event, ui ) {
+        update: function (event, ui) {
+            
+            idBatch = parseInt(ui.item.attr("idBatch"));
+            QueueNo = parseInt(ui.item.attr("idBatch"));
+            //TODO: recalc QueueNo
+            console.log("set Batch QueueNo");
+            sendRequest('updateBatchQueueNo', 'idBatch=' + idBatch + '&QueueNo=' + QueueNo, function (response) {
+                console.log(response);
+            });
+        
             //console.log("Changed" + ui.sender.attr("id"));// + " to " + ui.item.parent().attr("id"));
-            console.log("id:"+ui.item.attr("idBatch")+" QueueNo:"+ui.item.attr("QueueNo"));// + " to " + ui.item.parent().attr("id"));
+            console.log("id:" + ui.item.attr("idBatch") + " QueueNo:" + ui.item.attr("QueueNo"));// + " to " + ui.item.parent().attr("id"));
         },
 //        change: function( event, ui ) {
 //            //console.log("Changed" + ui.sender.attr("id"));// + " to " + ui.item.parent().attr("id"));
@@ -91,7 +100,12 @@ function createOperatorInterface() {
 //                    }
 
         receive: function (event, ui) {
-            console.log("HEYY..Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+            idOrder = parseInt(ui.item.attr("id"));
+            idBatch = "NULL";
+            console.log("set idBatch=null in order");
+            sendRequest('updateOrderIdBatch', 'idOrder=' + idOrder + '&idBatch=' + idBatch, function (response) {
+                console.log(response);
+            });
         }
 
     }).disableSelection();
@@ -327,7 +341,7 @@ function showOrderDialog(order) {
 
 function CreateBatchPanel(idBatch, QueueNo) {
     var divPanel = $('<div/>', {
-        id: 'b'+idBatch,
+        id: 'b' + idBatch,
         class: 'o_orderBatchPanel',
         attr: {'idBatch': idBatch, 'QueueNo': QueueNo}
         //html:'<div class="o_orderBatchPanelButtons">asd</div>'
@@ -372,11 +386,20 @@ function CreateBatchPanel(idBatch, QueueNo) {
 
     divItemsPanel.sortable({
         connectWith: ".connectedSortable",
+        update: function (event, ui) {
+            console.log("Update Queue: " + ui.item.attr("id") + " to " + ui.item.parent().parent().attr("id") + "  index: " + $(ui.item).index());
+
+        },
         receive: function (event, ui) {
-            console.log("Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
+            idOrder = parseInt(ui.item.attr("id"));
+            idBatch = parseInt(ui.item.parent().parent().attr("idBatch"));
+            console.log("updating idBatch in order");
+            sendRequest('updateOrderIdBatch', 'idOrder=' + idOrder + '&idBatch=' + idBatch, function (response) {
+                console.log(response)
+            });
         }
     }).disableSelection();
-divPanel.append(QueueNo);
+    divPanel.append(QueueNo);
     return divPanel;
 }
 
@@ -387,6 +410,10 @@ function updateOInterface_orders(orders) {
         if (!divOrder.length) {
             divOrder = CreateOrder(order);
             ordersPanel.append(divOrder);
+        }
+        alert(order.idBatch)
+        if (order.idBatch != null) {
+            divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
         }
 
         //if (divOrder) {
@@ -432,16 +459,16 @@ function updateOInterface_batches(batches) {
     $(batches).each(function (indx, batch) {
         var divBatchPanel = $('#b' + batch.id);
         if (!divBatchPanel.length) {
-            divBatchPanel = CreateBatchPanel(batch.id,batch.QueueNo);
+            divBatchPanel = CreateBatchPanel(batch.id, batch.QueueNo);
             activeOrdersPanel.append(divBatchPanel);
         }
-        divBatchPanel.attr("QueueNo",batch.QueueNo);
+        divBatchPanel.attr("QueueNo", batch.QueueNo);
         //divItemsPanel.effect("bounce", "slow");
     });
 
-activeOrdersPanel.find('.o_orderBatchPanel').sort(function (a, b) {
-   return $(a).attr('QueueNo') - $(b).attr('QueueNo');
-})
-.appendTo(activeOrdersPanel);
+    activeOrdersPanel.find('.o_orderBatchPanel').sort(function (a, b) {
+        return $(a).attr('QueueNo') - $(b).attr('QueueNo');
+    })
+            .appendTo(activeOrdersPanel);
 
 }

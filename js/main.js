@@ -219,7 +219,7 @@ function doInit() {
         //set USER ONLINE on server and then get active orders
         $.ajax({
             type: "POST",
-            data: "action=login&uid=" + localStorage.uid + "&wid=" + localStorage.wp_id+ "&old_sid=" + localStorage.id_session,
+            data: "action=login&uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session,
             url: "helper.php?",
             cache: false,
             success: function (jsondata) {
@@ -236,8 +236,8 @@ function doInit() {
                 //save actual orders to LS
                 var data = $.parseJSON(jsondata);
                 localStorage.id_session = data.id_session;
-                setItemsToLS('o_',data.orders);
-                setItemsToLS('b_',data.batches);
+                setItemsToLS('o_', data.orders);
+                setItemsToLS('b_', data.batches);
                 updateInterface_user();
                 //clearStorage();
                 //loadDataToStorage();
@@ -359,7 +359,7 @@ function updateInterface_user() {
     $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }
 
-function getItemFromLS(prefix,id) {
+function getItemFromLS(prefix, id) {
     var item = undefined;
     //console.log('LS items count: '+localStorage.length);
     for (var i = 0; i < localStorage.length; i++) {
@@ -382,7 +382,7 @@ function getItemsFromLS(prefix) {
 }
 
 function getOrderFromLS(id) {
-    return getItemFromLS("o_",id);
+    return getItemFromLS("o_", id);
 }
 
 function getOrdersFromLS() {
@@ -390,7 +390,7 @@ function getOrdersFromLS() {
 }
 
 function getBatchFromLS(id) {
-    return getItemFromLS("b_",id);
+    return getItemFromLS("b_", id);
 }
 
 function getBatchesFromLS() {
@@ -409,18 +409,16 @@ function afterSelUser(sender, id, name) {
     //updateInterface_user();
 }
 
-function sendRequest() {
+function sendRequest(action, paramsstr, callback) {
     $.ajax({
         type: "POST",
-        data: "action=login&uid=" + localStorage.uid,
+        data: "action=" + action + "&" + paramsstr,
         url: "helper.php?",
         cache: false,
         success: function (jsondata) {
-            //console.log('user ' + localStorage.user_name + ' set status online');
-            //console.log('active orders: ' + jsondata);
-            $(".ordrow").removeClass("ui-state-error");
-            // load otrders?
-            setItemsToLS('o_',$.parseJSON(jsondata));
+            if (callback) {
+                callback(jsondata);
+            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
@@ -432,6 +430,9 @@ function sendRequest() {
     });
 
 }
+
+
+
 //DYNAMIC CSS and JS load
 function loadjscssfile(filename, filetype) {
     if (filetype == "js") { //if filename is a external JavaScript file
@@ -460,15 +461,15 @@ function clearStorage() {
 }
 
 //copy data to LS and update interface if needed
-function setItemsToLS(prefix,data) {
+function setItemsToLS(prefix, data) {
     $.each(data, function (key, val) {
         //console.log('saving '+prefix+' to LS:' + JSON.stringify(val));
-        if (val){
-        localStorage.setItem(prefix + val.id, JSON.stringify(val));            
-        }else{
+        if (val) {
+            localStorage.setItem(prefix + val.id, JSON.stringify(val));
+        } else {
             console.log('ERROR setItemstoLS: val is null');
         }
-            
+
 
 //then update interface
         switch (localStorage.wp_type) {
@@ -489,15 +490,17 @@ function setItemsToLS(prefix,data) {
 
 //ANIMATE ELEMENT
 var notLocked = true;
-$.fn.animateHighlight = function(highlightColor, duration) {
+$.fn.animateHighlight = function (highlightColor, duration) {
     var highlightBg = highlightColor || "#FFFF9C";
     var animateMs = duration || 1500;
     var originalBg = this.css("backgroundColor");
     if (notLocked) {
         notLocked = false;
         this.stop().css("background-color", highlightBg)
-            .animate({backgroundColor: originalBg}, animateMs);
-        setTimeout( function() { notLocked = true; }, animateMs);
+                .animate({backgroundColor: originalBg}, animateMs);
+        setTimeout(function () {
+            notLocked = true;
+        }, animateMs);
     }
 };//using //.animateHighlight("#dd0000", 1000);
 
