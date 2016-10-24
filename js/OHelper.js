@@ -109,7 +109,7 @@ function createOperatorInterface() {
 
     var fs = $('<fieldset/>', {
         class: 'rg-kplace'
-    }).prependTo($('#topwidget'));
+    }).appendTo($('#o_filter'));
     //fs.append('<legend>Фильтр: </legend>');
     fs.append('<label for="chkP">Печерская</label>');
     fs.append('<input type="checkbox" name="chkP" id="chkP">');

@@ -27,6 +27,7 @@ body {
     /*min-width: 520px;*/
 }
 
+#o_filter{position: absolute; margin-left: 280px; width:600px; height:60px;}
 #userinfo{float:right; margin-right: 10px;}
 #settings{float:right; margin-right: 10px;}
 

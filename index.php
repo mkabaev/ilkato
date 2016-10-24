@@ -24,6 +24,7 @@
     </head>
     <body>
         <div id="topmenu" class="ui-widget ui-state-focus" style="height:24px;">
+            <div id="o_filter">Дата: <input type="text" id="datepicker"></div>
             <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
             <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
             <div id="topwidget"></div>
@@ -67,11 +68,18 @@
                 $('#settings').fadeOut().fadeIn();
             });
 
-            $('#settings').click(function () {
-                //console.log(eventSource);
-                //eventSource.close();
-                eventSource.removeEventListener('ordUpdate', afterOrdUpdate, false);
+            $("#datepicker").datepicker({
+                //showOn: "button",
+                //buttonImage: "images/calendar.gif",
+                //buttonImageOnly: true,
+                //buttonText: "Select date"
             });
+//
+//            $('#settings').click(function () {
+//                //console.log(eventSource);
+//                //eventSource.close();
+//                eventSource.removeEventListener('ordUpdate', afterOrdUpdate, false);
+//            });
             //проверяем есть ли юзер. 
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
