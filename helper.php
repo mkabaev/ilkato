@@ -248,6 +248,23 @@ function updateBatchQueueNo($id, $QueueNo) {
     return $res;
 }
 
+function updateBatchesQueue($ids) {
+    $db = new DB();
+
+    $query = "UPDATE ilkato.batches SET QueueNo=? WHERE id=?";
+    //$query = ";
+    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
+    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $stmt = $db->conn->prepare($query);
+
+    $queue = 0;
+    foreach ($ids as $id) {
+        $queue = $queue + 1;
+        $res = $stmt->execute(array($queue, $id));
+    }
+    return $res;
+}
+
 function registerNewSession($uid, $wid) {
     $db = new DB();
 
@@ -405,12 +422,17 @@ switch ($action) {
         $result = updateBatch($id, $idCourier, $QueueNo);
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
-        case 'updateBatchQueueNo':
+    case 'updateBatchQueueNo':
         $id = filter_input(INPUT_POST, 'id');
         $QueueNo = filter_input(INPUT_POST, 'QueueNo');
         $result = updateBatchQueueNo($id, $QueueNo);
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
+    case 'updateBatchesQueue':
+        $ids = filter_input(INPUT_POST, 'ids');        
+        $result = updateBatchesQueue(json_decode($ids));
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        break;
     default:
         break;
-}
+}    

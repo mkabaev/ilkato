@@ -29,17 +29,13 @@ function createOperatorInterface() {
         //connectWith: ".connectedSortable",
         axis: "y",
         update: function (event, ui) {
-            
-            idBatch = parseInt(ui.item.attr("idBatch"));
-            QueueNo = parseInt(ui.item.attr("idBatch"));
-            //TODO: recalc QueueNo
-            console.log("set Batch QueueNo");
-            sendRequest('updateBatchQueueNo', 'idBatch=' + idBatch + '&QueueNo=' + QueueNo, function (response) {
+            var IDs = [];
+            pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
+                IDs.push($(this).attr("idBatch"));
+            });
+            sendRequest('updateBatchesQueue', 'ids=' + JSON.stringify(IDs), function (response) {
                 console.log(response);
             });
-        
-            //console.log("Changed" + ui.sender.attr("id"));// + " to " + ui.item.parent().attr("id"));
-            console.log("id:" + ui.item.attr("idBatch") + " QueueNo:" + ui.item.attr("QueueNo"));// + " to " + ui.item.parent().attr("id"));
         },
 //        change: function( event, ui ) {
 //            //console.log("Changed" + ui.sender.attr("id"));// + " to " + ui.item.parent().attr("id"));
@@ -165,19 +161,20 @@ function CreateOrder(order) {
     if (order.Client) {
         strAddress = order.Client.Street + ', ' + order.Client.Building;
     }
+    var comments = order.Comment.split('|');
     var divOrderContent = $('<div/>', {
         //id: "content_"+order_id,
         class: 'order-content',
         //html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + order.Client.Street + ', ' + order.Client.Building + '</div>'
-        html: '<div><span class=comment>' + order.Comment + '</span><hr/>' + strAddress + '</div>'
+        html: '<div><span class=comment>' + comments[0] + '</span><hr/>' + strAddress + '</div>'
     });
 
-    //var curDate = new Date();
     var dt = new Date(order.CreateDate)
     var divTime = $('<div/>', {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
-        html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
+        html: 'Принят в <span class="CTime"></span><br/>Доставить к <span class="DTime"></span><br/><br/><span class="status"></span>'//order_time
+        //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
     });
     divOrderHeader.append(divTime);
 
@@ -243,25 +240,14 @@ function CreateOrder(order) {
     tt.children('button').click(function () {
         var idOrder = $(this).parent().parent().parent().attr('id');
         var idKitchen = $(this).attr('idKitchen');
-//        change order.idKitchen on Server
-        $.ajax({
-            type: "POST",
-            data: "action=updateOrderKithcenID&idOrder=" + idOrder + "&idKitchen=" + idKitchen,
-            url: "helper.php?",
-            cache: false,
-            success: function (data) {
-                //$(".ordrow").removeClass("ui-state-error");
-                //setOrderstoLS($.parseJSON(jsondata));
-                var order = $.parseJSON(localStorage.getItem('o_' + idOrder));
-                order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
-                localStorage['o_' + idOrder] = JSON.stringify(order);
-                //console.log('DONE');
-                updateOInterface_orders([getOrderFromLS(idOrder)]);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log("ERROR: " + xhr.status + " | " + thrownError);
-                //$(".ordrow").addClass("ui-state-error");
-            }
+        console.log("updating idKitchen in order");
+        sendRequest('updateOrderKithcenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (response) {
+            console.log(response)
+            var order = $.parseJSON(localStorage.getItem('o_' + idOrder));
+            order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
+            localStorage['o_' + idOrder] = JSON.stringify(order);
+            //console.log('DONE');
+            updateOInterface_orders([getOrderFromLS(idOrder)]);
         });
 
     });
@@ -372,9 +358,16 @@ function CreateBatchPanel(idBatch, QueueNo) {
     bAdd.css({'width': '25px', 'height': '25px', })
 
     bAdd.click(function (event) {
-//        $(event.target).parent().
-        $('#o_activeOrdersPanel').append(CreateBatchPanel());
-
+////        $(event.target).parent().
+//        var pnlActiveOrders = $('#o_activeOrdersPanel');
+//        pnlActiveOrders.append(CreateBatchPanel());
+//        var IDs = [];
+//        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
+//            IDs.push($(this).attr("idBatch"));
+//        });
+//        sendRequest('updateBatchesQueue', 'ids=' + JSON.stringify(IDs), function (response) {
+//            console.log(response);
+//        });
     });
 
     var divItemsPanel = $('<div/>', {
@@ -409,13 +402,17 @@ function updateOInterface_orders(orders) {
         var divOrder = $('#' + order.id);
         if (!divOrder.length) {
             divOrder = CreateOrder(order);
-            ordersPanel.append(divOrder);
         }
-        alert(order.idBatch)
+        //alert(order.idBatch)
         if (order.idBatch != null) {
             divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+        } else {
+            ordersPanel.append(divOrder);
         }
 
+        $(divOrder).find('span.CTime').text(order.CTime);
+        $(divOrder).find('span.DTime').text(order.DTime);
+        
         //if (divOrder) {
         divOrder.removeClass('ord-workplace-3 ord-workplace-4');
         divOrder.addClass('ord-workplace-' + order.idKitchen);
