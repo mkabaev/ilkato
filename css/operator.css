@@ -217,3 +217,11 @@
     visibility: hidden;
     height: 0;
 }
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+.ord-status-7{
+/*    opacity: 0.2;*/
+    animation: blinker 500ms linear infinite;
+}

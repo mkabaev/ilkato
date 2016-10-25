@@ -54,7 +54,7 @@ require_once 'database.php';
 //    $db->conn = null;
 //}
 
-function getActiveOrders() {
+function getOrders($date) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
@@ -69,10 +69,12 @@ function getActiveOrders() {
 //            . "o.`price`, "
 //            . "o.`timestamp` as ts "
 //            . "FROM orders o WHERE o.`idStatus`=" . 1 . " or o.`idStatus`=" . 2 . " limit 100";
-    $query = "SELECT * from v_orders where idStatus<7";
+    //$query = "SELECT * from v_orders where idStatus<7";
+    $query = "SELECT * from v_orders where CDate=:date";
     $stmt = $db->conn->prepare($query);
-    //$stmt->bindParam(':date', $date);
+    $stmt->bindParam(':date', $date);
     //$date = date('Y.m.d');
+    //$date = '2016-10-25';
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
@@ -372,15 +374,15 @@ switch ($action) {
         updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
 
-        $data = ['id_session' => $id_session, 'orders' => getActiveOrders(), 'batches' => getActiveBatches()];
+        $data = ['id_session' => $id_session, 'orders' => getOrders("2016-10-25"), 'batches' => getActiveBatches()];
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
-    case 'getKOrders':
-        echo getOrders($_POST["json"], "K");
-        break;
-    case 'getCOrders':
-        echo getOrders($_POST["json"], "C");
-        break;
+//    case 'getKOrders':
+//        echo getOrders($_POST["json"], "K");
+//        break;
+//    case 'getCOrders':
+//        echo getOrders($_POST["json"], "C");
+//        break;
     case 'getOrderProducts':
         echo getOrderProducts($_POST["order_id"]);
         break;

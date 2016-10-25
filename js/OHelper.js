@@ -7,18 +7,13 @@ function createOperatorInterface() {
     pnlOrders.appendTo($('#workplace'));
 
     var filterdate = (new Date()).toISOString().substring(0, 10);
-    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
-    var orders = getOrdersFromLS().filter(function (order, index, arr) {
-        return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
-//1	Принят
-//2	Готовить
-//3	Готовится
-//4	Приготовлен
-//5	Доставка
-//6	В пути
-//7	Доставлен
-//8	Отказ
-    });
+    //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
+    //var orders = getOrdersFromLS().filter(function (order, index, arr) {
+        //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
+        //return order.DDate == filterdate;
+        var orders = getOrdersFromLS();
+//    });
+
     //var dt=Date.parse(orders[1].DDate);
     //var dt = new Date(orders[1].DDate);
     //var today = new Date();
@@ -464,13 +459,16 @@ function updateOInterface_orders(orders) {
             //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
             log += this.ts.substr(11,5)+ ": "+idStatusToString(this.idStatus)+'\n';
         });
-        $(divOrder).attr('title', log);
-        $(divOrder).find('span.CTime').text(order.CTime);
-        $(divOrder).find('span.DTime').text(order.DTime);
+        divOrder.attr('title', log);
+        divOrder.find('span.CTime').text(order.CTime);
+        divOrder.find('span.DTime').text(order.DTime);
 
         //if (divOrder) {
         divOrder.removeClass('ord-workplace-3 ord-workplace-4');
         divOrder.addClass('ord-workplace-' + order.idKitchen);
+        
+        divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
+        divOrder.addClass('ord-status-' + order.idStatus);
         //console.log('try: '+order.id);
         switch (order.idStatus) {
             case "1"://Принят
