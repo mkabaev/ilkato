@@ -48,9 +48,18 @@ function addEventListeners() {
 }
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
-    var items = $.parseJSON(e.data);
-    setItemsToLS("o_",items);
-    afterOrdUpdate(items);
+    var orders = $.parseJSON(e.data);
+    setItemsToLS("o_",orders);
+    
+    var dates=[];
+    $(orders).each(function (indx, order) {
+         dates.push(order.DDate);
+    });
+    
+    localStorage.dates=$.unique(dates);
+    //localStorage.dates = ["2016-10-25", "2016-10-26", "2016-10-28"];
+
+    afterOrdUpdate(orders);
 }
 
 function batchUpdate(e) {
@@ -66,6 +75,7 @@ function afterOrdUpdate(orders) {
             updateOInterface_orders(orders);
             break;
         case '3':
+            //TODO: update if order id == localStorage.activeOrder
             updateOrderViewer(localStorage.activeOrder);
             updateKInterface_SelPanel();
             break;

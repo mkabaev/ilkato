@@ -103,16 +103,29 @@
     background-color: lightsalmon;
 }*/
 #topwidget{
-    font-size: 0.5em;
-    float:right;
-    margin-right: 100px;
+    font-size: 0.8em;
+    position: absolute;
+    margin-left: 280px;
+    width:400px;
+    height:34px;
+    padding: 4px;
 }
 
 #topwidget .ui-checkboxradio-checked{
     background:none;
     background-color: #FECA40;
 }
+#topwidget input{
+    font-size: 1.2em;
+    width: 90px;
+    line-height: 30px;
+    padding-left: 6px;
+}
 
+.o-filter-rg{
+    border: none;
+    float: right;
+}
 
 .o_price{
     font-size: 0.7em;

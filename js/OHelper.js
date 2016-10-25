@@ -6,9 +6,10 @@ function createOperatorInterface() {
     });
     pnlOrders.appendTo($('#workplace'));
 
-    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен");
-    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idStatus >= 1 && currentValue.idStatus <= 6;
+    var filterdate = (new Date()).toISOString().substring(0, 10);
+    console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
+    var orders = getOrdersFromLS().filter(function (order, index, arr) {
+        return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
 //1	Принят
 //2	Готовить
 //3	Готовится
@@ -18,7 +19,12 @@ function createOperatorInterface() {
 //7	Доставлен
 //8	Отказ
     });
+    //var dt=Date.parse(orders[1].DDate);
+    //var dt = new Date(orders[1].DDate);
+    //var today = new Date();
 
+    //alert(dt.toLocaleDateString());
+    //alert(today.toLocaleDateString());
 // placeholder for batches
     var pnlActiveOrders = $('<div/>', {
         id: 'o_activeOrdersPanel',
@@ -106,10 +112,52 @@ function createOperatorInterface() {
 
     }).disableSelection();
 
+//FILTER
+    var topwidget = $("#topwidget");
+    topwidget.append('Дата: <input type="text" id="datepicker"/>');
+    topwidget.addClass("ui-widget ui-widget-content ui-corner-bottom");
+
+
+    //localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
+
+    $("#datepicker").datepicker({
+        //showOn: "button",
+        //buttonImage: "images/calendar.gif",
+        //buttonImageOnly: true,
+        //buttonText: "Select date"
+        //minDate: -1,
+        //maxDate: "+1M +10D",
+        //maxDate: +3,
+        //dateFormat: "yy-mm-dd",
+        beforeShowDay: function (date) {
+            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
+            return [localStorage.dates.indexOf(string) != -1]
+        },
+        onSelect: function () {
+            alert($.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate')));
+        }
+    });
+
+//        var date = new Date();
+//    date.setDate(date.getDate() - 1);
+//
+//    $("#datepicker").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        defaultDate: date,
+//        onSelect: function () {
+//            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+//        }
+//    });
+
+    $("#datepicker").datepicker("setDate", new Date());
 
     var fs = $('<fieldset/>', {
-        class: 'rg-kplace'
-    }).appendTo($('#o_filter'));
+        class: 'o-filter-rg'
+    });
+
+    topwidget.append(fs);
+
     //fs.append('<legend>Фильтр: </legend>');
     fs.append('<label for="chkP">Печерская</label>');
     fs.append('<input type="checkbox" name="chkP" id="chkP">');
@@ -118,6 +166,7 @@ function createOperatorInterface() {
     fs.children('input').checkboxradio({
         icon: false
     });
+
 
 }
 
@@ -174,7 +223,7 @@ function CreateOrder(order) {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
         html: 'Принят в <span class="CTime"></span><br/>Доставить к <span class="DTime"></span><br/><br/><span class="status"></span>'//order_time
-        //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
+                //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
     });
     divOrderHeader.append(divTime);
 
@@ -392,7 +441,7 @@ function CreateBatchPanel(idBatch, QueueNo) {
             });
         }
     }).disableSelection();
-    divPanel.append(QueueNo);
+    //divPanel.append(QueueNo);
     return divPanel;
 }
 
@@ -409,10 +458,16 @@ function updateOInterface_orders(orders) {
         } else {
             ordersPanel.append(divOrder);
         }
-
+        var log = '';
+        $(order.Log).each(function (index) {
+            
+            //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
+            log += this.ts.substr(11,5)+ ": "+idStatusToString(this.idStatus)+'\n';
+        });
+        $(divOrder).attr('title', log);
         $(divOrder).find('span.CTime').text(order.CTime);
         $(divOrder).find('span.DTime').text(order.DTime);
-        
+
         //if (divOrder) {
         divOrder.removeClass('ord-workplace-3 ord-workplace-4');
         divOrder.addClass('ord-workplace-' + order.idKitchen);
@@ -444,7 +499,9 @@ function updateOInterface_orders(orders) {
                 //alert( 'Я таких значений не знаю' );
         }
 
-
+//        divOrder.tooltip({
+//            //content: "Awesome title!"
+//        });
         //}
         //pnlOrders.append(CreateOrder(order));
         divOrder.effect("bounce", "slow");

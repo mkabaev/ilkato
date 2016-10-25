@@ -212,7 +212,7 @@ function createUL(id, _class, items) {
     return list;
 }
 
-function doInit() {
+function doInit(callback) {
     if (localStorage.uid === undefined) {
         showSelectUserDialog();
     } else {
@@ -238,6 +238,13 @@ function doInit() {
                 localStorage.id_session = data.id_session;
                 setItemsToLS('o_', data.orders);
                 setItemsToLS('b_', data.batches);
+                
+                var dates = [];
+                $(data.orders).each(function (indx, order) {
+                    dates.push(order.DDate);
+                });
+                localStorage.dates = $.unique(dates);
+
                 updateInterface_user();
                 //clearStorage();
                 //loadDataToStorage();
@@ -245,6 +252,10 @@ function doInit() {
                 createWorkplace(localStorage.wp_type);
 
                 addEventListeners();
+                if (callback) {
+                    callback();
+                }
+
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log("status: " + xhr.status + " | " + thrownError);
@@ -469,24 +480,15 @@ function setItemsToLS(prefix, data) {
         } else {
             console.log('ERROR setItemstoLS: val is null');
         }
-
-
-//then update interface
-        switch (localStorage.wp_type) {
-            case '1'://adm
-                break;
-            case '2'://operator
-                break;
-            case '3'://kitch
-                if (val.id === localStorage.activeOrder) {
-                    updateOrderViewer(localStorage.activeOrder);
-                    updateKInterface_SelPanel();
-                }
-                break;
-        }
     });
 }
 
+function idStatusToString(idStatus){
+    var arr=["Принят","Готовить","Готовится","Приготовлен","Доставка","В пути","Доставлен","Отказ"];
+    return arr[idStatus-1];
+}
+
+//    localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
 
 //ANIMATE ELEMENT
 var notLocked = true;
@@ -504,6 +506,24 @@ $.fn.animateHighlight = function (highlightColor, duration) {
     }
 };//using //.animateHighlight("#dd0000", 1000);
 
+//русифицируем датапикер
+$.datepicker.regional['ru'] = {
+    closeText: 'Закрыть',
+    prevText: '&#x3c;Пред',
+    nextText: 'След&#x3e;',
+    currentText: 'Сегодня',
+    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
+        'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    dayNames: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+    dayNamesShort: ['вск', 'пнд', 'втр', 'срд', 'чтв', 'птн', 'сбт'],
+    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    dateFormat: 'dd.mm.yy',
+    firstDay: 1,
+    isRTL: false
+};
+$.datepicker.setDefaults($.datepicker.regional['ru']);
 
 $(document).ready(function () {
     //K_RequestServer();

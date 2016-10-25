@@ -24,17 +24,19 @@
     </head>
     <body>
         <div id="topmenu" class="ui-widget ui-state-focus" style="height:24px;">
-            <div id="o_filter">Дата: <input type="text" id="datepicker"></div>
-            <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
-            <div id="settings"><span class="ui-icon ui-icon-gear"></span>Настройки</div>
             <div id="topwidget"></div>
+            <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
+            <div id="settings" title="Please provide your firstname." ><span class="ui-icon ui-icon-gear"></span>Настройки</div>
         </div>
+        <div id="progressbar"></div>
 
         <!--<audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg" autoplay>
           Your browser does not support the <code>audio</code> element.
         </audio>-->
         <div id="workplace"/>
         <script>
+
+            $("#progressbar").progressbar({value: false});
             //get uid's,wpid's, [orders?]
             //sent uid (via SSE(uid)
 
@@ -68,12 +70,6 @@
                 $('#settings').fadeOut().fadeIn();
             });
 
-            $("#datepicker").datepicker({
-                //showOn: "button",
-                //buttonImage: "images/calendar.gif",
-                //buttonImageOnly: true,
-                //buttonText: "Select date"
-            });
 //
 //            $('#settings').click(function () {
 //                //console.log(eventSource);
@@ -84,7 +80,10 @@
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
             //addEventListeners(); // with session id
-            doInit();
+            doInit(function () {
+                $("#progressbar").progressbar("destroy");
+
+            });
             //    if (eventSource!==undefined) {
 //        eventSource.close();
 //        alert('es closed');
