@@ -49,6 +49,7 @@
             function createWorkplace(type) {
                 stopTimer();
                 $('#workplace').empty();
+                $('#topwidget').empty();
                 $("body").disableSelection();
                 //console.log(document.attributes);
                 switch (type) {
@@ -80,6 +81,7 @@
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся
             //addEventListeners(); // with session id
+            //var date = (new Date()).toISOString().substring(0, 10);
             doInit(function () {
                 $("#progressbar").progressbar("destroy");
 

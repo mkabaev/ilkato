@@ -155,7 +155,7 @@ function getSessionUpdates($id_session) {
 
 function getUsers() {
     $db = new DB();
-    $query = "SELECT idPerson, Name, idWorkplace FROM employees";
+    $query = "SELECT e.idPerson, e.Name, e.idWorkplace, wp.idType FROM employees e left join workplaces wp on e.idWorkplace=wp.id";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -374,7 +374,12 @@ switch ($action) {
         updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
 
-        $data = ['id_session' => $id_session, 'orders' => getOrders("2016-10-25"), 'batches' => getActiveBatches()];
+        $data = ['id_session' => $id_session, 'orders' => getOrders(date("Y-m-d")), 'batches' => getActiveBatches()];
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
+    case 'getOrders':
+        $date = filter_input(INPUT_POST, 'date');
+        $data = getOrders($date);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
 //    case 'getKOrders':

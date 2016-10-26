@@ -218,10 +218,36 @@
     height: 0;
 }
 
+.ord-status-7{
+    opacity: 0.2;
+}
+
+.ord-status-6{
+    opacity: 0.2;
+}
+
+.ord-status-5{
+    opacity: 0.4;
+}
+
+.ord-status-4{
+    opacity: 0.7;
+}
+
+.ord-status-3{
+    opacity: 0.9;
+}
+
+.ord-status-2{
+}
+
+.ord-status-1{
+}
+
 @keyframes blinker {  
   50% { opacity: 0; }
 }
-.ord-status-7{
+.ord-status-8{
 /*    opacity: 0.2;*/
     animation: blinker 500ms linear infinite;
 }

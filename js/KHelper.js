@@ -2,7 +2,6 @@ function createKitchenInterface() {
     //var tableItems = $.parseJSON(localStorage.products);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
-    createTimer('timer', 'ktimer', 10, 140).appendTo($('#workplace'));
     //$('body').append(CreateLeftPanel());
 
 
@@ -115,12 +114,13 @@ function createOrderViewer(id, _class) {
 
     divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
     divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
-divOrderViewer.append('<div id="ordlog"></div>');
+    divOrderViewer.append('<div id="ordlog"></div>');
     return divOrderViewer;
 }
 
 function updateOrderViewer(id) {
     localStorage.activeOrder = id;
+    stopTimer();
     var order = getOrderFromLS(id);
     if (order === undefined) {
         // load from server
@@ -130,6 +130,10 @@ function updateOrderViewer(id) {
         //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
+        if (localStorage.wp_type == 3) {
+            createTimer('timer', 'ktimer', 10, 140).appendTo($('#workplace'));
+        }
+
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
                 return row.idType === 1;

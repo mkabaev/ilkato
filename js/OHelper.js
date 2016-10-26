@@ -6,12 +6,12 @@ function createOperatorInterface() {
     });
     pnlOrders.appendTo($('#workplace'));
 
-    var filterdate = (new Date()).toISOString().substring(0, 10);
+//    var filterdate = (new Date()).toISOString().substring(0, 10);
     //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
     //var orders = getOrdersFromLS().filter(function (order, index, arr) {
-        //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
-        //return order.DDate == filterdate;
-        var orders = getOrdersFromLS();
+    //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
+    //return order.DDate == filterdate;
+    var orders = getOrdersFromLS();
 //    });
 
     //var dt=Date.parse(orders[1].DDate);
@@ -60,8 +60,6 @@ function createOperatorInterface() {
     var batches = getBatchesFromLS();
     //pnlActiveOrders.append(CreateBatchPanel(132));
 
-    updateOInterface_batches(batches);
-    updateOInterface_orders(orders);
     $("#o_ordersPanel").sortable({
         connectWith: ".connectedSortable",
         //axis: "y",
@@ -124,13 +122,41 @@ function createOperatorInterface() {
         //maxDate: "+1M +10D",
         //maxDate: +3,
         //dateFormat: "yy-mm-dd",
-        beforeShowDay: function (date) {
-            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
-            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
-            return [localStorage.dates.indexOf(string) != -1]
-        },
+//        beforeShowDay: function (date) {
+//            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+//            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
+//            return [localStorage.dates.indexOf(string) != -1]
+//        },
         onSelect: function () {
-            alert($.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate')));
+            var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+            $.ajax({
+                type: "POST",
+                data: "action=getOrders&date=" + dt,
+                url: "helper.php?",
+                cache: false,
+                success: function (jsondata) {
+                    $("body").removeClass("ui-state-error");
+                    // remove orders from LS
+                    $.each(localStorage, function (key, value) {
+                        if (key.startsWith('o_')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    //add old orders to LS
+                    var orders = $.parseJSON(jsondata);
+                    setItemsToLS('o_', orders);
+                    updateOInterface_orders(orders);
+                    localStorage.activeDate = dt;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("body").addClass("ui-state-error");
+                    alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
+                    //$("body").addClass("ui-state-error");
+//            alert(xhr.status);
+//            alert(thrownError);
+                }
+            });
+
         }
     });
 
@@ -162,6 +188,8 @@ function createOperatorInterface() {
         icon: false
     });
 
+    updateOInterface_batches(batches);
+    updateOInterface_orders(orders);
 
 }
 
@@ -442,6 +470,10 @@ function CreateBatchPanel(idBatch, QueueNo) {
 
 function updateOInterface_orders(orders) {
     var ordersPanel = $('#o_ordersPanel');
+    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+    if (localStorage.activeDate !== dt) {
+        $('#o_ordersPanel, .o_itemsPanel').empty();
+    }
     $(orders).each(function (indx, order) {
         var divOrder = $('#' + order.id);
         if (!divOrder.length) {
@@ -455,9 +487,9 @@ function updateOInterface_orders(orders) {
         }
         var log = '';
         $(order.Log).each(function (index) {
-            
+
             //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
-            log += this.ts.substr(11,5)+ ": "+idStatusToString(this.idStatus)+'\n';
+            log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
         });
         divOrder.attr('title', log);
         divOrder.find('span.CTime').text(order.CTime);
@@ -466,7 +498,7 @@ function updateOInterface_orders(orders) {
         //if (divOrder) {
         divOrder.removeClass('ord-workplace-3 ord-workplace-4');
         divOrder.addClass('ord-workplace-' + order.idKitchen);
-        
+
         divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
         divOrder.addClass('ord-status-' + order.idStatus);
         //console.log('try: '+order.id);

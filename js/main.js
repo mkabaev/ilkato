@@ -183,7 +183,6 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
                         callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
                     } else {
                         alert('callback error');
-                        callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
                     }
                     //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
                     //console.log(JSON.stringify(ar));
@@ -223,10 +222,7 @@ function doInit(callback) {
             url: "helper.php?",
             cache: false,
             success: function (jsondata) {
-                //console.log('user ' + localStorage.user_name + ' set status online');
-
-//console.log('init data: ' + jsondata);
-                $(".ordrow").removeClass("ui-state-error");
+                $("body").removeClass("ui-state-error");
                 // remove orders from LS
                 $.each(localStorage, function (key, value) {
                     if (key.startsWith('o_') | key.startsWith('b_')) {
@@ -238,7 +234,8 @@ function doInit(callback) {
                 localStorage.id_session = data.id_session;
                 setItemsToLS('o_', data.orders);
                 setItemsToLS('b_', data.batches);
-                
+
+                localStorage.activeDate = (new Date()).toISOString().substr(0,10);
                 var dates = [];
                 $(data.orders).each(function (indx, order) {
                     dates.push(order.DDate);
@@ -258,8 +255,8 @@ function doInit(callback) {
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                console.log("status: " + xhr.status + " | " + thrownError);
-                $(".ordrow").addClass("ui-state-error");
+                $("body").addClass("ui-state-error");
+                alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
                 //$("body").addClass("ui-state-error");
 //            alert(xhr.status);
 //            alert(thrownError);
@@ -408,12 +405,11 @@ function getBatchesFromLS() {
     return getItemsFromLS('b_');
 }
 
-
 function afterSelUser(sender, id, name) {
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
     //localStorage.clear();
     localStorage.wp_id = $(sender).attr("idWorkplace");
-    localStorage.wp_type = $(sender).attr("idWorkplace");
+    localStorage.wp_type = $(sender).attr("idType");
     localStorage.uid = id;
     localStorage.user_name = name;
     doInit();
@@ -483,9 +479,9 @@ function setItemsToLS(prefix, data) {
     });
 }
 
-function idStatusToString(idStatus){
-    var arr=["Принят","Готовить","Готовится","Приготовлен","Доставка","В пути","Доставлен","Отказ"];
-    return arr[idStatus-1];
+function idStatusToString(idStatus) {
+    var arr = ["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"];
+    return arr[idStatus - 1];
 }
 
 //    localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
