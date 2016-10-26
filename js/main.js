@@ -212,6 +212,30 @@ function createUL(id, _class, items) {
 }
 
 function doInit(callback) {
+//    db = openDatabase("ilkato", "0.1", "Ilkato orders", 200000);
+//    if (!db) {
+//        alert("Failed to connect to database.");
+//    }
+//    db.transaction(function (tx) {
+//        tx.executeSql("SELECT COUNT(*) FROM orders", [], function (result) {
+//            alert('dsfsdf')
+//        }, function (tx, error) {
+//            tx.executeSql("CREATE TABLE orders (id REAL UNIQUE, label TEXT, timestamp REAL)", [], null, null);
+//        })
+//    });
+//
+//    db.transaction(function (tx) {
+//        tx.executeSql("INSERT INTO orders (label, timestamp) values(?, ?)", ["Купить iPad или HP Slate", new Date().getTime()], null, null);
+//    });
+//
+//    db.transaction(function (tx) {
+//        tx.executeSql("SELECT * FROM ToDo", [], function (tx, result) {
+//            for (var i = 0; i < result.rows.length; i++) {
+//                document.write('<b>' + result.rows.item(i)['label'] + '</b><br />');
+//            }
+//        }, null)
+//    }); 
+
     if (localStorage.uid === undefined) {
         showSelectUserDialog();
     } else {

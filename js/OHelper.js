@@ -437,9 +437,10 @@ function CreateBatchPanel(idBatch, QueueNo) {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-//        sendRequest('updateBatchesQueue', 'ids=' + JSON.stringify(IDs), function (response) {
-//            console.log(response);
-//        });
+        sendRequest('createBatch', '', function (response) {
+            console.log(response);
+        });
+        updateOInterface_batches(getBatchesFromLS());
     });
 
     var divItemsPanel = $('<div/>', {

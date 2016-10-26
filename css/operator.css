@@ -41,8 +41,9 @@
 
 #o_activeOrdersPanel{
     border: 1px solid #e78f08ee;
-    width: 80%;
+    /*width: 80%;*/
     min-height: 160px;
+    height: 700px;
     margin: 0;
     padding: 5px 0 0 0;
     float: left;
@@ -61,6 +62,7 @@
     border: 1px solid #eee;
     width:900px;
     float:left;
+    overflow-x:auto;
 }
 
 .o_orderBatchPanelButtons {

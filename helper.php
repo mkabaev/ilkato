@@ -238,14 +238,10 @@ function updateBatch($id, $idCourier, $QueueNo) {
     return $res;
 }
 
-function updateBatchQueueNo($id, $QueueNo) {
+function createBatch() {
     $db = new DB();
-    $query = "UPDATE ilkato.batches SET QueueNo=:QueueNo WHERE id=:id";
-    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
-    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+    $query = "INSERT INTO batches(isActive) VALUES (1)";
     $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':QueueNo', $QueueNo);
     $res = $stmt->execute();
     return $res;
 }
@@ -438,6 +434,10 @@ switch ($action) {
     case 'updateBatchesQueue':
         $ids = filter_input(INPUT_POST, 'ids');        
         $result = updateBatchesQueue(json_decode($ids));
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        break;
+    case 'createBatch':
+        $result = createBatch();
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
     default:
