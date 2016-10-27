@@ -13,7 +13,6 @@
         <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
 
-        <script src="js-ext/sound.js"></script>
         <script src="js-ext/easy-pie-chart.js"></script>
 
         <script src="js/main.js"></script>
@@ -65,18 +64,20 @@
                 }
             }
 
-            var sound = ss_soundbits('s1.mp3');
+            var audio = new Audio('s1.mp3');
             //localStorage.removeItem('user_id');
             $(document).ajaxComplete(function () {
                 $('#settings').fadeOut().fadeIn();
             });
 
+
 //
-//            $('#settings').click(function () {
-//                //console.log(eventSource);
+            $('#settings').click(function () {
+                audio.play();
+////                //console.log(eventSource);
 //                //eventSource.close();
 //                eventSource.removeEventListener('ordUpdate', afterOrdUpdate, false);
-//            });
+            });
             //проверяем есть ли юзер. 
             //если есть, то загружаем локальные данные
             //если нет, то авторизуемся

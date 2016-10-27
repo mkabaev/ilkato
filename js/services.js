@@ -80,7 +80,7 @@ function afterOrdUpdate(orders) {
             updateKInterface_SelPanel();
             break;
     }
-    sound.playclip();
+    audio.play();
 }
 
 function afterBatchUpdate(batches) {
@@ -93,7 +93,7 @@ function afterBatchUpdate(batches) {
             //updateKInterface_SelPanel();
             break;
     }
-    sound.playclip();
+    audio.play();
 }
 
 function LoadOrderProducts(order_id)

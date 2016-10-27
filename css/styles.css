@@ -10,7 +10,7 @@ and open the template in the editor.
 /** { margin: 0; padding: 0; }
 p { padding: 10px; }*/
 *{font-family: sans-serif; margin: 0; padding: 0; color:#494437;}
-div, li{border:1px dotted #d34d17}
+/*div, li{border:1px dotted #d34d17}*/
 table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}

@@ -9,8 +9,31 @@
     top:40px;
     bottom:10px;
     left:80px;
-/*    right:10px;*/
+    /*    right:10px;*/
 }
+.pricingPic{
+    position: absolute;
+    right: 0;
+    top: -14px;
+    height:40px;
+    z-index:10;
+}
+.orderViewer.ord-pricingType-1 .pricingPic{
+    content:url(../images/ilkato.png);
+}
+
+.orderViewer.ord-pricingType-2 .pricingPic{
+    content:url(../images/sxl.png);
+}
+/*.pricingPic:after{
+  content:url('../bg_italian.png');  with class ModalCarrot ??
+  position:relative; or absolute
+  z-index:100000; a number that's more than the modal box
+  left:-50px;
+  top:10px;
+}*/
+
+
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
 .mk {
     float: left;

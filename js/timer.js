@@ -21,7 +21,6 @@ function createTimer(id, _class, length, size) {
         }, //#0033CC
     });
     var sec = length;
-
     var d = 100 / sec;
     var c = 0;
     timerId = setInterval(function () {
@@ -40,6 +39,24 @@ function createTimer(id, _class, length, size) {
 function stopTimer() {
     if (timerId !== undefined) {
         clearInterval(timerId);
+    }
+}
+function startTimer(length) {
+    var divTimer = $("#timer");
+    if (divTimer.length) {
+        var sec = length;
+        var d = 100 / sec;
+        var c = 0;
+        timerId = setInterval(function () {
+            sec = sec - 1;
+            c = c + d;
+            divTimer.data('easyPieChart').update(c);
+            //if (sec>65){ timer.data('easyPieChart').options.lineWidth = 48; }; //#0033CC
+            $('span', divTimer).text(sec < 0 ? sec : sec.toString().toHHMMSS());
+        }, 1000);
+        return true;
+    }else{
+        return false;
     }
 }
 
