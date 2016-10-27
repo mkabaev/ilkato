@@ -35,14 +35,49 @@ WorkPlace.prototype.stop = function () {
 var wp = new WorkPlace('blaa');
 
 
-function printHTML(html) {
+function printHTML(html, order) {
     var divPrint = $('#divPrint');
     if (!divPrint.length) {
         var divPrint = $('<div/>', {
             id: "divPrint",
         }).appendTo("#workplace");
     }
-    divPrint.html(html);
+    var s = "";
+    s = html;
+    s = s.replace("$caption", "ILKato");
+
+    s = s.replace("$order_number", order.No);
+    s = s.replace("$order_date", order.DDate);
+    s = s.replace("$order_time", order.CTime);
+    s = s.replace("$delivery_time", order.DTime);
+
+    s = s.replace("$comment", order.Comment.split("|")[0]);
+
+    var pcount = order.Comment.split("|")[1].slice(19);
+    s = s.replace("$count_person", pcount);
+    
+    //table id, _class, headerItems, tableItems, footerItems
+    var prd = order.Products.map(function (item,i,arr) {
+        var newObj = {};
+        newObj.No = i+1;
+        newObj.Count = 1;
+        newObj.Name = item.Name;
+        newObj.Weight = item.Weight;
+        return newObj;
+    });
+    var t=CreateTable('tPProducts',undefined,["№","Кол-во Наименование","Вес"],prd,undefined);
+    t.css('align:"right"; width:"53%";border:"1px";cellspacing=0;');
+alert(t.html());
+    s = s.replace("$products", t.html());
+    
+    
+    
+    
+
+    //another one
+    s = s.replace("$order_time", order.CTime);
+
+    divPrint.html(s);
     window.print();
 //    return divPrint;
 }
@@ -212,6 +247,7 @@ function createUL(id, _class, items) {
 }
 
 function doInit(callback) {
+    //websql
 //    db = openDatabase("ilkato", "0.1", "Ilkato orders", 200000);
 //    if (!db) {
 //        alert("Failed to connect to database.");
@@ -236,6 +272,8 @@ function doInit(callback) {
 //        }, null)
 //    }); 
 
+
+
     if (localStorage.uid === undefined) {
         showSelectUserDialog();
     } else {
@@ -259,7 +297,7 @@ function doInit(callback) {
                 setItemsToLS('o_', data.orders);
                 setItemsToLS('b_', data.batches);
 
-                localStorage.activeDate = (new Date()).toISOString().substr(0,10);
+                localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
                 var dates = [];
                 $(data.orders).each(function (indx, order) {
                     dates.push(order.DDate);
@@ -316,7 +354,7 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
 
 //tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
     //tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
-
+    tBody.append(ArrayToTableItems(tableItems));
     table.append(tBody);
 
     return table;
@@ -556,3 +594,123 @@ $(document).ready(function () {
 //loadjscssfile("myscript.js", "js") //dynamically load and add this .js file
 //loadjscssfile("javascript.php", "js") //dynamically load "javascript.php" as a JavaScript file
 //loadjscssfile("mystyle.css", "css") ////dynamically load and add this .css file
+
+
+//DB
+//var indexedDB 	  = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB,
+//	IDBTransaction  = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction,
+//	baseName 	  = "filesBase",
+//	storeName 	  = "filesStore";
+//
+//function logerr(err){
+//	console.log(err);
+//}
+//
+//function connectDB(f){
+//	var request = indexedDB.open(baseName, 1);
+//	request.onerror = logerr;
+//	request.onsuccess = function(){
+//		f(request.result);
+//	}
+//	request.onupgradeneeded = function(e){
+//		e.currentTarget.result.createObjectStore(storeName, { keyPath: "path" });
+//		connectDB(f);
+//	}
+//}
+//
+//function getFile(file, f){
+//	connectDB(function(db){
+//		var request = db.transaction([storeName], "readonly").objectStore(storeName).get(file);
+//		request.onerror = logerr;
+//		request.onsuccess = function(){
+//			f(request.result ? request.result : -1);
+//		}
+//	});
+//}
+//
+//function getStorage(f){
+//	connectDB(function(db){
+//		var rows = [],
+//			store = db.transaction([storeName], "readonly").objectStore(storeName);
+//
+//		if(store.mozGetAll)
+//			store.mozGetAll().onsuccess = function(e){
+//				f(e.target.result);
+//			};
+//		else
+//			store.openCursor().onsuccess = function(e) {
+//				var cursor = e.target.result;
+//				if(cursor){
+//					rows.push(cursor.value);
+//					cursor.continue();
+//				}
+//				else {
+//					f(rows);
+//				}
+//			};
+//	});
+//}
+//
+//function setFile(file){
+//	connectDB(function(db){
+//		var request = db.transaction([storeName], "readwrite").objectStore(storeName).put(file);
+//		request.onerror = logerr;
+//		request.onsuccess = function(){
+//			return request.result;
+//		}
+//	});
+//}
+//
+//function delFile(file){
+//	connectDB(function(db){
+//		var request = db.transaction([storeName], "readwrite").objectStore(storeName).delete(file);
+//		request.onerror = logerr;
+//		request.onsuccess = function(){
+//			console.log("File delete from DB:", file);
+//		}
+//	});
+//}
+
+
+//*************** IDB
+// This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
+//var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+//
+//// Open (or create) the database
+//var open = indexedDB.open("ilkato", 1);
+//
+//// Create the schema
+//open.onupgradeneeded = function() {
+//    var db = open.result;
+//    var store = db.createObjectStore("IlkatoObjectStore", {keyPath: "id"});
+//    var index = store.createIndex("NameIndex", ["name.last", "name.first"]);
+//};
+//
+//open.onsuccess = function() {
+//    // Start a new transaction
+//    var db = open.result;
+//    var tx = db.transaction("IlkatoObjectStore", "readwrite");
+//    var store = tx.objectStore("IlkatoObjectStore");
+//    var index = store.index("NameIndex");
+//
+//    // Add some data
+//    store.put({id: 12345, name: {first: "John", last: "Doe"}, age: 42});
+//    store.put({id: 67890, name: {first: "Bob", last: "Smith"}, age: 35});
+//    
+//    // Query the data
+//    var getJohn = store.get(12345);
+//    var getBob = index.get(["Smith", "Bob"]);
+//
+//    getJohn.onsuccess = function() {
+//        console.log(getJohn.result.name.first);  // => "John"
+//    };
+//
+//    getBob.onsuccess = function() {
+//        console.log(getBob.result.name.first);   // => "Bob"
+//    };
+//
+//    // Close the db when the transaction is done
+//    tx.oncomplete = function() {
+//        db.close();
+//    };
+//}

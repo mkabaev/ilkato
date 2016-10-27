@@ -66,7 +66,17 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         //class: 'ui-widget-content',
         //text: "Печать",
         click: function (event) {
-            printHTML('<h1>ORDER</h1>');
+            localStorage.removeItem("chktemplate");
+            if (localStorage.getItem("chktemplate") === null) {
+                $.get("chktemplate.html", function (data) {
+                    localStorage.chktemplate = data;
+                    printHTML(localStorage.chktemplate,getOrderFromLS(localStorage.activeOrder));
+                });
+            } else {
+                printHTML(localStorage.chktemplate,getOrderFromLS(localStorage.activeOrder));
+
+            }
+
         },
     }).appendTo(divHeader);
 
