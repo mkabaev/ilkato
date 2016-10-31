@@ -5,14 +5,17 @@ function createKitchenInterface() {
     //$('body').append(CreateLeftPanel());
 
 
-    createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
-    //updateOrderViewer(localStorage.activeOrder);
-    updateKInterface_SelPanel();
+    var selPanel = createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
+
     var divFooter = $('<div/>', {
         id: 'footer',
         //class: _class,
         attr: {'title': 'caption'}
     }).appendTo($('#ordViewer'));
+    updateKInterface_SelPanel();
+    localStorage.activeOrder = $("#p1").find("li").first().attr("item_id");
+    updateKInterface_SelPanel();
+    updateOrderViewer(localStorage.activeOrder);
 }
 
 
@@ -129,8 +132,6 @@ function createOrderViewer(id, _class) {
 }
 
 function updateOrderViewer(id) {
-    localStorage.activeOrder = id;
-    stopTimer();
     var order = getOrderFromLS(id);
     if (order === undefined) {
         // load from server
@@ -140,20 +141,28 @@ function updateOrderViewer(id) {
         //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
-        if (localStorage.wp_type == 3) {
-            var ct = order.Products[0].CookingTime;
-            if (ct > 0) {
-                if (!startTimer(ct)) {
-                    //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
-                    createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
-                }
-            }
-        }
 
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
                 return row.idType === 1;
             });
+
+            var itemsP = order.Products.filter(function (row) {
+                return row.idType === 2;
+            });
+
+            var ctR = 0;
+            $.each(itemsR, function (key, val) {
+                ctR = ctR + val.CookingTime;
+                console.log("R:" + val.CookingTime);
+            });
+
+            var ctP = 0;
+            $.each(itemsP, function (key, val) {
+                ctP = ctP + val.CookingTime;
+                console.log("P:" + val.CookingTime);
+            });
+            
             itemsR = itemsR.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -164,10 +173,7 @@ function updateOrderViewer(id) {
 
                 return newItem;
             });
-
-            var itemsP = order.Products.filter(function (row) {
-                return row.idType === 2;
-            });
+            $('#tableR tbody').html(ArrayToTableItems(itemsR));
             itemsP = itemsP.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -178,19 +184,23 @@ function updateOrderViewer(id) {
 
                 return newItem;
             });
-
-//            $.each(products, function (key, val) {
-            //if (val.type=='R'){
-//                itemsR.push(new Array(val.id, val.name, val.count, val.weight));
-            //}
-//                if (val.type == 'P') {
-//                    itemsP.push(val);
-            //localStorage.setItem('o_' + val.id, JSON.stringify(val));
-//                }
-//            });
-
-            $('#tableR tbody').html(ArrayToTableItems(itemsR));
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
+
+            if (localStorage.wp_type === "3") {//trick for operator upfateInterface
+                if (localStorage.activeOrder != id) {//reset timer
+                    localStorage.activeOrder = id;
+                    stopTimer();
+                    var ct = Math.max(ctR,ctP);
+                    if (ct > 0) {
+                        if (!startTimer(ct)) {
+                            //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
+                            createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
+                        }
+                    }
+                }
+            } else {
+                localStorage.removeItem("activeOrder");
+            }
 
 //    $('body').append(localStorage.getItem(localStorage.key(i))); 
         } else {

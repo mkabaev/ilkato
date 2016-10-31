@@ -35,7 +35,7 @@ WorkPlace.prototype.stop = function () {
 var wp = new WorkPlace('blaa');
 
 
-function printHTML(html, order) {
+function printHTML(htmlTemplate, order) {
     var divPrint = $('#divPrint');
     if (!divPrint.length) {
         var divPrint = $('<div/>', {
@@ -43,39 +43,47 @@ function printHTML(html, order) {
         }).appendTo("#workplace");
     }
     var s = "";
-    s = html;
+    s = htmlTemplate;
     s = s.replace("$caption", "ILKato");
 
     s = s.replace("$order_number", order.No);
     s = s.replace("$order_date", order.DDate);
     s = s.replace("$order_time", order.CTime);
     s = s.replace("$delivery_time", order.DTime);
-
+//
     s = s.replace("$comment", order.Comment.split("|")[0]);
-
+//
     var pcount = order.Comment.split("|")[1].slice(19);
     s = s.replace("$count_person", pcount);
-    
-    //table id, _class, headerItems, tableItems, footerItems
-    var prd = order.Products.map(function (item,i,arr) {
+//
+//    //table id, _class, headerItems, tableItems, footerItems
+    var prd = order.Products.map(function (item, i, arr) {
         var newObj = {};
-        newObj.No = i+1;
+        newObj.No = i + 1;
         newObj.Count = 1;
         newObj.Name = item.Name;
         newObj.Weight = item.Weight;
         return newObj;
     });
-    var t=CreateTable('tPProducts',undefined,["№","Кол-во Наименование","Вес"],prd,undefined);
-    t.css('align:"right"; width:"53%";border:"1px";cellspacing=0;');
-alert(t.html());
-    s = s.replace("$products", t.html());
-    
-    
-    
-    
+//
+////    function CreateTable(id, _class, headerItems, tableItems, footerItems) {
+    var t = CreateTable('tPProducts', undefined, ["№", "Кол-во", "Наименование", "Вес"], prd, undefined);
+    //t.css('align:"right"; width:"53%";border:"1px";cellspacing=0;');
+    t.removeAttr("class");
+    t.children().removeAttr("class");
 
-    //another one
-    s = s.replace("$order_time", order.CTime);
+//console.log(t[0].outerHTML);
+    s = s.replace("$table", t[0].outerHTML);
+    s = s.replace("<thead>", "");
+    s = s.replace("</thead>", "");
+
+//
+//
+//
+//
+//
+//    //another one
+//    s = s.replace("$order_time", order.CTime);
 
     divPrint.html(s);
     window.print();

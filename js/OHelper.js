@@ -181,11 +181,24 @@ function createOperatorInterface() {
 
     //fs.append('<legend>Фильтр: </legend>');
     fs.append('<label for="chkP">Печерская</label>');
-    fs.append('<input type="checkbox" name="chkP" id="chkP">');
+    fs.append('<input type="checkbox" name="chkP" id="chkP" item_id=3>');
     fs.append('<label for="chkNS">Ново-Садовая</label>');
-    fs.append('<input type="checkbox" name="chkNS" id="chkNS">');
+    fs.append('<input type="checkbox" name="chkNS" id="chkNS" item_id=4>');
     fs.children('input').checkboxradio({
-        icon: false
+        icon: false,
+    });
+    fs.children('input').prop('checked', true);;
+
+    fs.children('input').on("change", function (e) {
+        var target = $(e.target);
+        var id=target.attr("item_id");
+        if (target.is(":checked")) {
+            $('.order[idKitchen='+id+']').show();
+        } else {
+            $('.order[idKitchen='+id+']').hide();
+        }
+
+//        alert(target.attr("id"));
     });
 
     updateOInterface_batches(batches);
@@ -203,7 +216,7 @@ function CreateOrder(order) {
     var divOrder = $('<div/>', {
         id: order.id,
         class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
-        //attr: {'idKitchen': order.idKitchen, 'ts': timestamp}
+        attr: {'idKitchen': order.idKitchen}
     });
 //    if (order.idKitchen) {
 //        divOrder.attr('idKitchen', order.idKitchen);
