@@ -2,6 +2,7 @@ function createKitchenInterface() {
     //var tableItems = $.parseJSON(localStorage.products);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
+
     //$('body').append(CreateLeftPanel());
 
 
@@ -162,7 +163,7 @@ function updateOrderViewer(id) {
                 ctP = ctP + val.CookingTime;
                 console.log("P:" + val.CookingTime);
             });
-            
+
             itemsR = itemsR.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -190,7 +191,7 @@ function updateOrderViewer(id) {
                 if (localStorage.activeOrder != id) {//reset timer
                     localStorage.activeOrder = id;
                     stopTimer();
-                    var ct = Math.max(ctR,ctP);
+                    var ct = Math.max(ctR, ctP);
                     if (ct > 0) {
                         if (!startTimer(ct)) {
                             //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
@@ -288,3 +289,65 @@ function updateKInterface_SelPanel() {
     $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
 }
 
+
+//function ProcessScanner()
+//{
+//    //2200003014129 roll
+//    //2200001012985 pizza
+//    if (inp.val().length == 13) {
+//        var s = inp.val();
+//        var type = s.substr(1, 6);
+//        var weight = s.substr(7, 5);
+//        weight = parseInt(weight);
+//        switch (type) {
+//            case "200003": //roll
+//                //var inttt=parseInt(weight);
+//
+//                //$('#tProducts').append('<tr><td>my data</td><td>more data</td></tr>');
+//                //items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td id='scanp'>" + val.count + "</td><td>" + val.price + "</td></tr>");
+//
+//                weightR = weight / 1000;
+//                $("#scanr").text(weightR);
+//                //$("#scanr").attr('weight', weightP);
+//                break;
+//            case "200001":
+//                weightP = weight / 1000;
+//                $("#scanp").text(weightP);
+//                //$("#scanp").attr('weight', weightR);
+//                break;
+//        }
+//        inp.val("");
+//        //$("#weight").text((weightP + weightR));
+//        SetOrderProductsOnServer($("#dlgEdit").attr("order_id"), weightR, weightP);
+//    }
+//}
+
+
+//$(document).scannerDetection({
+//	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+//	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+//	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+//	ignoreIfFocusOn: 'input', // turn off scanner detection if an input has focus
+//	onComplete: function(barcode, qty){ ... }, // main callback function
+//	scanButtonKeyCode: 116, // the hardware scan button acts as key 116 (F5)
+//	scanButtonLongPressThreshold: 5, // assume a long press if 5 or more events come in sequence
+//	onScanButtonLongPressed: showKeyPad, // callback for long pressing the scan button
+//	onError: function(string){alert('Error ' + string);}
+//});
+
+$(document).scannerDetection({
+	//...
+	onKeyDetect: function(event){console.log(event.which); return false;}
+	//...
+});
+
+//$(document).on('pageshow', '#pageId', function(){
+//	$(document).scannerDetection({
+//		avgTimeByChar: 40,
+//		onComplete: function(barcode, qty){ ... },
+//		onError: function(string){alert('Error ' + string);}
+//	});
+//});
+//$(document).on('pagehide', '#pageId', function(){
+//	$(document).scannerDetection(false);
+//});

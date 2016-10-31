@@ -12,6 +12,7 @@
         <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
         <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
+        <script src="js-ext/jquery.scannerdetection.js"></script>
 
         <script src="js-ext/easy-pie-chart.js"></script>
 
