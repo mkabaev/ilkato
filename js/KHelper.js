@@ -120,7 +120,24 @@ function createOrderViewer(id, _class) {
         //id: "number",
     }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
 
-    divHeader.append(divNumber);
+    var select = $('<select/>', {
+        id: "selstatus",
+        name: "status",
+//        class: 'ui-widget-header',
+    }).append('<label for="status">Статус</label>').appendTo(divOrderViewer);
+
+    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути"]));
+//or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
+
+    $(select).selectmenu({
+        width: 100,
+//        position: {
+//            my: "left+10 top",
+//            at: "left top+20"
+//        },
+    });
+    
+
     divOrderViewer.append(divHeader);
     divOrderViewer.append('<div id=ordlog></div><div id=ordercomment class="comment">' + 'comment' + '</div>');
 
@@ -336,9 +353,12 @@ function updateKInterface_SelPanel() {
 //});
 
 $(document).scannerDetection({
-	//...
-	onKeyDetect: function(event){console.log(event.which); return false;}
-	//...
+    //...
+    onKeyDetect: function (event) {
+        console.log(event.which);
+        return false;
+    }
+    //...
 });
 
 //$(document).on('pageshow', '#pageId', function(){

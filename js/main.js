@@ -433,6 +433,35 @@ function ArrayToLiItems(items) {
     return _items;
 }
 
+function ArrayToOptionItems(items) {
+    var _items = [];
+    $.each(items, function (key, val) {
+        var s = "";
+        var t = "";
+        if (typeof val === 'object') {
+            $.each(val, function (key2, val2) {
+                //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
+                switch (key2) {
+                    case 'id':  // if (x === 'value1')
+                        s = s + " item_id=" + val2;
+                        break
+
+                    case 'Name':  // if (x === 'value2')
+                        t = val2;
+                        break
+                    default:
+                        s = s + " " + key2 + "=" + val2;
+                        break
+                }
+            });
+            _items.push("<option" + s + ">" + t + "</option>");
+        }else{
+            _items.push("<option>" + val + "</option>");            
+        }
+
+    });
+    return _items;
+}
 function updateInterface_user() {
     $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }

@@ -11,6 +11,12 @@
     left:80px;
     /*    right:10px;*/
 }
+.orderViewer table{
+  font-size: 0.9em;
+  white-space: nowrap;
+/*  width: 100px;*/
+}
+
 .pricingPic{
     position: absolute;
     right: 0;
@@ -18,6 +24,16 @@
     height:40px;
     z-index:10;
 }
+
+.ui-dialog .orderViewer{
+margin-left: 30px;
+margin-top: 10px;
+}
+
+.ui-dialog .pricingPic{
+    top: -44px;
+}
+
 .orderViewer.ord-pricingType-1 .pricingPic{
     content:url(../images/ilkato.png);
 }
@@ -31,6 +47,9 @@
   z-index:100000; a number that's more than the modal box
   left:-50px;
   top:10px;
+}*/
+/*.orderViewer .ui-selectmenu-button{
+    visibility: hidden;
 }*/
 
 

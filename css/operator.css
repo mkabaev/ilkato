@@ -216,40 +216,53 @@
     top:"10px";
 }
 .o_orderViewerDlg .orderViewer #orderheader{
+    visibility: visible;
+}
+
+/*скрываем кнопку кухне*/
+.ui-selectmenu-button{
     visibility: hidden;
-    height: 0;
+}
+.o_orderViewerDlg .orderViewer .ui-selectmenu-button{
+    visibility: visible;
+    position: absolute;
+    top:-44px;
+    right: 200px;
+}
+.ui-selectmenu-menu{
+z-index: 1000000;
 }
 
-.ord-status-7{
-    opacity: 0.2;
-}
+    .ord-status-7{
+        opacity: 0.2;
+    }
 
-.ord-status-6{
-    opacity: 0.2;
-}
+    .ord-status-6{
+        opacity: 0.2;
+    }
 
-.ord-status-5{
-    opacity: 0.4;
-}
+    .ord-status-5{
+        opacity: 0.4;
+    }
 
-.ord-status-4{
-    opacity: 0.7;
-}
+    .ord-status-4{
+        opacity: 0.7;
+    }
 
-.ord-status-3{
-    opacity: 0.9;
-}
+    .ord-status-3{
+        opacity: 0.9;
+    }
 
-.ord-status-2{
-}
+    .ord-status-2{
+    }
 
-.ord-status-1{
-}
+    .ord-status-1{
+    }
 
-@keyframes blinker {  
-  50% { opacity: 0; }
-}
-.ord-status-8{
-/*    opacity: 0.2;*/
-    animation: blinker 500ms linear infinite;
-}
+    @keyframes blinker {  
+        50% { opacity: 0; }
+    }
+    .ord-status-8{
+        /*    opacity: 0.2;*/
+        animation: blinker 500ms linear infinite;
+    }
