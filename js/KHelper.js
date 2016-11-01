@@ -112,6 +112,12 @@ function createOrderViewer(id, _class) {
         //attr: {'order_id': '123', 'ts': timestamp}
     }).append('<div class="pricingPic"></div>');
 
+    var select = $('<select/>', {
+        id: "selstatus",
+        name: "status",
+//        class: 'ui-widget-header',
+    }).append('<label for="status">Статус</label>').appendTo(divOrderViewer);
+
     var divHeader = $('<div/>', {
         id: "orderheader",
         class: 'ui-widget-header',
@@ -120,23 +126,7 @@ function createOrderViewer(id, _class) {
         //id: "number",
     }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
 
-    var select = $('<select/>', {
-        id: "selstatus",
-        name: "status",
-//        class: 'ui-widget-header',
-    }).append('<label for="status">Статус</label>').appendTo(divOrderViewer);
 
-    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути"]));
-//or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
-
-    $(select).selectmenu({
-        width: 100,
-//        position: {
-//            my: "left+10 top",
-//            at: "left top+20"
-//        },
-    });
-    
 
     divOrderViewer.append(divHeader);
     divOrderViewer.append('<div id=ordlog></div><div id=ordercomment class="comment">' + 'comment' + '</div>');
@@ -146,6 +136,27 @@ function createOrderViewer(id, _class) {
     divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
     divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
     divOrderViewer.append('<div id="ordlog"></div>');
+
+    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути"]));
+
+    //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
+
+    $(select).selectmenu({
+//        create: function (event, ui) {
+////            $('.ui-selectmenu-menu').css({'height': '100px', 'overflow': 'auto'});
+//            $('.ui-selectmenu-menu').css({'z-index': '10000000'});
+//        },
+//        open: function (event, ui)
+//        {
+//            $('.ui-selectmenu-menu').zIndex($(‘#dialog’).zIndex() + 1);
+//        },
+        width: 140,
+//        position: {
+//            my: "left+10 top",
+//            at: "left top+20"
+//        },
+        //change: function (event, ui) {alert(event)}
+    });
     return divOrderViewer;
 }
 

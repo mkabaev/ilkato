@@ -455,8 +455,8 @@ function ArrayToOptionItems(items) {
                 }
             });
             _items.push("<option" + s + ">" + t + "</option>");
-        }else{
-            _items.push("<option>" + val + "</option>");            
+        } else {
+            _items.push("<option>" + val + "</option>");
         }
 
     });

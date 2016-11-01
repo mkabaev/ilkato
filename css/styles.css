@@ -30,17 +30,19 @@ body {
 #userinfo{float:right; margin-right: 10px;}
 #settings{float:right; margin-right: 10px;}
 
-.ordrow {
+/*.ordrow {
     width: 100%;
     height: 230px;
     float: top;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    /*    padding-bottom: 100px;*/
+        padding-bottom: 100px;
+}*/
+
+.ui-dialog{
+z-index: 100 !important;
 }
-
-
 
 .ul_selectItems .ui-selecting { background: #FECA40; }
 .ul_selectItems .ui-selected { background: #F39814; color: white; }

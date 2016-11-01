@@ -187,15 +187,15 @@ function createOperatorInterface() {
     fs.children('input').checkboxradio({
         icon: false,
     });
-    fs.children('input').prop('checked', true);;
+    fs.children('input').prop('checked', true);
 
     fs.children('input').on("change", function (e) {
         var target = $(e.target);
-        var id=target.attr("item_id");
+        var id = target.attr("item_id");
         if (target.is(":checked")) {
-            $('.order[idKitchen='+id+']').show();
+            $('.order[idKitchen=' + id + ']').show();
         } else {
-            $('.order[idKitchen='+id+']').hide();
+            $('.order[idKitchen=' + id + ']').hide();
         }
 
 //        alert(target.attr("id"));
@@ -368,7 +368,20 @@ function showOrderDialog(order) {
     dlgV.append(ov.fadeIn(1000));
     //}
     updateOrderViewer(order.id);
+//    $("#selstatus").on('selectmenuopen', function (event, ui)
+//    {
+//        alert($(dlgV).zIndex());
+//        $('.ui-selectmenu-menu').zIndex($(dlgV).zIndex() + 100);
+//    });
+
+
     dlgV.dialog('open');
+    
+//var dialogZindex = $('.ui-dialog').css('z-index');
+//alert(dialogZindex);
+//alert($('.ui-selectmenu-menu').css('z-index'));
+//$('.ui-selectmenu-menu').css('z-index', dialogZindex+2);
+
 
 //        //var order = $(event.target).parent().parent();
 //        //$("#dlgEdit").attr("order_id", $(this).parent().attr("id"));

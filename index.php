@@ -4,13 +4,16 @@
         <meta charset="utf-8">
         <title>Кухня</title>
         <!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
-        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">
+<!--        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">-->
+        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.1.custom/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/operator.css">
         <link rel="stylesheet" href="css/kitchen.css">
 
-        <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
-        <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>
+        <script src="js-ext/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+        <script src="js-ext/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<!--        <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
+        <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>-->
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
         <script src="js-ext/jquery.scannerdetection.js"></script>
 
