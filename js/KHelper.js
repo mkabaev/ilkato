@@ -103,7 +103,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
 }
 
 function createOrderViewer(id, _class) {
-    var headerItems = ["Продукт", "Кол-во", "Вес", "Цена"];
+    var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
     var tableItems = null;
 
     var divOrderViewer = $('<div/>', {
@@ -187,10 +187,39 @@ function updateOrderViewer(id) {
             });
 
             var ctP = 0;
+            var ct30cm = 0;
+            var count30 = 0;
+
+            var ct40cm = 0;
+            var count40 = 0;
             $.each(itemsP, function (key, val) {
-                ctP = ctP + val.CookingTime;
-                console.log("P:" + val.CookingTime);
+                if (val.Name.indexOf("30 см") > -1) {
+                    count30++;
+                    ct30cm = Math.max(ct30cm, val.CookingTime);
+                } else
+                if (val.Name.indexOf("40 см") > -1) {
+                    count40++;
+                    ct40cm = Math.max(ct40cm, val.CookingTime);
+                }
+                console.log("P:" + val.Name + " - " + val.CookingTime);
             });
+            var floor30 = Math.floor(count30 / 4);
+            var mod30 = count30 % 4;
+            if (mod30 > 0) {
+                ct30cm = ct30cm * floor30 + ct30cm;
+            } else {
+                ct30cm = ct30cm * floor30;
+            }
+
+            var floor40 = Math.floor(count40 / 3);
+            var mod40 = count40 % 3;
+            if (mod40 > 0) {
+                ct40cm = ct40cm * floor40 + ct40cm;
+            } else {
+                ct40cm = ct40cm * floor40;
+            }
+            ctP = Math.max(ct30cm, ct40cm);
+
 
             itemsR = itemsR.map(function (oldItem) {
                 var newItem = {};
@@ -199,6 +228,7 @@ function updateOrderViewer(id) {
                 newItem.Count = oldItem.Count;
                 newItem.Weight = oldItem.Weight;
                 newItem.Price = oldItem.Price;
+                newItem.Time = oldItem.CookingTime;
 
                 return newItem;
             });
@@ -210,6 +240,7 @@ function updateOrderViewer(id) {
                 newItem.Count = oldItem.Count;
                 newItem.Weight = oldItem.Weight;
                 newItem.Price = oldItem.Price;
+                newItem.Time = oldItem.CookingTime;
 
                 return newItem;
             });
@@ -219,12 +250,15 @@ function updateOrderViewer(id) {
                 if (localStorage.activeOrder != id) {//reset timer
                     localStorage.activeOrder = id;
                     stopTimer();
+                    $("#timer").hide();
                     var ct = Math.max(ctR, ctP);
                     if (ct > 0) {
                         if (!startTimer(ct)) {
                             //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
                             createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
+
                         }
+                        $("#timer").show();
                     }
                 }
             } else {
@@ -233,6 +267,7 @@ function updateOrderViewer(id) {
 
 //    $('body').append(localStorage.getItem(localStorage.key(i))); 
         } else {
+            $('#tableP tbody,#tableR tbody').empty();
             console.log("ERROR: Заказ " + order.No + " не содержит продуктов");
         }
 
