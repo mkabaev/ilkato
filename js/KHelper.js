@@ -71,15 +71,17 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         //text: "Печать",
         click: function (event) {
             localStorage.removeItem("chktemplate");
-            if (localStorage.getItem("chktemplate") === null) {
+            //if (localStorage.getItem("chktemplate") === null) {
+            $.ajaxSetup({ cache: false });
                 $.get("chktemplate.html", function (data) {
                     localStorage.chktemplate = data;
-                    printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+                    //alert(data);
+                    //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+                    printHTML(data, getOrderFromLS(localStorage.activeOrder));
                 });
-            } else {
-                printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-
-            }
+            //} else {
+            //    printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+            //}
 
         },
     }).appendTo(divHeader);
@@ -183,7 +185,7 @@ function updateOrderViewer(id) {
             var ctR = 0;
             $.each(itemsR, function (key, val) {
                 ctR = ctR + val.CookingTime;
-                console.log("R:" + val.CookingTime);
+                //console.log("R:" + val.CookingTime);
             });
 
             var ctP = 0;
@@ -201,7 +203,7 @@ function updateOrderViewer(id) {
                     count40++;
                     ct40cm = Math.max(ct40cm, val.CookingTime);
                 }
-                console.log("P:" + val.Name + " - " + val.CookingTime);
+                //console.log("P:" + val.Name + " - " + val.CookingTime);
             });
             var floor30 = Math.floor(count30 / 4);
             var mod30 = count30 % 4;

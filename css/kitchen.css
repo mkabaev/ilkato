@@ -12,9 +12,9 @@
     /*    right:10px;*/
 }
 .orderViewer table{
-  font-size: 0.9em;
-  white-space: nowrap;
-/*  width: 100px;*/
+    font-size: 0.9em;
+    white-space: nowrap;
+    /*  width: 100px;*/
 }
 
 .pricingPic{
@@ -22,12 +22,12 @@
     right: 0;
     top: -14px;
     height:40px;
-    z-index:10;
+    /*z-index:10;*/
 }
 
 .ui-dialog .orderViewer{
-margin-left: 30px;
-margin-top: 10px;
+    margin-left: 30px;
+    margin-top: 10px;
 }
 
 .ui-dialog .pricingPic{
@@ -41,19 +41,9 @@ margin-top: 10px;
 .orderViewer.ord-pricingType-2 .pricingPic{
     content:url(../images/sxl.png);
 }
-/*.pricingPic:after{
-  content:url('../bg_italian.png');  with class ModalCarrot ??
-  position:relative; or absolute
-  z-index:100000; a number that's more than the modal box
-  left:-50px;
-  top:10px;
-}*/
-/*.orderViewer .ui-selectmenu-button{
-    visibility: hidden;
-}*/
-
 
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
+
 .mk {
     float: left;
     width:500px;
@@ -76,12 +66,30 @@ margin-top: 10px;
     margin:20px;
     width: calc(100% - 40px);
 }
-
-.selPanel {z-index:3; left:100px; float: left; width: 60px; height: 100%; box-sizing: border-box; border-right: 4px solid #F39814;}
+.ui-dialog .mk .doneButton{
+    visibility: hidden;  
+}
+.selPanel {
+    z-index:3;
+    left:100px;
+    float: left;
+    width: 70px;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 4px solid #F39814;
+}
 .selItems .ui-selecting { background: #FECA40; }
 .selItems .ui-selected { background: #F39814; color: white; }
 .selItems { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-.selItems li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 48px; }
+.selItems li {
+    margin: 3px;
+    padding: 0.4em;
+    font-size: 1.8em;
+    text-align:center;
+    line-height: 32px;
+    height: 32px;
+}
+.selItems li:hover {opacity: 0.2;}
 .ui-selectable-helper{display:none;}
 
 div.imgRoll {
@@ -100,6 +108,8 @@ div.imgPizza {
 
 .orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
 
+
+/*default timer style*/
 .ktimer {
     position: absolute;
     display: inline-block;
@@ -118,40 +128,18 @@ div.imgPizza {
     top: 0;
     left: 0;
 }
+/*.digit:after {
+  content: '%';
+  margin-left: 0.1em;
+  font-size: .8em;
+}*/
+
 /*.digit {
     display: inline-block;
     line-height: 200px;
     z-index: 2;
 }*/
 
-/*.chart {
-    position: fixed;
-    display: inline-block;
-    width: 200px;
-    height: 200px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    right:10px;
-    top: 10px;    
-    font-size: 40px;
-    font-weight:bold;
-}
-.chart canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-.digit {
-    display: inline-block;
-    line-height: 200px;
-    z-index: 2;
-}*/
-/*.digit:after {
-  content: '%';
-  margin-left: 0.1em;
-  font-size: .8em;
-}*/
 
 /*#footer{position:fixed;bottom:20px;right:20px; height:200px}*/
 #footer{position: absolute; width:100%; bottom: 0;}

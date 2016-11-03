@@ -106,7 +106,12 @@ function createOperatorInterface() {
     }).disableSelection();
 
 //FILTER
-    var topwidget = $("#topwidget");
+    var topwidget = $('<div/>', {
+        id: 'topwidget',
+        //class: 'o_orderBatchPanel',
+        //attr: {'idBatch': idBatch, 'QueueNo': QueueNo}
+        //html:'<div class="o_orderBatchPanelButtons">asd</div>'
+    }).appendTo("#topmenu");
     topwidget.append('Дата: <input type="text" id="datepicker"/>');
     topwidget.addClass("ui-widget ui-widget-content ui-corner-bottom");
 
@@ -181,13 +186,13 @@ function createOperatorInterface() {
 
     //fs.append('<legend>Фильтр: </legend>');
     fs.append('<label for="chkP">Печерская</label>');
-    fs.append('<input type="checkbox" name="chkP" id="chkP" item_id=3>');
+    fs.append('<input type="checkbox" name="chkP" id="chkP" item_id=3 checked>');
     fs.append('<label for="chkNS">Ново-Садовая</label>');
-    fs.append('<input type="checkbox" name="chkNS" id="chkNS" item_id=4>');
+    fs.append('<input type="checkbox" name="chkNS" id="chkNS" item_id=4 checked>');
     fs.children('input').checkboxradio({
         icon: false,
     });
-    fs.children('input').prop('checked', true);
+//    fs.children('input').prop('checked', true);
 
     fs.children('input').on("change", function (e) {
         var target = $(e.target);
@@ -366,6 +371,7 @@ function showOrderDialog(order) {
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     //ov.addClass('ul_selec');
     dlgV.append(ov.fadeIn(1000));
+    
     //}
     updateOrderViewer(order.id);
 //    $("#selstatus").on('selectmenuopen', function (event, ui)
@@ -376,7 +382,6 @@ function showOrderDialog(order) {
 
 
     dlgV.dialog('open');
-    
 //var dialogZindex = $('.ui-dialog').css('z-index');
 //alert(dialogZindex);
 //alert($('.ui-selectmenu-menu').css('z-index'));

@@ -87,6 +87,7 @@ function printHTML(htmlTemplate, order) {
 
     divPrint.html(s);
     window.print();
+    divPrint.remove();
 //    return divPrint;
 }
 
@@ -186,6 +187,11 @@ function CreateDialog(id, caption, _class) {
                 divDialog.dialog('close');
                 divDialog.dialog('destroy');
             })
+        },
+        close: function () {
+            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
+//            $(this).dialog('destroy').remove();
+            $(this).remove();
         },
         dialogClass: "noclose"
     });
@@ -511,6 +517,7 @@ function afterSelUser(sender, id, name) {
     localStorage.wp_type = $(sender).attr("idType");
     localStorage.uid = id;
     localStorage.user_name = name;
+//    $("#SelUsers").remove();
     doInit();
     //updateInterface_user();
 }
@@ -519,16 +526,18 @@ function sendRequest(action, paramsstr, callback) {
     $.ajax({
         type: "POST",
         data: "action=" + action + "&" + paramsstr,
-        url: "helper.php?",
+        //url: "helper.php?",
+        url: "helper.php",
         cache: false,
         success: function (jsondata) {
+            $("body").removeClass("ui-state-error");
             if (callback) {
                 callback(jsondata);
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
-            $(".ordrow").addClass("ui-state-error");
+            $("body").addClass("ui-state-error");
             //$("body").addClass("ui-state-error");
 //            alert(xhr.status);
 //            alert(thrownError);

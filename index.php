@@ -27,7 +27,6 @@
     </head>
     <body>
         <div id="topmenu" class="ui-widget ui-state-focus" style="height:24px;">
-            <div id="topwidget"></div>
             <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
             <div id="settings" title="Please provide your firstname." ><span class="ui-icon ui-icon-gear"></span>Настройки</div>
         </div>
@@ -52,7 +51,7 @@
             function createWorkplace(type) {
                 stopTimer();
                 $('#workplace').empty();
-                $('#topwidget').empty();
+                $('#topwidget').remove();
                 $("body").disableSelection();
                 //console.log(document.attributes);
                 switch (type) {

@@ -113,10 +113,14 @@
     padding: 4px;
 }
 
-#topwidget .ui-checkboxradio-checked{
-    background:none;
-    background-color: #FECA40;
+.ui-checkboxradio-label{
+opacity: 0.2;
 }
+
+.ui-checkboxradio-label.ui-checkboxradio-checked{
+opacity: 1;
+}
+
 #topwidget input{
     font-size: 1.2em;
     width: 90px;
