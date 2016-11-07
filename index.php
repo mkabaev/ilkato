@@ -35,9 +35,8 @@
         <!--<audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg" autoplay>
           Your browser does not support the <code>audio</code> element.
         </audio>-->
-        <div id="workplace"/>
+        <div id="workplace"></div>
         <script>
-
             $("#progressbar").progressbar({value: false});
             //get uid's,wpid's, [orders?]
             //sent uid (via SSE(uid)

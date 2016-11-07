@@ -15,6 +15,10 @@ table tr td{padding:10px;}
 table thead th,td{padding:10px;border: 1px solid orange;}
 table {font-size: 20px; border-collapse: collapse;}
 table {margin: 10px;}
+tfoot td{padding:10px;border: none;}
+tfoot {
+    font-size: 22px;
+}
 body {overflow: hidden;} 
 tr:hover {background-color: #f5f5f5}
 tr:nth-child(even) {background-color: #f2f2f2}

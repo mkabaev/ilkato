@@ -306,7 +306,7 @@ function doInit(callback) {
                     }
                 });
                 //save actual orders to LS
-                var data = $.parseJSON(jsondata);
+                var data = JSON.parse(jsondata);
                 localStorage.id_session = data.id_session;
                 setItemsToLS('o_', data.orders);
                 setItemsToLS('b_', data.batches);
@@ -353,23 +353,31 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
         //id: id,
         class: 'ui-widget-header',
         //attr: {'status_id': status_id, 'ts': timestamp}
-    });
-
-    tHead.append(ArrayToTableHeader(headerItems));
+    }).append(ArrayToTableHeader(headerItems));
     table.append(tHead);
+
+    //if (footerItems!==undefined) {
+    var tFooter = $('<tfoot/>', {
+        //id: id,
+        //class: 'ui-widget-header',
+        //attr: {'status_id': status_id, 'ts': timestamp}
+
+    }).append(ArrayToTableFooter(footerItems));
+    table.append(tFooter);
+    //}
 
     var tBody = $('<tbody/>', {
         //id: id,
         //class: 'ui-widget-content',
         //attr: {'status_id': status_id, 'ts': timestamp}
-    });
+    }).append(ArrayToTableItems(tableItems));
+    table.append(tBody);
 
     //tBody.append(ArrayToTableItems(tableItems));
 
 //tBody.append('<tr><td>Ролл Филаделфия</td><td>2</td></tr>');
     //tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
-    tBody.append(ArrayToTableItems(tableItems));
-    table.append(tBody);
+
 
     return table;
 }
@@ -387,6 +395,16 @@ function ArrayToTableHeader(headerItems) {
     headerHtml = headerHtml + '</tr>';
     return headerHtml;
     //$("#tProducts tbody").html(items);
+}
+
+function ArrayToTableFooter(items) {
+    var html;
+    html = '<tr>';
+    $.each(items, function (key, val) {
+        html = html + "<td>" + val + "</td>";
+    });
+    html = html + '</tr>';
+    return html;
 }
 
 function ArrayToTableItems(tableItems) {
@@ -462,12 +480,13 @@ function ArrayToOptionItems(items) {
             });
             _items.push("<option" + s + ">" + t + "</option>");
         } else {
-            _items.push("<option>" + val + "</option>");
+            _items.push("<option value=" + key + ">" + val + "</option>");
         }
 
     });
     return _items;
 }
+
 function updateInterface_user() {
     $("#userinfo").html('<span class="ui-icon ui-icon-person"></span>' + localStorage.user_name);
 }
@@ -477,7 +496,7 @@ function getItemFromLS(prefix, id) {
     //console.log('LS items count: '+localStorage.length);
     for (var i = 0; i < localStorage.length; i++) {
         if (localStorage.key(i) === prefix + id) {
-            item = $.parseJSON(localStorage[localStorage.key(i)]);
+            item = JSON.parse(localStorage[localStorage.key(i)]);
         }
     }
     return item;
@@ -488,7 +507,8 @@ function getItemsFromLS(prefix) {
     //console.log('LS items count: '+localStorage.length);
     for (var i = 0; i < localStorage.length; i++) {
         if (localStorage.key(i).substr(0, 2) === prefix) {
-            items.push($.parseJSON(localStorage[localStorage.key(i)]));
+//            items.push($.parseJSON(localStorage[localStorage.key(i)]));
+            items.push(JSON.parse(localStorage[localStorage.key(i)]));
         }
     }
     return items;

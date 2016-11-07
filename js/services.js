@@ -48,7 +48,7 @@ function addEventListeners() {
 }
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
-    var orders = $.parseJSON(e.data);
+    var orders = JSON.parse(e.data);
     setItemsToLS("o_",orders);
     
     var dates=[];

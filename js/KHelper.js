@@ -46,7 +46,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         //class: 'ui-widget-',
     }).appendTo(divModule).css('padding-left', '30px')
 
-    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems));
+    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems, ["","",123,888]));
 
     var bDone = $('<button/>', {
         id: "bDone" + modType,
@@ -55,6 +55,12 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         click: function (event) {
             var divModule = $(this).parent();
             divModule.addClass('ui-state-disabled');
+            if ($("#divR").hasClass('ui-state-disabled') && $("#divP").hasClass('ui-state-disabled')) {
+                var idOrder = parseInt($('#ordViewer').attr("idOrder"));
+                sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
+                    console.log(response);
+                });
+            }
         },
     }).appendTo(divModule);
 
@@ -72,13 +78,13 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         click: function (event) {
             localStorage.removeItem("chktemplate");
             //if (localStorage.getItem("chktemplate") === null) {
-            $.ajaxSetup({ cache: false });
-                $.get("chktemplate.html", function (data) {
-                    localStorage.chktemplate = data;
-                    //alert(data);
-                    //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-                    printHTML(data, getOrderFromLS(localStorage.activeOrder));
-                });
+            $.ajaxSetup({cache: false});
+            $.get("chktemplate.html", function (data) {
+                localStorage.chktemplate = data;
+                //alert(data);
+                //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+                printHTML(data, getOrderFromLS(localStorage.activeOrder));
+            });
             //} else {
             //    printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
             //}
@@ -139,7 +145,7 @@ function createOrderViewer(id, _class) {
     divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
     divOrderViewer.append('<div id="ordlog"></div>');
 
-    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути"]));
+    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
 
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
 
@@ -157,7 +163,13 @@ function createOrderViewer(id, _class) {
 //            my: "left+10 top",
 //            at: "left top+20"
 //        },
-        //change: function (event, ui) {alert(event)}
+        change: function (event, ui) {
+            var idOrder = parseInt($('#ordViewer').attr("idOrder"));
+            var idStatus = parseInt($(this).val()) + 1;
+            sendRequest('updateOrderStatus', 'idOrder=' + idOrder + '&idStatus=' + idStatus, function (response) {
+                console.log(response);
+            });
+        }
     });
     return divOrderViewer;
 }
@@ -167,11 +179,17 @@ function updateOrderViewer(id) {
     if (order === undefined) {
         // load from server
         console.log('ord undef');
+        $('#ordViewer').hide();
     } else {
+        $('#ordViewer').show();
+        $('#ordViewer').attr("idOrder", order.id);
         //console.log('ordViewer updating ' + order.comment);
         //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
+
+        $("#selstatus").val(order.idStatus - 1);
+        $("#selstatus").selectmenu('refresh', true);
 
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
@@ -235,6 +253,7 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableR tbody').html(ArrayToTableItems(itemsR));
+            $('#tableR tfoot').html(ArrayToTableFooter(["","",111,222]));
             itemsP = itemsP.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -247,6 +266,7 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
+            $('#tableP tfoot').html(ArrayToTableFooter(["","",111,222]));
 
             if (localStorage.wp_type === "3") {//trick for operator upfateInterface
                 if (localStorage.activeOrder != id) {//reset timer
@@ -285,9 +305,9 @@ function updateOrderViewer(id) {
 
 function updateKInterface_SelPanel() {
 
-    console.log("--загружаем из LS заказы со статусом Готовить, Готовится, Приготовлен");
+    console.log("--обновляем боковую панель");
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idStatus > 1 && currentValue.idStatus < 8;
+        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5;
 //1	Принят
 //2	Готовить
 //3	Готовится
@@ -314,26 +334,26 @@ function updateKInterface_SelPanel() {
     var list = $('#p1 ul');
     var items = ArrayToLiItems(mappedOrders);
 
-    var li;
-    $(orders).each(function (indx, order) {
-        var rCount = 0;
-        var pCount = 0;
-        if (order.Products !== null) {
-            rCount = order.Products.filter(function (currentValue, index, arr) {
-                return currentValue.idType == 1;
-            }).length;
-
-            pCount = order.Products.filter(function (currentValue, index, arr) {
-                return currentValue.idType == 2;
-            }).length;
-        }
-
-        li = $(items[indx]);
-//        console.log('R:'+rCount);
-//        console.log('P:'+pCount);
-        li.html(order.no); //'<div class="imgRoll"/>'
-        items[indx] = li;
-    });
+//    var li;
+//    $(orders).each(function (indx, order) {
+//        var rCount = 0;
+//        var pCount = 0;
+//        if (order.Products !== null) {
+//            rCount = order.Products.filter(function (currentValue, index, arr) {
+//                return currentValue.idType == 1;
+//            }).length;
+//
+//            pCount = order.Products.filter(function (currentValue, index, arr) {
+//                return currentValue.idType == 2;
+//            }).length;
+//        }
+//
+//        li = $(items[indx]);
+////        console.log('R:'+rCount);
+////        console.log('P:'+pCount);
+//        li.html(order.no); //'<div class="imgRoll"/>'
+//        items[indx] = li;
+//    });
 
 
     list.html(items);
@@ -348,15 +368,31 @@ function updateKInterface_SelPanel() {
                 }
 
     });
-
-
-
     $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
 }
 
 
-//function ProcessScanner()
-//{
+//$(document).scannerDetection({
+//	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+//	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+//	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+//	ignoreIfFocusOn: 'input', // turn off scanner detection if an input has focus
+//	onComplete: function(barcode, qty){ ... }, // main callback function
+//	scanButtonKeyCode: 116, // the hardware scan button acts as key 116 (F5)
+//	scanButtonLongPressThreshold: 5, // assume a long press if 5 or more events come in sequence
+//	onScanButtonLongPressed: showKeyPad, // callback for long pressing the scan button
+//	onError: function(string){alert('Error ' + string);}
+//});
+
+$(document).scannerDetection({
+    //...
+    onKeyDetect: function (event) {
+        console.log("key detect:" + event.which);
+        return false;
+    },
+    onComplete: function (barcode, qty) {
+        console.log("barcode:" + barcode);
+        console.log("qty:" + qty);
 //    //2200003014129 roll
 //    //2200001012985 pizza
 //    if (inp.val().length == 13) {
@@ -385,26 +421,6 @@ function updateKInterface_SelPanel() {
 //        //$("#weight").text((weightP + weightR));
 //        SetOrderProductsOnServer($("#dlgEdit").attr("order_id"), weightR, weightP);
 //    }
-//}
-
-
-//$(document).scannerDetection({
-//	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
-//	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
-//	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
-//	ignoreIfFocusOn: 'input', // turn off scanner detection if an input has focus
-//	onComplete: function(barcode, qty){ ... }, // main callback function
-//	scanButtonKeyCode: 116, // the hardware scan button acts as key 116 (F5)
-//	scanButtonLongPressThreshold: 5, // assume a long press if 5 or more events come in sequence
-//	onScanButtonLongPressed: showKeyPad, // callback for long pressing the scan button
-//	onError: function(string){alert('Error ' + string);}
-//});
-
-$(document).scannerDetection({
-    //...
-    onKeyDetect: function (event) {
-        console.log(event.which);
-        return false;
     }
     //...
 });

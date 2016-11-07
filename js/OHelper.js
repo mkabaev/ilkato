@@ -492,7 +492,7 @@ function CreateBatchPanel(idBatch, QueueNo) {
             idBatch = parseInt(ui.item.parent().parent().attr("idBatch"));
             console.log("updating idBatch in order");
             sendRequest('updateOrderIdBatch', 'idOrder=' + idOrder + '&idBatch=' + idBatch, function (response) {
-                console.log(response)
+                console.log(response);
             });
         }
     }).disableSelection();
@@ -535,26 +535,26 @@ function updateOInterface_orders(orders) {
         divOrder.addClass('ord-status-' + order.idStatus);
         //console.log('try: '+order.id);
         switch (order.idStatus) {
-            case "1"://Принят
+            case 1://Принят
                 //divOrder.addClass('ui-state-disabled');
                 divOrder.find("span.status").text("Принят");
                 break;
-            case "2"://Готовить
+            case 2://Готовить
                 divOrder.find("span.status").text("Готовить");
                 break;
-            case "3"://Готовится
+            case 3://Готовится
                 divOrder.find("span.status").text("Готовится");
                 break;
-            case "4"://Приготовлен
+            case 4://Приготовлен
                 divOrder.find("span.status").text("Приготовлен");
                 break;
-            case "5"://Доставка
+            case 5://Доставка
                 divOrder.find("span.status").text("Доставка");
                 break;
-            case "6"://В пути
+            case 6://В пути
                 divOrder.find("span.status").text("В пути");
                 break;
-            case "7"://Доставлен
+            case 7://Доставлен
                 divOrder.find("span.status").text("Доставлен");
                 break;
             default:
