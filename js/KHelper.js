@@ -1,18 +1,15 @@
 function createKitchenInterface() {
-    //var tableItems = $.parseJSON(localStorage.products);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
 
-    //$('body').append(CreateLeftPanel());
+    $('#workplace').append(createSelectPanel('p1', 'selPanel', undefined, afterSelTest));
 
+//    var divFooter = $('<div/>', {
+//        id: 'footer',
+//        //class: _class,
+//        attr: {'title': 'caption'}
+//    }).appendTo($('#ordViewer'));
 
-    var selPanel = createSelectPanel('p1', 'selPanel', undefined, afterSelTest).appendTo('#workplace');
-
-    var divFooter = $('<div/>', {
-        id: 'footer',
-        //class: _class,
-        attr: {'title': 'caption'}
-    }).appendTo($('#ordViewer'));
     updateKInterface_SelPanel();
     localStorage.activeOrder = $("#p1").find("li").first().attr("item_id");
     updateKInterface_SelPanel();
@@ -46,7 +43,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
         //class: 'ui-widget-',
     }).appendTo(divModule).css('padding-left', '30px')
 
-    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems, ["","",123,888]));
+    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems, ["", "", 123, 888]));
 
     var bDone = $('<button/>', {
         id: "bDone" + modType,
@@ -181,8 +178,10 @@ function updateOrderViewer(id) {
         console.log('ord undef');
         $('#ordViewer').hide();
     } else {
-        $('#ordViewer').show();
-        $('#ordViewer').attr("idOrder", order.id);
+        var divOrder=$('#ordViewer');
+        divOrder.show();
+        divOrder.children(".mk").removeClass('ui-state-disabled');
+        divOrder.attr("idOrder", order.id);
         //console.log('ordViewer updating ' + order.comment);
         //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
@@ -190,7 +189,6 @@ function updateOrderViewer(id) {
 
         $("#selstatus").val(order.idStatus - 1);
         $("#selstatus").selectmenu('refresh', true);
-
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
                 return row.idType === 1;
@@ -200,8 +198,12 @@ function updateOrderViewer(id) {
                 return row.idType === 2;
             });
 
+//TODO: check func speed
+//var sum = itemsR.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
             var ctR = 0;
+            var totalSummR = 0;
             $.each(itemsR, function (key, val) {
+                totalSummR += val.Price;
                 ctR = ctR + val.CookingTime;
                 //console.log("R:" + val.CookingTime);
             });
@@ -212,7 +214,9 @@ function updateOrderViewer(id) {
 
             var ct40cm = 0;
             var count40 = 0;
+            var totalSummP = 0;
             $.each(itemsP, function (key, val) {
+                totalSummP += val.Price;
                 if (val.Name.indexOf("30 см") > -1) {
                     count30++;
                     ct30cm = Math.max(ct30cm, val.CookingTime);
@@ -253,7 +257,7 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableR tbody').html(ArrayToTableItems(itemsR));
-            $('#tableR tfoot').html(ArrayToTableFooter(["","",111,222]));
+            $('#tableR tfoot').html(ArrayToTableFooter(["", "", "", totalSummR]));
             itemsP = itemsP.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -266,7 +270,7 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
-            $('#tableP tfoot').html(ArrayToTableFooter(["","",111,222]));
+            $('#tableP tfoot').html(ArrayToTableFooter(["", "", "", totalSummP]));
 
             if (localStorage.wp_type === "3") {//trick for operator upfateInterface
                 if (localStorage.activeOrder != id) {//reset timer

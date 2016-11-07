@@ -113,11 +113,11 @@ function getOrders($date) {
     return $items;
 }
 
-function getActiveBatches() {
+function getBatches($date) {
     $db = new DB();
-    $query = "SELECT * from batches where isActive=1";
+    $query = "SELECT * from batches where DDate=:date";
     $stmt = $db->conn->prepare($query);
-    //$stmt->bindParam(':date', $date);
+    $stmt->bindParam(':date', $date);    
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
@@ -381,7 +381,7 @@ switch ($action) {
         updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
 
-        $data = ['id_session' => $id_session, 'orders' => getOrders(date("Y-m-d")), 'batches' => getActiveBatches()];
+        $data = ['id_session' => $id_session, 'orders' => getOrders(date("Y-m-d")), 'batches' => getBatches(date("Y-m-d"))];
         echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
         //, JSON_NUMERIC_CHECK
         break;
@@ -396,6 +396,12 @@ switch ($action) {
 //    case 'getCOrders':
 //        echo getOrders($_POST["json"], "C");
 //        break;
+    case 'getOrdersAndBatches':
+        $date = filter_input(INPUT_POST, 'date');
+        $data = ['orders' => getOrders($date), 'batches' => getBatches($date)];
+        echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        //, JSON_NUMERIC_CHECK
+        break;
     case 'getOrderProducts':
         echo getOrderProducts($_POST["order_id"]);
         break;

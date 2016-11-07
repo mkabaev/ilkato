@@ -136,21 +136,26 @@ function createOperatorInterface() {
             var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
             $.ajax({
                 type: "POST",
-                data: "action=getOrders&date=" + dt,
+                data: "action=getOrdersAndBatches&date=" + dt,
                 url: "helper.php?",
                 cache: false,
                 success: function (jsondata) {
                     $("body").removeClass("ui-state-error");
                     // remove orders from LS
                     $.each(localStorage, function (key, value) {
-                        if (key.startsWith('o_')) {
+                        if (key.startsWith('o_') | key.startsWith('b_')) {
                             localStorage.removeItem(key);
                         }
                     });
-                    //add old orders to LS
-                    var orders = $.parseJSON(jsondata);
-                    setItemsToLS('o_', orders);
-                    updateOInterface_orders(orders);
+
+                    //save orders to LS
+                    var data = JSON.parse(jsondata);
+                    localStorage.id_session = data.id_session;
+                    setItemsToLS('o_', data.orders);
+                    setItemsToLS('b_', data.batches);
+                    updateOInterface_orders(data.orders);
+                    $("#o_activeOrdersPanel").empty();
+                    updateOInterface_batches(data.batches);
                     localStorage.activeDate = dt;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -204,6 +209,41 @@ function createOperatorInterface() {
         }
 
 //        alert(target.attr("id"));
+    });
+
+
+
+
+
+    var bAdd = $("<button/>", {
+        //type: 'checkbox',
+        id: 'bAddBatch',
+        //name: 'n' + order.id
+        //class: 'orderDoneButton'
+    }).appendTo(topwidget);
+
+    bAdd.button({
+        icons: {
+            primary: "ui-icon-plus",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+//    bAdd.css({'width': '25px', 'height': '25px', })
+
+    bAdd.click(function (event) {
+////        $(event.target).parent().
+//        var pnlActiveOrders = $('#o_activeOrdersPanel');
+//        pnlActiveOrders.append(CreateBatchPanel());
+//        var IDs = [];
+//        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
+//            IDs.push($(this).attr("idBatch"));
+//        });
+        sendRequest('createBatch', '', function (response) {
+            console.log(response);
+        });
+        updateOInterface_batches(getBatchesFromLS());
     });
 
     updateOInterface_batches(batches);
@@ -371,7 +411,7 @@ function showOrderDialog(order) {
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     //ov.addClass('ul_selec');
     dlgV.append(ov.fadeIn(1000));
-    
+
     //}
     updateOrderViewer(order.id);
 //    $("#selstatus").on('selectmenuopen', function (event, ui)
@@ -458,7 +498,8 @@ function CreateBatchPanel(idBatch, QueueNo) {
         text: false
     }
     );
-    bAdd.css({'width': '25px', 'height': '25px', })
+    bAdd.css({'width': '25px', 'height': '25px', });
+    bAdd.addClass('ui-state-disabled');
 
     bAdd.click(function (event) {
 ////        $(event.target).parent().
