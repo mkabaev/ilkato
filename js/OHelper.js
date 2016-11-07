@@ -153,10 +153,10 @@ function createOperatorInterface() {
                     localStorage.id_session = data.id_session;
                     setItemsToLS('o_', data.orders);
                     setItemsToLS('b_', data.batches);
-                    updateOInterface_orders(data.orders);
                     $("#o_activeOrdersPanel").empty();
                     updateOInterface_batches(data.batches);
-                    localStorage.activeDate = dt;
+                    updateOInterface_orders(data.orders);
+                    
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     $("body").addClass("ui-state-error");
