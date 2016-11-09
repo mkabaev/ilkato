@@ -1,5 +1,3 @@
-/* global eventSource, afterSelUser */
-
 function WorkPlace(name) {
     this.name = name;
     this._speed = 0;
@@ -325,10 +323,6 @@ function doInit(callback) {
                 createWorkplace(localStorage.wp_type);
 
                 addEventListeners();
-                if (callback) {
-                    callback();
-                }
-
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 $("body").addClass("ui-state-error");
@@ -338,7 +332,9 @@ function doInit(callback) {
 //            alert(thrownError);
             }
         });
-
+    }
+    if (callback) {
+        callback();
     }
 }
 

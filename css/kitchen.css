@@ -69,7 +69,7 @@
 .ui-dialog .mk .doneButton{
     visibility: hidden;  
 }
-.selPanel {
+/*.selPanel {
     z-index:3;
     left:100px;
     float: left;
@@ -90,7 +90,7 @@
     height: 32px;
 }
 .selItems li:hover {opacity: 0.2;}
-.ui-selectable-helper{display:none;}
+.ui-selectable-helper{display:none;}*/
 
 div.imgRoll {
     /*   background-image:url(../bg_japan.png);*/

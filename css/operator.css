@@ -6,9 +6,24 @@
     position: relative;
 }
 
+/*kitchen workplace*/
+.wp-3 .order{
+    /*    width:auto;*/
+    width: 60px;
+    height:60px;
+    margin: 5px;
+    position: relative;
+}
+.wp-3 .order .time,.wp-3 .order .order-content{
+    display: none;
+}
+.wp-3 .order.selected {
+    border-color: red;
+    border-width: 2px;
+}
+
 .order:hover {
-    /*    border-color: red;*/
-    /*    background-color: yellow;*/
+    border-color: red;
 }
 
 /*принятые*/
@@ -24,6 +39,7 @@
     overflow-y: auto;
 }
 
+/*где делать заказ*/
 .ord-workplace-3{
     border: 4px double green;
     background-color: lightgreen;
@@ -135,7 +151,7 @@
 .o-filter-rg{
     border: none;
     margin-left: 10px;
-/*    float: right;*/
+    /*    float: right;*/
 }
 
 #bAddBatch{

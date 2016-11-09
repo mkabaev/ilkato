@@ -1,28 +1,22 @@
 function createKitchenInterface() {
+    var pnlOrders = $('<div/>', {
+        id: 'o_ordersPanel',
+        class: 'connectedSortable',
+        //attr: {'title': 'caption'}
+    });
+    pnlOrders.appendTo($('#workplace'));
+
+//    var filterdate = (new Date()).toISOString().substring(0, 10);
+    //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
+    //var orders = getOrdersFromLS().filter(function (order, index, arr) {
+    //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
+    //return order.DDate == filterdate;
+    var orders = getOrdersFromLS();
+    updateInterface_orders(orders);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
-
-    $('#workplace').append(createSelectPanel('p1', 'selPanel', undefined, afterSelTest));
-
-//    var divFooter = $('<div/>', {
-//        id: 'footer',
-//        //class: _class,
-//        attr: {'title': 'caption'}
-//    }).appendTo($('#ordViewer'));
-
-    updateKInterface_SelPanel();
-    localStorage.activeOrder = $("#p1").find("li").first().attr("item_id");
-    updateKInterface_SelPanel();
-    updateOrderViewer(localStorage.activeOrder);
+    $(".order").first().click();
 }
-
-
-function afterSelTest(id, name) {
-    //var ov=$('#ordViewer');
-    //stopTimer();
-    updateOrderViewer(id);
-}
-
 
 /**
  * Create module with table and buttons
@@ -368,7 +362,7 @@ function updateKInterface_SelPanel() {
         //tolerance: "fit",
         selected:
                 function (event, ui) {
-                    afterSelTest($(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                    updateOrderViewer($(ui.selected).attr("item_id"));
                 }
 
     });

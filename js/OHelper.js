@@ -155,8 +155,8 @@ function createOperatorInterface() {
                     setItemsToLS('b_', data.batches);
                     $("#o_activeOrdersPanel").empty();
                     updateOInterface_batches(data.batches);
-                    updateOInterface_orders(data.orders);
-                    
+                    updateInterface_orders(data.orders);
+
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     $("body").addClass("ui-state-error");
@@ -247,7 +247,7 @@ function createOperatorInterface() {
     });
 
     updateOInterface_batches(batches);
-    updateOInterface_orders(orders);
+    updateInterface_orders(orders);
 
 }
 
@@ -256,7 +256,7 @@ function createOperatorInterface() {
  * @param order {Object} Order Object
  * @return {Object} div order
  */
-function CreateOrder(order) {
+function CreateOrder(order, isOperator) {
     //var js_date_str = d.substr(0,10)+'T'+d.substr(11,8);
     var divOrder = $('<div/>', {
         id: order.id,
@@ -356,11 +356,19 @@ function CreateOrder(order) {
 //        primary: "ui-icon-locked"
 //      },
 //      text: false
-//  }).appendTo(divOrderContent);;
-    divOrder.dblclick(function (event) {
-        showOrderDialog(order);
-        //showSelectUserDialog();
-    });
+//  }).appendTo(divOrderContent);
+    if (isOperator) {
+        divOrder.dblclick(function (event) {
+            showOrderDialog(order);
+        });
+    } else {
+        divOrder.click(function (event) {
+            updateOrderViewer(order.id);
+            $(".order").removeClass('selected');
+            divOrder.addClass('selected');
+        });
+
+    }
 
 
     var tt = $('<div/>', {
@@ -377,7 +385,7 @@ function CreateOrder(order) {
             order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
             localStorage['o_' + idOrder] = JSON.stringify(order);
             //console.log('DONE');
-            updateOInterface_orders([getOrderFromLS(idOrder)]);
+            updateInterface_orders([getOrderFromLS(idOrder)]);
         });
 
     });
@@ -541,16 +549,24 @@ function CreateBatchPanel(idBatch, QueueNo) {
     return divPanel;
 }
 
-function updateOInterface_orders(orders) {
+function updateInterface_orders(orders) {
     var ordersPanel = $('#o_ordersPanel');
-    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-    if (localStorage.activeDate !== dt) {
-        $('#o_ordersPanel, .o_itemsPanel').empty();
+    if (localStorage.wp_type === "2") {
+        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+        if (localStorage.activeDate !== dt) {
+            $('#o_ordersPanel, .o_itemsPanel').empty();
+        }
+
     }
     $(orders).each(function (indx, order) {
         var divOrder = $('#' + order.id);
         if (!divOrder.length) {
+            if (localStorage.wp_type === "2") {
+            divOrder = CreateOrder(order, 1);
+        }else{
             divOrder = CreateOrder(order);
+            
+        }
         }
         //alert(order.idBatch)
         if (order.idBatch != null) {

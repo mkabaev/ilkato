@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>Кухня</title>
         <!--        <link rel="stylesheet" href="external/jquery/jquery-ui.css">-->
-<!--        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">-->
+        <!--        <link rel="stylesheet" href="js-ext/jquery-ui-1.12.0.custom/jquery-ui.css">-->
         <link rel="stylesheet" href="js-ext/jquery-ui-1.12.1.custom/jquery-ui.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/operator.css">
@@ -37,7 +37,6 @@
         </audio>-->
         <div id="workplace"></div>
         <script>
-            $("#progressbar").progressbar({value: false});
             //get uid's,wpid's, [orders?]
             //sent uid (via SSE(uid)
 
@@ -51,8 +50,11 @@
                 stopTimer();
                 $('#workplace').empty();
                 $('#topwidget').remove();
+                $('#workplace').removeClass('wp-2');
+                $('#workplace').removeClass('wp-3');
                 $("body").disableSelection();
                 //console.log(document.attributes);
+                $('#workplace').addClass('wp-' + type);
                 switch (type) {
                     case '2':
                         createOperatorInterface();
@@ -85,9 +87,9 @@
             //если нет, то авторизуемся
             //addEventListeners(); // with session id
             //var date = (new Date()).toISOString().substring(0, 10);
+            $("#progressbar").progressbar({value: false});
             doInit(function () {
                 $("#progressbar").progressbar("destroy");
-
             });
             //    if (eventSource!==undefined) {
 //        eventSource.close();
