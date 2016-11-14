@@ -49,14 +49,14 @@ function addEventListeners() {
 function ordUpdate(e) {
     console.log('ordUpdate fired:' + e.data);
     var orders = JSON.parse(e.data);
-    setItemsToLS("o_",orders);
-    
-    var dates=[];
+    setItemsToLS("o_", orders);
+
+    var dates = [];
     $(orders).each(function (indx, order) {
-         dates.push(order.DDate);
+        dates.push(order.DDate);
     });
-    
-    localStorage.dates=$.unique(dates);
+
+    localStorage.dates = $.unique(dates);
     //localStorage.dates = ["2016-10-25", "2016-10-26", "2016-10-28"];
 
     afterOrdUpdate(orders);
@@ -72,12 +72,26 @@ function batchUpdate(e) {
 function afterOrdUpdate(orders) {
     switch (localStorage.wp_type) {
         case '2':
-            updateOInterface_orders(orders);
+            updateInterface_orders(orders);
             break;
         case '3':
             //TODO: update if order id == localStorage.activeOrder
+            var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+                return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5;
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+
+            });
+            updateInterface_orders(orders);
+
             updateOrderViewer(localStorage.activeOrder);
-            updateKInterface_SelPanel();
+            //        updateKInterface_SelPanel();
             break;
     }
     audio.play();

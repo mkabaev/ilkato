@@ -6,25 +6,27 @@
         <style>
             body, table{
                 font-size: 12pt;
+                font-family: cursive;
             }
-
             h3,p{
-                border-bottom: 1pt solid;
+                border-bottom: 1pt solid black;
             }
 
-/*            p{
-                display: block;
-                margin-top: 1em;
-                margin-bottom: 1em;
-                margin-left: 0;
-                margin-right: 0;
-                text-indent: 0;
-            }*/
-            
-            table { 
-                /*border: 1pt solid black;
+            /*            p{
+                            display: block;
+                            margin-top: 1em;
+                            margin-bottom: 1em;
+                            margin-left: 0;
+                            margin-right: 0;
+                            text-indent: 0;
+                        }*/
+
+            table {
+                border: 1pt solid black;
                 border-collapse: collapse;  
-                width: 100%;
+                width: 98%;
+                padding: 2pt;
+                margin: 2pt;
             }
             th {
                 text-align: left; /* Выравнивание по левому краю */
@@ -33,10 +35,10 @@
                 border: 1pt solid black; /* Граница вокруг ячеек */
                 background-color: lightgray;
             }
-            td { 
+            td {
                 padding: 1pt; /* Поля вокруг содержимого ячеек */
                 border: 1pt solid black; /* Граница вокруг ячеек */
-            }        
+            }
         </style>
         <!--        <script>
                     var items = document.getElementsByClassName("cweight");
@@ -50,7 +52,7 @@
     </head>
 
     <body>
-        <div style="border: dotted; width:260pt;">
+        <div style="position: absolute; left:0;top:0; width:100%;padding: 1pt;">
             <h1>$caption № $order_number</h1>
             <p><b>Дата заказа:</b> $order_date $order_time</p>
             <p><b>Доставить к:</b> $delivery_time</p>

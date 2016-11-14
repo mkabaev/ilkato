@@ -1,16 +1,67 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>Чек</title>
+        <style>
+            body, table{
+                font-size: 12pt;
+            }
+
+            h3,p{
+                border-bottom: 1pt solid;
+            }
+
+/*            p{
+                display: block;
+                margin-top: 1em;
+                margin-bottom: 1em;
+                margin-left: 0;
+                margin-right: 0;
+                text-indent: 0;
+            }*/
+            
+            table { 
+                /*border: 1pt solid black;
+                border-collapse: collapse;  
+                width: 100%;
+            }
+            th {
+                text-align: left; /* Выравнивание по левому краю */
+                /*background: #ccc;  Цвет фона ячеек */
+                padding: 1pt; /* Поля вокруг содержимого ячеек */
+                border: 1pt solid black; /* Граница вокруг ячеек */
+                background-color: lightgray;
+            }
+            td { 
+                padding: 1pt; /* Поля вокруг содержимого ячеек */
+                border: 1pt solid black; /* Граница вокруг ячеек */
+            }        
+        </style>
+        <!--        <script>
+                    var items = document.getElementsByClassName("cweight");
+                    var i;
+                    var total = 0;
+                    for (i = 0; i < items.length; i++) {
+                        total = total + parseFloat(items[i].innerHTML);
+                    }
+                    document.getElementById("totalweight").innerHTML = total.toFixed(2);
+                </script>-->
     </head>
+
     <body>
-        <div>TODO write content</div>
+        <div style="border: dotted; width:260pt;">
+            <h1>$caption № $order_number</h1>
+            <p><b>Дата заказа:</b> $order_date $order_time</p>
+            <p><b>Доставить к:</b> $delivery_time</p>
+            <p><b>Дополнительно:</b> $comment</p>
+            <p><b>Количество персон:</b> $count_person</p>
+            $table
+            <!--<tr><td colspan="3">Всего по кухне: $common_prod_count</td><td><span id="totalweight">TOTAL WEIGHT VALUE</span></td></tr>-->
+            <br/>
+            <b>Повар: </b><br/>
+            <b>Время: $order_time</b>
+        </div>
     </body>
+
 </html>
