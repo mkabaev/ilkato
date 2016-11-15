@@ -117,7 +117,7 @@ function getBatches($date) {
     $db = new DB();
     $query = "SELECT * from batches where DDate=:date";
     $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':date', $date);    
+    $stmt->bindParam(':date', $date);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
@@ -130,7 +130,7 @@ function getSessionUpdates($id_session) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
-    
+
     $stmt = $db->conn->prepare("SELECT * from app_sessiondata where id_session=:id_session");
     $stmt->bindParam(':id_session', $id_session);
     //$date = date('Y.m.d');
@@ -158,7 +158,7 @@ function getUsers() {
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($items, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+    return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
 }
 
 //function getCouriers() {
@@ -249,12 +249,28 @@ function updateBatch($id, $idCourier, $QueueNo) {
     return $res;
 }
 
-function createBatch() {
+function createBatch($date = null) {
     $db = new DB();
-    $query = "INSERT INTO batches(isActive) VALUES (1)";
+    $query = "INSERT INTO batches(isActive,DDate) VALUES (1,:date)";
     $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':date', $date);
+    if (!isset($date)) {
+        $date = date('Y.m.d'); //set curent
+    }
     $res = $stmt->execute();
     return $res;
+
+
+    $db = new DB();
+    $query = "SELECT * from batches where DDate=:date";
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':date', $date);
+    //$date = date('Y.m.d');
+    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
+    $stmt->execute();
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    return $items;
 }
 
 function updateBatchesQueue($ids) {
@@ -382,13 +398,13 @@ switch ($action) {
         $id_session = registerNewSession($uid, $wid);
 
         $data = ['id_session' => $id_session, 'orders' => getOrders(date("Y-m-d")), 'batches' => getBatches(date("Y-m-d"))];
-        echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         //, JSON_NUMERIC_CHECK
         break;
     case 'getOrders':
         $date = filter_input(INPUT_POST, 'date');
         $data = getOrders($date);
-        echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
 //    case 'getKOrders':
 //        echo getOrders($_POST["json"], "K");
@@ -399,15 +415,15 @@ switch ($action) {
     case 'getOrdersAndBatches':
         $date = filter_input(INPUT_POST, 'date');
         $data = ['orders' => getOrders($date), 'batches' => getBatches($date)];
-        echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         //, JSON_NUMERIC_CHECK
         break;
     case 'getOrderProducts':
         echo getOrderProducts($_POST["order_id"]);
         break;
     case 'updateOrderStatus':
-        $idOrder = filter_input(INPUT_POST, 'idOrder',FILTER_VALIDATE_INT);
-        $idStatus = filter_input(INPUT_POST, 'idStatus',FILTER_VALIDATE_INT);
+        $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
+        $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_VALIDATE_INT);
         echo updateOrderStatus($idOrder, $idStatus);
         break;
     case 'SetCourierToOrders':
@@ -443,22 +459,23 @@ switch ($action) {
         $idCourier = filter_input(INPUT_POST, 'idCourier');
         $QueueNo = filter_input(INPUT_POST, 'QueueNo');
         $result = updateBatch($id, $idCourier, $QueueNo);
-        echo json_encode($result, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'updateBatchQueueNo':
         $id = filter_input(INPUT_POST, 'id');
         $QueueNo = filter_input(INPUT_POST, 'QueueNo');
         $result = updateBatchQueueNo($id, $QueueNo);
-        echo json_encode($result, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'updateBatchesQueue':
-        $ids = filter_input(INPUT_POST, 'ids');        
+        $ids = filter_input(INPUT_POST, 'ids');
         $result = updateBatchesQueue(json_decode($ids));
-        echo json_encode($result, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'createBatch':
-        $result = createBatch();
-        echo json_encode($result, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+        $date = filter_input(INPUT_POST, 'date');
+        $result = createBatch($date);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     default:
         break;

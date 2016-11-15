@@ -106,7 +106,14 @@ div.imgPizza {
     height:15px;
 }​
 
-.orderViewer .comment {font-size: 1.5em; margin: 10px 10px 10px 10px; color: red;}
+/*тут какой-то косяк. убираешь строчку и стиль коммента меняется*/
+.orderViewer.ord-pricingType-2 .comment{
+}
+.orderViewer .comment {
+    font-size: 1.5em;
+    margin: 10px 10px 10px 10px;
+    color: red;
+}
 
 
 /*default timer style*/

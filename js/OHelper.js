@@ -211,10 +211,6 @@ function createOperatorInterface() {
 //        alert(target.attr("id"));
     });
 
-
-
-
-
     var bAdd = $("<button/>", {
         //type: 'checkbox',
         id: 'bAddBatch',
@@ -240,10 +236,12 @@ function createOperatorInterface() {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-        sendRequest('createBatch', '', function (response) {
+        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+        sendRequest('createBatch', 'date='+dt, function (response) {
             console.log(response);
         });
-        updateOInterface_batches(getBatchesFromLS());
+
+        //updateOInterface_batches(getBatchesFromLS()); ?
     });
 
     updateOInterface_batches(batches);
@@ -507,7 +505,7 @@ function CreateBatchPanel(idBatch, QueueNo) {
     }
     );
     bAdd.css({'width': '25px', 'height': '25px', });
-    bAdd.addClass('ui-state-disabled');
+    //bAdd.addClass('ui-state-disabled');
 
     bAdd.click(function (event) {
 ////        $(event.target).parent().
@@ -517,9 +515,11 @@ function CreateBatchPanel(idBatch, QueueNo) {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-        sendRequest('createBatch', '', function (response) {
+        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+        sendRequest('createBatch', 'date='+dt, function (response) {
             console.log(response);
         });
+
         updateOInterface_batches(getBatchesFromLS());
     });
 
@@ -562,11 +562,11 @@ function updateInterface_orders(orders) {
         var divOrder = $('#' + order.id);
         if (!divOrder.length) {
             if (localStorage.wp_type === "2") {
-            divOrder = CreateOrder(order, 1);
-        }else{
-            divOrder = CreateOrder(order);
-            
-        }
+                divOrder = CreateOrder(order, 1);
+            } else {
+                divOrder = CreateOrder(order);
+
+            }
         }
         //alert(order.idBatch)
         if (order.idBatch != null) {
@@ -641,7 +641,15 @@ function updateOInterface_batches(batches) {
 
     activeOrdersPanel.find('.o_orderBatchPanel').sort(function (a, b) {
         return $(a).attr('QueueNo') - $(b).attr('QueueNo');
-    })
-            .appendTo(activeOrdersPanel);
+    }).appendTo(activeOrdersPanel);
+
+//create batch if no one
+    if (!activeOrdersPanel.children().length) {
+        // add batch on server
+        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+        sendRequest('createBatch', 'date='+dt, function (response) {
+            console.log(response);
+        });
+    }
 
 }

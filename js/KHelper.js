@@ -128,7 +128,7 @@ function createOrderViewer(id, _class) {
 
 
     divOrderViewer.append(divHeader);
-    divOrderViewer.append('<div id=ordlog></div><div id=ordercomment class="comment">' + 'comment' + '</div>');
+    divOrderViewer.append('<div id=ordlog></div><span id=ordercomment class="comment">' + 'comment' + '</span>');
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
