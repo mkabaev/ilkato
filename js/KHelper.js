@@ -58,19 +58,19 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
             var divModule = $(this).parent();
             divModule.addClass('ui-state-disabled');
             if ($("#divR").hasClass('ui-state-disabled') && $("#divP").hasClass('ui-state-disabled')) {
-                
-            localStorage.removeItem("check");
-            //if (localStorage.getItem("chktemplate") === null) {
-            $.ajaxSetup({cache: false});
-            $.get("check.html", function (data) {
-                localStorage.check = data;
-                //alert(data);
-                //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-                printHTML(data, getOrderFromLS(localStorage.activeOrder));
-            });
-            
-            
-            
+
+                localStorage.removeItem("check");
+                //if (localStorage.getItem("chktemplate") === null) {
+                $.ajaxSetup({cache: false});
+                $.get("check.html", function (data) {
+                    localStorage.check = data;
+                    //alert(data);
+                    //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+                    printHTML(data, getOrderFromLS(localStorage.activeOrder));
+                });
+
+
+
                 var idOrder = parseInt($('#ordViewer').attr("idOrder"));
                 sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
                     console.log(response);
@@ -197,7 +197,7 @@ function updateOrderViewer(id) {
         console.log('ord undef');
         $('#ordViewer').hide();
     } else {
-        var divOrder=$('#ordViewer');
+        var divOrder = $('#ordViewer');
         divOrder.show();
         divOrder.children(".mk").removeClass('ui-state-disabled');
         divOrder.attr("idOrder", order.id);
@@ -292,21 +292,36 @@ function updateOrderViewer(id) {
             $('#tableP tfoot').html(ArrayToTableFooter(["", "", "", totalSummP]));
 
             if (localStorage.wp_type === "3") {//trick for operator upfateInterface
-                if (localStorage.activeOrder != id) {//reset timer
+                if (localStorage.activeOrder != id) {//then reset timer
                     localStorage.activeOrder = id;
                     stopTimer();
                     $("#timer").hide();
                     var ct = Math.max(ctR, ctP);
                     if (ct > 0) {
-                        if (!startTimer(ct)) {
+                        console.log("ct>0, start timer with ct=" + ct);
+                        if (!startTimer(ct, function (sec) {
+                            localStorage.timer = sec;
+                        })) {
+                            console.log("create timer");
                             //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
                             createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
-
                         }
                         $("#timer").show();
                     }
+                } else { // set timer to prev value
+                    console.log("prev:" + localStorage.timer);
+                    stopTimer();
+                    if (!startTimer(localStorage.timer, function (sec) {
+                        localStorage.timer = sec;
+                    })) {
+                        console.log("create timer2");
+                        //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
+                        createTimer('timer', 'ktimer', localStorage.timer, 340).appendTo($('#workplace'));
+
+                    }
+                    $("#timer").show();
                 }
-            } else {
+            } else { // for operator UI
                 localStorage.removeItem("activeOrder");
             }
 

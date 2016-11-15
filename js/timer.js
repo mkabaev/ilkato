@@ -41,7 +41,7 @@ function stopTimer() {
         clearInterval(timerId);
     }
 }
-function startTimer(length) {
+function startTimer(length, callback) {
     var divTimer = $("#timer");
     if (divTimer.length) {
         var sec = length;
@@ -49,13 +49,16 @@ function startTimer(length) {
         var c = 0;
         timerId = setInterval(function () {
             sec = sec - 1;
+            if (callback) {
+                callback(sec);
+            }
             c = c + d;
             divTimer.data('easyPieChart').update(c);
             //if (sec>65){ timer.data('easyPieChart').options.lineWidth = 48; }; //#0033CC
             $('span', divTimer).text(sec < 0 ? sec : sec.toString().toHHMMSS());
         }, 1000);
         return true;
-    }else{
+    } else {
         return false;
     }
 }
