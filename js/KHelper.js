@@ -11,7 +11,18 @@ function createKitchenInterface() {
     //var orders = getOrdersFromLS().filter(function (order, index, arr) {
     //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
     //return order.DDate == filterdate;
-    var orders = getOrdersFromLS();
+    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
+        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 8;//5
+//1	Принят
+//2	Готовить
+//3	Готовится
+//4	Приготовлен
+//5	Доставка
+//6	В пути
+//7	Доставлен
+//8	Отказ
+
+    });
     updateInterface_orders(orders);
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
@@ -47,6 +58,19 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
             var divModule = $(this).parent();
             divModule.addClass('ui-state-disabled');
             if ($("#divR").hasClass('ui-state-disabled') && $("#divP").hasClass('ui-state-disabled')) {
+                
+            localStorage.removeItem("check");
+            //if (localStorage.getItem("chktemplate") === null) {
+            $.ajaxSetup({cache: false});
+            $.get("check.html", function (data) {
+                localStorage.check = data;
+                //alert(data);
+                //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
+                printHTML(data, getOrderFromLS(localStorage.activeOrder));
+            });
+            
+            
+            
                 var idOrder = parseInt($('#ordViewer').attr("idOrder"));
                 sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
                     console.log(response);
@@ -74,7 +98,8 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
                 localStorage.chktemplate = data;
                 //alert(data);
                 //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-                printHTML(data, getOrderFromLS(localStorage.activeOrder));
+                //printHTML(data, getOrderFromLS(localStorage.activeOrder));
+                printHTML(data, getOrdersFromLS()[0]);
             });
             //} else {
             //    printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
@@ -386,7 +411,7 @@ $(document).scannerDetection({
     //...
     onKeyDetect: function (event) {
         console.log("key detect:" + event.which);
-        return false;
+        //return false;
     },
     onComplete: function (barcode, qty) {
         console.log("barcode:" + barcode);
