@@ -5,14 +5,13 @@ function createKitchenInterface() {
         //attr: {'title': 'caption'}
     });
     pnlOrders.appendTo($('#workplace'));
-
 //    var filterdate = (new Date()).toISOString().substring(0, 10);
     //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
     //var orders = getOrdersFromLS().filter(function (order, index, arr) {
     //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
     //return order.DDate == filterdate;
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 8;//5
+        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 8; //5
 //1	Принят
 //2	Готовить
 //3	Готовится
@@ -49,7 +48,6 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
     }).appendTo(divModule).css('padding-left', '30px')
 
     divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems, ["", "", 123, 888]));
-
     var bDone = $('<button/>', {
         id: "bDone" + modType,
         class: 'doneButton',
@@ -68,9 +66,6 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
                     //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
                     printHTML(data, getOrderFromLS(localStorage.activeOrder));
                 });
-
-
-
                 var idOrder = parseInt($('#ordViewer').attr("idOrder"));
                 sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
                     console.log(response);
@@ -78,14 +73,12 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
             }
         },
     }).appendTo(divModule);
-
     bDone.button({
         icons: {
             primary: "ui-icon-check",
             //secondary: "ui-icon-triangle-1-s"
         },
     });
-
     var bPrint = $('<button/>', {
         id: "bPrint" + modType,
         //class: 'ui-widget-content',
@@ -107,7 +100,6 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
 
         },
     }).appendTo(divHeader);
-
     //divFooter.append(CreateTimer('timer2',null,30));
 
     bPrint.button({
@@ -116,32 +108,27 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
             //secondary: "ui-icon-triangle-1-s"
         },
     });
-
     //var json='[{"id":"3","name":"Илья"},{"id":"10","name":"Дима 12ка"}]';
     var divChefs = $('<div/>', {
         id: 'divChefs' + modType,
         //class: 'ui-widget-',
     }).appendTo(divHeader).append('<span class="ui-icon ui-icon-person"></span>Повара').css({"float": "right", "padding": "5px"});
-
     return divModule;
 }
 
 function createOrderViewer(id, _class) {
     var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
     var tableItems = null;
-
     var divOrderViewer = $('<div/>', {
         id: id,
         class: 'ui-widget ui-widget-content ' + _class,
         //attr: {'order_id': '123', 'ts': timestamp}
     }).append('<div class="pricingPic"></div>');
-
     var select = $('<select/>', {
         id: "selstatus",
         name: "status",
 //        class: 'ui-widget-header',
     }).append('<label for="status">Статус</label>').appendTo(divOrderViewer);
-
     var divHeader = $('<div/>', {
         id: "orderheader",
         class: 'ui-widget-header',
@@ -149,20 +136,14 @@ function createOrderViewer(id, _class) {
     var divNumber = $('<div/>', {
         //id: "number",
     }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
-
-
-
     divOrderViewer.append(divHeader);
     divOrderViewer.append('<div id=ordlog></div><span id=ordercomment class="comment">' + 'comment' + '</span>');
-
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
     divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
     divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
     divOrderViewer.append('<div id="ordlog"></div>');
-
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
-
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
 
     $(select).selectmenu({
@@ -193,7 +174,7 @@ function createOrderViewer(id, _class) {
 function updateOrderViewer(id) {
     var order = getOrderFromLS(id);
     if (order === undefined) {
-        // load from server
+// load from server
         console.log('ord undef');
         $('#ordViewer').hide();
     } else {
@@ -205,64 +186,47 @@ function updateOrderViewer(id) {
         //$('#ordlog').html(createUL('asd',undefined,order.Log));
         $('#number').html(order.No);
         $('#ordercomment').html(order.Comment);
-
         $("#selstatus").val(order.idStatus - 1);
         $("#selstatus").selectmenu('refresh', true);
+//        
+//                    if (filterIdType) {
+//                items = items.filter(function (row) {
+//                    return row.idType === filterIdType;
+//                });
+//            }
+
+        function Order() {
+            this.x = 0;
+            this.y = 0; yyyyyy
+        }
+        
+        o=new Order();
+        
+
+        var o2 = {
+            x: 0,
+            y: 0,
+        }
+        
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
                 return row.idType === 1;
             });
-
             var itemsP = order.Products.filter(function (row) {
                 return row.idType === 2;
             });
-
+            var coockingTimeR = calcCoockingTime(itemsR, 1);
+            var coockingTimeP = calcCoockingTime(itemsP, 2);
 //TODO: check func speed
 //var sum = itemsR.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
-            var ctR = 0;
             var totalSummR = 0;
             $.each(itemsR, function (key, val) {
                 totalSummR += val.Price;
-                ctR = ctR + val.CookingTime;
-                //console.log("R:" + val.CookingTime);
             });
-
-            var ctP = 0;
-            var ct30cm = 0;
-            var count30 = 0;
-
-            var ct40cm = 0;
-            var count40 = 0;
             var totalSummP = 0;
             $.each(itemsP, function (key, val) {
                 totalSummP += val.Price;
-                if (val.Name.indexOf("30 см") > -1) {
-                    count30++;
-                    ct30cm = Math.max(ct30cm, val.CookingTime);
-                } else
-                if (val.Name.indexOf("40 см") > -1) {
-                    count40++;
-                    ct40cm = Math.max(ct40cm, val.CookingTime);
-                }
-                //console.log("P:" + val.Name + " - " + val.CookingTime);
             });
-            var floor30 = Math.floor(count30 / 4);
-            var mod30 = count30 % 4;
-            if (mod30 > 0) {
-                ct30cm = ct30cm * floor30 + ct30cm;
-            } else {
-                ct30cm = ct30cm * floor30;
-            }
-
-            var floor40 = Math.floor(count40 / 3);
-            var mod40 = count40 % 3;
-            if (mod40 > 0) {
-                ct40cm = ct40cm * floor40 + ct40cm;
-            } else {
-                ct40cm = ct40cm * floor40;
-            }
-            ctP = Math.max(ct30cm, ct40cm);
-
 
             itemsR = itemsR.map(function (oldItem) {
                 var newItem = {};
@@ -272,7 +236,6 @@ function updateOrderViewer(id) {
                 newItem.Weight = oldItem.Weight;
                 newItem.Price = oldItem.Price;
                 newItem.Time = oldItem.CookingTime;
-
                 return newItem;
             });
             $('#tableR tbody').html(ArrayToTableItems(itemsR));
@@ -285,7 +248,6 @@ function updateOrderViewer(id) {
                 newItem.Weight = oldItem.Weight;
                 newItem.Price = oldItem.Price;
                 newItem.Time = oldItem.CookingTime;
-
                 return newItem;
             });
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
@@ -296,7 +258,7 @@ function updateOrderViewer(id) {
                     localStorage.activeOrder = id;
                     stopTimer();
                     $("#timer").hide();
-                    var ct = Math.max(ctR, ctP);
+                    var ct = Math.max(coockingTimeR, coockingTimeP);
                     if (ct > 0) {
                         console.log("ct>0, start timer with ct=" + ct);
                         if (!startTimer(ct, function (sec) {
@@ -317,7 +279,6 @@ function updateOrderViewer(id) {
                         console.log("create timer2");
                         //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
                         createTimer('timer', 'ktimer', localStorage.timer, 340).appendTo($('#workplace'));
-
                     }
                     $("#timer").show();
                 }
@@ -341,6 +302,71 @@ function updateOrderViewer(id) {
     }
 }
 
+//считает время приготовления продуктов. idType - если задан, то считает только необходимые продукты
+function calcCoockingTime(products, idType) {
+    var totalCookingTime = 0;
+    if (products) {
+        var items = products;
+        if (idType !== undefined) {
+            items = products.filter(function (row) {
+                return row.idType === idType;
+            });
+        }
+
+//TODO: check func speed
+//var sum =.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
+        switch (idType) {
+            case 1: //R
+                $.each(items, function (key, val) {
+                    totalSumm += val.Price;
+                    totalCookingTime += val.CookingTime;
+                });
+                break;
+            case 2: //P
+                var ctP = 0;
+                var ct30cm = 0;
+                var count30 = 0;
+                var ct40cm = 0;
+                var count40 = 0;
+                var totalSumm = 0;
+                $.each(items, function (key, val) {
+                    totalSumm += val.Price;
+                    if (val.Name.indexOf("30 см") > -1) {
+                        count30++;
+                        ct30cm = Math.max(ct30cm, val.CookingTime);
+                    } else
+                    if (val.Name.indexOf("40 см") > -1) {
+                        count40++;
+                        ct40cm = Math.max(ct40cm, val.CookingTime);
+                    }
+                    //console.log("P:" + val.Name + " - " + val.CookingTime);
+                });
+                var floor30 = Math.floor(count30 / 4);
+                var mod30 = count30 % 4;
+                if (mod30 > 0) {
+                    ct30cm = ct30cm * floor30 + ct30cm;
+                } else {
+                    ct30cm = ct30cm * floor30;
+                }
+
+                var floor40 = Math.floor(count40 / 3);
+                var mod40 = count40 % 3;
+                if (mod40 > 0) {
+                    ct40cm = ct40cm * floor40 + ct40cm;
+                } else {
+                    ct40cm = ct40cm * floor40;
+                }
+                ctP = Math.max(ct30cm, ct40cm);
+                totalCookingTime = ctP;
+                break;
+            default:
+                alert("TODO calc total CoockingTime");
+                break;
+        }
+    }
+    return totalCookingTime;
+}
+
 function updateKInterface_SelPanel() {
 
     console.log("--обновляем боковую панель");
@@ -356,7 +382,6 @@ function updateKInterface_SelPanel() {
 //8	Отказ
 
     });
-
     //orders.forEach(function (order, index, array) {
     //});
 
@@ -371,7 +396,6 @@ function updateKInterface_SelPanel() {
     //console.log('items: '+JSON.stringify(smallOrders));
     var list = $('#p1 ul');
     var items = ArrayToLiItems(mappedOrders);
-
 //    var li;
 //    $(orders).each(function (indx, order) {
 //        var rCount = 0;
@@ -396,7 +420,6 @@ function updateKInterface_SelPanel() {
 
     list.html(items);
     $(list.children('li')).addClass('ui-widget-content');
-
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
     list.selectable({
         //tolerance: "fit",
@@ -423,7 +446,7 @@ function updateKInterface_SelPanel() {
 //});
 
 $(document).scannerDetection({
-    //...
+//...
     onKeyDetect: function (event) {
         console.log("key detect:" + event.which);
         //return false;
@@ -460,9 +483,8 @@ $(document).scannerDetection({
 //        SetOrderProductsOnServer($("#dlgEdit").attr("order_id"), weightR, weightP);
 //    }
     }
-    //...
+//...
 });
-
 //$(document).on('pageshow', '#pageId', function(){
 //	$(document).scannerDetection({
 //		avgTimeByChar: 40,
