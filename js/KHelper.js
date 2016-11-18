@@ -195,18 +195,18 @@ function updateOrderViewer(id) {
 //                });
 //            }
 
-        function Order() {
-            this.x = 0;
-            this.y = 0; yyyyyy
-        }
-        
-        o=new Order();
-        
-
-        var o2 = {
-            x: 0,
-            y: 0,
-        }
+//        function Order() {
+//            this.x = 0;
+//            this.y = 0; yyyyyy
+//        }
+//        
+//        o=new Order();
+//        
+//
+//        var o2 = {
+//            x: 0,
+//            y: 0,
+//        }
         
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
@@ -220,12 +220,16 @@ function updateOrderViewer(id) {
 //TODO: check func speed
 //var sum = itemsR.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
             var totalSummR = 0;
+            var totalWeightR = 0;
             $.each(itemsR, function (key, val) {
                 totalSummR += val.Price;
+                totalWeightR += val.Weight;
             });
             var totalSummP = 0;
+            var totalWeightP = 0;
             $.each(itemsP, function (key, val) {
                 totalSummP += val.Price;
+                totalWeightP += val.Weight;
             });
 
             itemsR = itemsR.map(function (oldItem) {
@@ -239,7 +243,7 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableR tbody').html(ArrayToTableItems(itemsR));
-            $('#tableR tfoot').html(ArrayToTableFooter(["", "", "", totalSummR]));
+            $('#tableR tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
             itemsP = itemsP.map(function (oldItem) {
                 var newItem = {};
                 newItem.id = oldItem.id;
@@ -251,9 +255,10 @@ function updateOrderViewer(id) {
                 return newItem;
             });
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
-            $('#tableP tfoot').html(ArrayToTableFooter(["", "", "", totalSummP]));
+            $('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
 
-            if (localStorage.wp_type === "3") {//trick for operator upfateInterface
+            if (localStorage.wp_type === "3") {//show timer for kitchen iface
+                console.log("order status: "+order.idStatus);
                 if (localStorage.activeOrder != id) {//then reset timer
                     localStorage.activeOrder = id;
                     stopTimer();
