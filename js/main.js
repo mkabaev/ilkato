@@ -94,26 +94,34 @@ function showSelectUserDialog() {
     if (!dlg.length) {
         dlg = CreateSelectDialog('SelUsers', 'Авторизация', undefined, undefined, afterSelUser);
     }
-    $.ajax({
-        type: "POST",
-        data: "action=getUsers",
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            //console.log('dialog ' + id + ' found on page. items');
-            console.log('users loaded from server: ' + jsondata);
-            $('#workplace').removeClass("ui-state-error");
-            $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
-            dlg.dialog('open');
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.log("status: " + xhr.status + " | " + thrownError);
-            $("#workplace").addClass("ui-state-error");
-            //$("body").addClass("ui-state-error");
-//            alert(xhr.status);
-//            alert(thrownError);
-        }
+    sendRequest('getUsers', '', function (data) {
+        //console.log('dialog ' + id + ' found on page. items');
+        console.log('users loaded from server:');
+        console.log(data);
+        $('ul.ul_selectItems').html(ArrayToLiItems(data));
+        dlg.dialog('open');
     });
+
+//    $.ajax({
+//        type: "POST",
+//        data: "action=getUsers",
+//        url: "helper.php",
+//        cache: false,
+//        success: function (jsondata) {
+//            //console.log('dialog ' + id + ' found on page. items');
+//            console.log('users loaded from server: ' + jsondata);
+//            $('#workplace').removeClass("ui-state-error");
+//            $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
+//            dlg.dialog('open');
+//        },
+//        error: function (xhr, ajaxOptions, thrownError) {
+//            console.log("status: " + xhr.status + " | " + thrownError);
+//            $("#workplace").addClass("ui-state-error");
+//            //$("body").addClass("ui-state-error");
+////            alert(xhr.status);
+////            alert(thrownError);
+//        }
+//    });
 }
 
 function createSelectPanel(id, _class, items, callback) {
@@ -227,7 +235,8 @@ function CreateSelectDialog(id, caption, _class, items, callback) {
                     //$("#"+idPanel + " .order").css("visible:none;");
                     //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
                     if (callback) {
-                        callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                        //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                        callback(ui.selected);
                     } else {
                         alert('callback error');
                     }
@@ -286,52 +295,80 @@ function doInit(callback) {
 
 
 
-    if (localStorage.uid === undefined) {
+    if (localStorage.uid === "undefined") {
         showSelectUserDialog();
     } else {
         //set USER ONLINE on server and then get active orders
-        $.ajax({
-            type: "POST",
-            data: "action=login&uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session,
-            url: "helper.php?",
-            cache: false,
-            success: function (jsondata) {
-                $("body").removeClass("ui-state-error");
-                // remove orders from LS
-                $.each(localStorage, function (key, value) {
-                    if (key.startsWith('o_') | key.startsWith('b_')) {
-                        localStorage.removeItem(key);
-                    }
-                });
-                //save actual orders to LS
-                var data = JSON.parse(jsondata);
-                localStorage.id_session = data.id_session;
-                setItemsToLS('o_', data.orders);
-                setItemsToLS('b_', data.batches);
+        sendRequest("login", "uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session, function (data) {
+            $.each(localStorage, function (key, value) {
+                if (key.startsWith('o_') | key.startsWith('b_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            //save actual orders to LS
+            console.log("received:");
+            console.log(data);
+            //var data = JSON.parse(jsondata);
+            localStorage.id_session = data.id_session;
+            setItemsToLS('o_', data.orders);
+            setItemsToLS('b_', data.batches);
 
-                localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
-                var dates = [];
-                $(data.orders).each(function (indx, order) {
-                    dates.push(order.DDate);
-                });
-                localStorage.dates = $.unique(dates);
-
-                updateInterface_user();
-                //clearStorage();
-                //loadDataToStorage();
-
-                createWorkplace(localStorage.wp_type);
-
-                addEventListeners();
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                $("body").addClass("ui-state-error");
-                alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
-                //$("body").addClass("ui-state-error");
-//            alert(xhr.status);
-//            alert(thrownError);
-            }
+            localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
+            var dates = [];
+            $(data.orders).each(function (indx, order) {
+                dates.push(order.DDate);
+            });
+            localStorage.dates = $.unique(dates);
+            updateInterface_user();
+            //clearStorage();
+            //loadDataToStorage();
+            createWorkplace(localStorage.wp_type);
+            addEventListeners();
         });
+
+//        $.ajax({
+//            type: "POST",
+//            data: "action=login&uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session,
+//            url: "helper.php?",
+//            cache: false,
+//            success: function (jsondata) {
+//                $("body").removeClass("ui-state-error");
+//                // remove orders from LS
+//                $.each(localStorage, function (key, value) {
+//                    if (key.startsWith('o_') | key.startsWith('b_')) {
+//                        localStorage.removeItem(key);
+//                    }
+//                });
+//                //save actual orders to LS
+//                console.log(jsondata);
+//                var data = JSON.parse(jsondata);
+//                localStorage.id_session = data.id_session;
+//                setItemsToLS('o_', data.orders);
+//                setItemsToLS('b_', data.batches);
+//
+//                localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
+//                var dates = [];
+//                $(data.orders).each(function (indx, order) {
+//                    dates.push(order.DDate);
+//                });
+//                localStorage.dates = $.unique(dates);
+//
+//                updateInterface_user();
+//                //clearStorage();
+//                //loadDataToStorage();
+//
+//                createWorkplace(localStorage.wp_type);
+//
+//                addEventListeners();
+//            },
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                $("body").addClass("ui-state-error");
+//                alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
+//                //$("body").addClass("ui-state-error");
+////            alert(xhr.status);
+////            alert(thrownError);
+//            }
+//        });
     }
     if (callback) {
         callback();
@@ -526,20 +563,23 @@ function getBatchesFromLS() {
     return getItemsFromLS('b_');
 }
 
-function afterSelUser(sender, id, name) {
+function afterSelUser(sender) {
+    //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
     //localStorage.clear();
     localStorage.wp_id = $(sender).attr("idWorkplace");
     localStorage.wp_type = $(sender).attr("idType");
-    localStorage.uid = id;
-    localStorage.user_name = name;
+    localStorage.uid = $(sender).attr("idPerson");;
+    localStorage.user_name = $(sender).text();
 //    $("#SelUsers").remove();
     doInit();
     //updateInterface_user();
 }
 
 function sendRequest(action, paramsstr, callback) {
+    //alert("action=" + action + "&" + paramsstr);
     $.ajax({
+        dataType: 'json',
         type: "POST",
         data: "action=" + action + "&" + paramsstr,
         //url: "helper.php?",

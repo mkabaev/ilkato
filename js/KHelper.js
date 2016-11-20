@@ -11,7 +11,8 @@ function createKitchenInterface() {
     //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
     //return order.DDate == filterdate;
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 8; //5
+//        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5; //5
+        return currentValue.idKitchen == localStorage.wp_id && [2, 3, 4].indexOf(currentValue.idStatus) != -1;
 //1	Принят
 //2	Готовить
 //3	Готовится
@@ -22,10 +23,39 @@ function createKitchenInterface() {
 //8	Отказ
 
     });
-    updateInterface_orders(orders);
+    //updateInterface_orders(orders);
+    //    var ordersPanel = $('#o_ordersPanel');
+    console.log("sorted orders:");
+    orders = $(orders).sort(function (a, b) {
+        var tt = a.DTime.split(":");
+        var secA = tt[0] * 3600 + tt[1] * 60;
+
+        tt = b.DTime.split(":");
+        var secB = tt[0] * 3600 + tt[1] * 60;
+
+        return secA - secB;
+    });
+    console.log(orders);
+
+    $(orders).each(function (indx, order) {
+        var divOrder = CreateOrder(order);
+
+        pnlOrders.append(divOrder);
+    });
+
+
+
+
+
+
+
+
+
+
     var ov = createOrderViewer('ordViewer', 'orderViewer');
     ov.appendTo($('#workplace')).fadeIn(1000);
     $(".order").first().click();
+
 }
 
 /**
@@ -66,7 +96,7 @@ function CreateKitchenModule(modType, _class, headerItems, tableItems) {
                     //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
                     printHTML(data, getOrderFromLS(localStorage.activeOrder));
                 });
-                var idOrder = parseInt($('#ordViewer').attr("idOrder"));
+                //var idOrder = parseInt($('#ordViewer').attr("idOrder"));
                 sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
                     console.log(response);
                 });
@@ -207,7 +237,7 @@ function updateOrderViewer(id) {
 //            x: 0,
 //            y: 0,
 //        }
-        
+
         if (order.Products) {
             var itemsR = order.Products.filter(function (row) {
                 return row.idType === 1;
@@ -258,7 +288,7 @@ function updateOrderViewer(id) {
             $('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
 
             if (localStorage.wp_type === "3") {//show timer for kitchen iface
-                console.log("order status: "+order.idStatus);
+                console.log("order status: " + order.idStatus);
                 if (localStorage.activeOrder != id) {//then reset timer
                     localStorage.activeOrder = id;
                     stopTimer();
@@ -373,10 +403,11 @@ function calcCoockingTime(products, idType) {
 }
 
 function updateKInterface_SelPanel() {
-
+    alert("upd");
     console.log("--обновляем боковую панель");
     var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5;
+//        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5;
+        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 4;
 //1	Принят
 //2	Готовить
 //3	Готовится

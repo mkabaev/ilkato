@@ -47,37 +47,43 @@ function addEventListeners() {
     }
 }
 function ordUpdate(e) {
-    console.log('ordUpdate fired:' + e.data);
-    var orders = JSON.parse(e.data);
-    setItemsToLS("o_", orders);
+    console.log('ordUpdate fired:');
+    console.log(e.data);
+    var order = JSON.parse(e.data);
+    console.log(order);
+    setItemsToLS("o_", [order]);
 
-    var dates = [];
-    $(orders).each(function (indx, order) {
-        dates.push(order.DDate);
-    });
+//    var dates = [];
+//    $(items).each(function (indx, order) {
+//        dates.push(order.DDate);
+//    });
 
-    localStorage.dates = $.unique(dates);
+//    localStorage.dates = $.unique(dates);
     //localStorage.dates = ["2016-10-25", "2016-10-26", "2016-10-28"];
-
-    afterOrdUpdate(orders);
+    afterOrdUpdate(order);
 }
 
 function batchUpdate(e) {
-    console.log('batchUpdate fired:' + e.data);
-    var items = $.parseJSON(e.data);
+    console.log('batchUpdate fired:');
+    var items = JSON.parse(e.data);
+    console.log(items);
     setItemsToLS("b_", items);
     afterBatchUpdate(items);
 }
 
-function afterOrdUpdate(orders) {
+function afterOrdUpdate(order) {
     switch (localStorage.wp_type) {
         case '2':
-            updateInterface_orders(orders);
+            updateInterface_order(order);
             break;
         case '3':
-            //TODO: update if order id == localStorage.activeOrder
-            var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-                return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5;
+            //TODO: 1-сохранить новый заказ в LS
+            //2-если активный, то обновить его
+            //3-если новый, то добавить в панель
+            updateInterface_order(order);
+            if (order.id == localStorage.activeOrder) {
+                updateOrderViewer(localStorage.activeOrder);
+            }
 //1	Принят
 //2	Готовить
 //3	Готовится
@@ -86,15 +92,11 @@ function afterOrdUpdate(orders) {
 //6	В пути
 //7	Доставлен
 //8	Отказ
-
-            });
-            updateInterface_orders(orders);
-
-            updateOrderViewer(localStorage.activeOrder);
+            //updateInterface_orders(_orders);
             //        updateKInterface_SelPanel();
             break;
     }
-    audio.play();
+    //audio.play();
 }
 
 function afterBatchUpdate(batches) {
@@ -107,53 +109,8 @@ function afterBatchUpdate(batches) {
             //updateKInterface_SelPanel();
             break;
     }
-    audio.play();
+    //audio.play();
 }
-
-function LoadOrderProducts(order_id)
-{
-    return $.ajax({
-        type: "POST",
-        data: "action=getOrderProducts&order_id=" + order_id,
-        url: "helper.php",
-        cache: false,
-        success: function (jsondata) {
-            console.log("Loading products. Server response is " + jsondata);
-            var data = $.parseJSON(jsondata);
-            var items = [];
-            var sum = 0;
-            //items.push("<thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>");
-            weightP = 0;
-            weightR = 0;
-            $.each(data, function (key, val) {
-                var id_string = "";
-                sum = sum + parseFloat(val.price);
-                switch (val.product_id) {
-                    case '1271':
-                        id_string = "id='scanp'";
-                        weightP = parseFloat(val.count);
-                        break;
-                    case '1272':
-                        id_string = "id='scanr'";
-                        weightR = parseFloat(val.count);
-                        break;
-                    case '1273':
-                        id_string = "id='weight'";
-                        break;
-                }
-                items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td " + id_string + ">" + val.count + "</td><td>" + val.price + "</td></tr>");
-            });
-            //items.push("<tr><tfoot>sum</tfoot><tfoot>Кол-во</tfoot><tfoot>"+sum+"</tfoot></tr>");
-            $("#weight").text((weightP + weightR));
-            $("#tProducts tbody").html(items);
-            $("#totalPrice").html(sum);
-        }
-    });
-}
-
-var inp = $("#inpScanner");
-var weightP = 0;
-var weightR = 0;
 
 function ProcessScanner()
 {

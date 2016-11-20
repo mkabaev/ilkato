@@ -97,9 +97,8 @@ function createOperatorInterface() {
         receive: function (event, ui) {
             idOrder = parseInt(ui.item.attr("id"));
             idBatch = "NULL";
-            console.log("set idBatch=null in order");
-            sendRequest('updateOrderIdBatch', 'idOrder=' + idOrder + '&idBatch=' + idBatch, function (response) {
-                console.log(response);
+            sendRequest('updateOrderIdBatchAndIdStatus', 'idOrder=' + idOrder + '&idStatus=1&idBatch=' + idBatch, function (data) {
+                console.log(data);
             });
         }
 
@@ -134,38 +133,54 @@ function createOperatorInterface() {
 //        },
         onSelect: function () {
             var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-            $.ajax({
-                type: "POST",
-                data: "action=getOrdersAndBatches&date=" + dt,
-                url: "helper.php?",
-                cache: false,
-                success: function (jsondata) {
-                    $("body").removeClass("ui-state-error");
-                    // remove orders from LS
-                    $.each(localStorage, function (key, value) {
-                        if (key.startsWith('o_') | key.startsWith('b_')) {
-                            localStorage.removeItem(key);
-                        }
-                    });
+            sendRequest('getOrdersAndBatches', 'date=' + dt, function (data) {
+                $.each(localStorage, function (key, value) {
+                    if (key.startsWith('o_') | key.startsWith('b_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
 
-                    //save orders to LS
-                    var data = JSON.parse(jsondata);
-                    localStorage.id_session = data.id_session;
-                    setItemsToLS('o_', data.orders);
-                    setItemsToLS('b_', data.batches);
-                    $("#o_activeOrdersPanel").empty();
-                    updateOInterface_batches(data.batches);
-                    updateInterface_orders(data.orders);
-
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $("body").addClass("ui-state-error");
-                    alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
-                    //$("body").addClass("ui-state-error");
-//            alert(xhr.status);
-//            alert(thrownError);
-                }
+                //save orders to LS
+                //var data = JSON.parse(jsondata);
+                localStorage.id_session = data.id_session;
+                setItemsToLS('o_', data.orders);
+                setItemsToLS('b_', data.batches);
+                $("#o_activeOrdersPanel").empty();
+                updateOInterface_batches(data.batches);
+                updateInterface_orders(data.orders);
             });
+//            $.ajax({
+//                type: "POST",
+//                data: "action=getOrdersAndBatches&date=" + dt,
+//                url: "helper.php?",
+//                cache: false,
+//                success: function (jsondata) {
+//                    $("body").removeClass("ui-state-error");
+//                    // remove orders from LS
+//                    $.each(localStorage, function (key, value) {
+//                        if (key.startsWith('o_') | key.startsWith('b_')) {
+//                            localStorage.removeItem(key);
+//                        }
+//                    });
+//
+//                    //save orders to LS
+//                    var data = JSON.parse(jsondata);
+//                    localStorage.id_session = data.id_session;
+//                    setItemsToLS('o_', data.orders);
+//                    setItemsToLS('b_', data.batches);
+//                    $("#o_activeOrdersPanel").empty();
+//                    updateOInterface_batches(data.batches);
+//                    updateInterface_orders(data.orders);
+//
+//                },
+//                error: function (xhr, ajaxOptions, thrownError) {
+//                    $("body").addClass("ui-state-error");
+//                    alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
+//                    //$("body").addClass("ui-state-error");
+////            alert(xhr.status);
+////            alert(thrownError);
+//                }
+//            });
 
         }
     });
@@ -245,7 +260,42 @@ function createOperatorInterface() {
     });
 
     updateOInterface_batches(batches);
-    updateInterface_orders(orders);
+
+
+    //updateInterface_orders(orders);
+    console.log("sorted orders:");
+    orders = $(orders).sort(function (a, b) {
+        var tt = a.DTime.split(":");
+        var secA = tt[0] * 3600 + tt[1] * 60;
+
+        tt = b.DTime.split(":");
+        var secB = tt[0] * 3600 + tt[1] * 60;
+
+        return secA - secB;
+    });
+    console.log(orders);
+
+    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+    if (localStorage.activeDate !== dt) {
+        //$('#o_ordersPanel, .o_itemsPanel').empty();
+    }
+
+    $(orders).each(function (indx, order) {
+        var divOrder = CreateOrder(order, 1);
+
+        if (order.idBatch != null) {
+            divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+        } else {
+            pnlOrders.append(divOrder);
+        }
+//        divOrder.tooltip({
+//            //content: "Awesome title!"
+//        });
+        //}
+        //pnlOrders.append(CreateOrder(order));
+        //divOrder.effect( "bounce", { times: 3 }, "slow" );
+        //divOrder.effect("bounce", "slow");
+    });
 
 }
 
@@ -261,17 +311,6 @@ function CreateOrder(order, isOperator) {
         class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
         attr: {'idKitchen': order.idKitchen}
     });
-//    if (order.idKitchen) {
-//        divOrder.attr('idKitchen', order.idKitchen);
-//        divOrder.addClass('ord-workplace-' + order.idKitchen);
-//    }
-
-//    if (order.idStatus == 4) {
-//        divOrder.addClass('ui-state-disabled');
-//    }
-//    if (status_id == 5) {
-//        divOrder.addClass('ui-state-default');
-//    }
 
     var divOrderHeader = $('<div/>', {
         //id: order_id,
@@ -301,9 +340,10 @@ function CreateOrder(order, isOperator) {
     var divTime = $('<div/>', {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
-        html: 'Принят в <span class="CTime"></span><br/>Доставить к <span class="DTime"></span><br/><br/><span class="status"></span>'//order_time
+        html: 'Принят в <span class="CTime">' + order.CTime + '</span><br/>Доставить к <span class="DTime">' + order.DTime + '</span><br/><br/><span class="status">' + idStatusToString(order.idStatus) + '</span>'//order_time
                 //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
     });
+
     divOrderHeader.append(divTime);
 
 
@@ -362,9 +402,9 @@ function CreateOrder(order, isOperator) {
     } else {
         divOrder.click(function (event) {
             //if (localStorage.activeOrder != order.id) {
-                updateOrderViewer(order.id);
-                $(".order").removeClass('selected');
-                divOrder.addClass('selected');
+            updateOrderViewer(order.id);
+            $(".order").removeClass('selected');
+            divOrder.addClass('selected');
             //}
         });
 
@@ -379,13 +419,13 @@ function CreateOrder(order, isOperator) {
         var idOrder = $(this).parent().parent().parent().attr('id');
         var idKitchen = $(this).attr('idKitchen');
         console.log("updating idKitchen in order");
-        sendRequest('updateOrderKithcenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (response) {
-            console.log(response)
-            var order = $.parseJSON(localStorage.getItem('o_' + idOrder));
+        sendRequest('updateOrderKithcenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (data) {
+            console.log(data);
+            var order = JSON.parse(localStorage.getItem('o_' + idOrder));
             order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
             localStorage['o_' + idOrder] = JSON.stringify(order);
             //console.log('DONE');
-            updateInterface_orders([getOrderFromLS(idOrder)]);
+//            updateInterface_orders([getOrderFromLS(idOrder)]);
         });
 
     });
@@ -401,6 +441,19 @@ function CreateOrder(order, isOperator) {
             return currentValue.idType == 2;
         }).length;
     }
+
+
+    var log = '';
+    $(order.Log).each(function (index) {
+        //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
+        log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
+    });
+    divOrder.attr('title', log);
+
+    divOrder.addClass('ord-workplace-' + order.idKitchen);
+
+    divOrder.addClass('ord-status-' + order.idStatus);
+
 
     divOrder.append(divOrderHeader);
     divOrder.append(divOrderContent);
@@ -542,7 +595,8 @@ function CreateBatchPanel(idBatch, QueueNo) {
             idOrder = parseInt(ui.item.attr("id"));
             idBatch = parseInt(ui.item.parent().parent().attr("idBatch"));
             console.log("updating idBatch in order");
-            sendRequest('updateOrderIdBatch', 'idOrder=' + idOrder + '&idBatch=' + idBatch, function (response) {
+            //TODO: chage status to 3
+            sendRequest('updateOrderIdBatchAndIdStatus', 'idOrder=' + idOrder + '&idStatus=2&idBatch=' + idBatch, function (response) {
                 console.log(response);
             });
         }
@@ -551,82 +605,59 @@ function CreateBatchPanel(idBatch, QueueNo) {
     return divPanel;
 }
 
-function updateInterface_orders(orders) {
+function updateInterface_order(order) {
     var ordersPanel = $('#o_ordersPanel');
-    if (localStorage.wp_type === "2") {
-        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-        if (localStorage.activeDate !== dt) {
-            $('#o_ordersPanel, .o_itemsPanel').empty();
-        }
+    var divOrder = $('#' + order.id);
 
-    }
-    $(orders).each(function (indx, order) {
-        var divOrder = $('#' + order.id);
-        if (!divOrder.length) {
-            if (localStorage.wp_type === "2") {
+    switch (localStorage.wp_type) {
+        case "2"://O
+            if (!divOrder.length) {
                 divOrder = CreateOrder(order, 1);
-            } else {
-                divOrder = CreateOrder(order);
-
             }
-        }
-        //alert(order.idBatch)
-        if (order.idBatch != null) {
-            divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-        } else {
+            if (order.idBatch != null) {
+                divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+            } else {
+                ordersPanel.append(divOrder);
+            }
+
+            break;
+        case "3"://K
+            if (!divOrder.length) {
+                divOrder = CreateOrder(order);
+            }
             ordersPanel.append(divOrder);
-        }
-        var log = '';
-        $(order.Log).each(function (index) {
 
-            //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
-            log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
-        });
-        divOrder.attr('title', log);
-        divOrder.find('span.CTime').text(order.CTime);
-        divOrder.find('span.DTime').text(order.DTime);
+            break;
+    }
+//    if (localStorage.wp_type === "2") {//O
+//        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+//        if (localStorage.activeDate !== dt) {
+//            //$('#o_ordersPanel, .o_itemsPanel').empty();
+//        }
+//    }
 
-        //if (divOrder) {
-        divOrder.removeClass('ord-workplace-3 ord-workplace-4');
-        divOrder.addClass('ord-workplace-' + order.idKitchen);
 
-        divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
-        divOrder.addClass('ord-status-' + order.idStatus);
-        //console.log('try: '+order.id);
-        switch (order.idStatus) {
-            case 1://Принят
-                //divOrder.addClass('ui-state-disabled');
-                divOrder.find("span.status").text("Принят");
-                break;
-            case 2://Готовить
-                divOrder.find("span.status").text("Готовить");
-                break;
-            case 3://Готовится
-                divOrder.find("span.status").text("Готовится");
-                break;
-            case 4://Приготовлен
-                divOrder.find("span.status").text("Приготовлен");
-                break;
-            case 5://Доставка
-                divOrder.find("span.status").text("Доставка");
-                break;
-            case 6://В пути
-                divOrder.find("span.status").text("В пути");
-                break;
-            case 7://Доставлен
-                divOrder.find("span.status").text("Доставлен");
-                break;
-            default:
-                //alert( 'Я таких значений не знаю' );
-        }
-
-//        divOrder.tooltip({
-//            //content: "Awesome title!"
-//        });
-        //}
-        //pnlOrders.append(CreateOrder(order));
-        divOrder.effect("bounce", "slow");
+    var log = '';
+    $(order.Log).each(function (index) {
+        log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
     });
+    divOrder.attr('title', log);
+    divOrder.find('span.CTime').text(order.CTime);
+    divOrder.find('span.DTime').text(order.DTime);
+
+    //if (divOrder) {
+    divOrder.removeClass('ord-workplace-3 ord-workplace-4');
+    divOrder.addClass('ord-workplace-' + order.idKitchen);
+
+    divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
+    divOrder.addClass('ord-status-' + order.idStatus);
+    //console.log('try: '+order.id);
+
+
+    divOrder.find("span.status").text(idStatusToString(order.idStatus));
+
+    divOrder.effect("bounce", "slow");
+
 }
 
 function updateOInterface_batches(batches) {
