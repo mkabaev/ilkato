@@ -11,7 +11,7 @@ function createOperatorInterface() {
     //var orders = getOrdersFromLS().filter(function (order, index, arr) {
     //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
     //return order.DDate == filterdate;
-    var orders = getOrdersFromLS();
+//////////////////////    var orders = getOrdersFromLS();
 //    });
 
     //var dt=Date.parse(orders[1].DDate);
@@ -57,7 +57,7 @@ function createOperatorInterface() {
 //            $(ulRows).children('li').prepend('<div style="float:left;padding:0;margin:0;top:10px;" class="ui-icon ui-icon-grip-dotted-vertical"></div>');
 ////'<span class="ui-icon u ui-icon-carat-2-n-s"></span>'
 ////$('.o_orderlist').children('li').html('<div style="float:left; padding:0; margin:0;">dasda</div>');
-    var batches = getBatchesFromLS();
+    /////////////////var batches = getBatchesFromLS();
     //pnlActiveOrders.append(CreateBatchPanel(132));
 
     $("#o_ordersPanel").sortable({
@@ -133,21 +133,57 @@ function createOperatorInterface() {
 //        },
         onSelect: function () {
             var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+            localStorage.activeDate = dt;
             sendRequest('getOrdersAndBatches', 'date=' + dt, function (data) {
-                $.each(localStorage, function (key, value) {
-                    if (key.startsWith('o_') | key.startsWith('b_')) {
-                        localStorage.removeItem(key);
-                    }
-                });
+                //$.each(localStorage, function (key, value) {
+                //    if (key.startsWith('o_') | key.startsWith('b_')) {
+                //        localStorage.removeItem(key);
+                //    }
+                //});
 
                 //save orders to LS
-                //var data = JSON.parse(jsondata);
-                localStorage.id_session = data.id_session;
+                //localStorage.id_session = data.id_session;
                 setItemsToLS('o_', data.orders);
                 setItemsToLS('b_', data.batches);
-                $("#o_activeOrdersPanel").empty();
+                $("#o_activeOrdersPanel").empty();//right panel
                 updateOInterface_batches(data.batches);
-                updateInterface_orders(data.orders);
+
+                $("#o_ordersPanel").empty();//left panel
+                console.log("sorted orders:");
+                var orders = data.orders;//getOrdersFromLS(); //TODO of current date
+                orders = orders.filter(function (currentValue, index, arr) {
+                    return currentValue.DDate === localStorage.activeDate;
+                });
+                orders = $(orders).sort(function (a, b) {
+                    var tt = a.DTime.split(":");
+                    var secA = tt[0] * 3600 + tt[1] * 60;
+                    tt = b.DTime.split(":");
+                    var secB = tt[0] * 3600 + tt[1] * 60;
+                    return secA - secB;
+                });
+                console.log(orders);
+
+                //var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+                //if (localStorage.activeDate !== dt) {
+                //    //$('#o_ordersPanel, .o_itemsPanel').empty();
+                //}
+
+                $(orders).each(function (indx, order) {
+                    var divOrder = CreateOrder(order, 1);
+
+                    if (order.idBatch != null) {
+                        divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+                    } else {
+                        pnlOrders.append(divOrder);
+                    }
+//        divOrder.tooltip({
+//            //content: "Awesome title!"
+//        });
+                    //}
+                    //pnlOrders.append(CreateOrder(order));
+                    //divOrder.effect( "bounce", { times: 3 }, "slow" );
+                    //divOrder.effect("bounce", "slow");
+                });
             });
 //            $.ajax({
 //                type: "POST",
@@ -195,8 +231,6 @@ function createOperatorInterface() {
 //            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
 //        }
 //    });
-
-    $("#datepicker").datepicker("setDate", new Date());
 
     var fs = $('<fieldset/>', {
         class: 'o-filter-rg'
@@ -251,6 +285,8 @@ function createOperatorInterface() {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
+
+
         var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
         sendRequest('createBatch', 'date=' + dt, function (response) {
             console.log(response);
@@ -259,43 +295,16 @@ function createOperatorInterface() {
         //updateOInterface_batches(getBatchesFromLS()); ?
     });
 
-    updateOInterface_batches(batches);
-
-
-    //updateInterface_orders(orders);
-    console.log("sorted orders:");
-    orders = $(orders).sort(function (a, b) {
-        var tt = a.DTime.split(":");
-        var secA = tt[0] * 3600 + tt[1] * 60;
-
-        tt = b.DTime.split(":");
-        var secB = tt[0] * 3600 + tt[1] * 60;
-
-        return secA - secB;
-    });
-    console.log(orders);
-
-    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-    if (localStorage.activeDate !== dt) {
-        //$('#o_ordersPanel, .o_itemsPanel').empty();
+    if (localStorage.getItem("activeDate") === null) {
+        $("#datepicker").datepicker("setDate", new Date());
+    } else {
+        $("#datepicker").datepicker("setDate", new Date(localStorage.activeDate));
     }
+    $("#datepicker").trigger("onSelect"); TODO
+    /////////////////updateOInterface_batches(batches);
 
-    $(orders).each(function (indx, order) {
-        var divOrder = CreateOrder(order, 1);
 
-        if (order.idBatch != null) {
-            divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-        } else {
-            pnlOrders.append(divOrder);
-        }
-//        divOrder.tooltip({
-//            //content: "Awesome title!"
-//        });
-        //}
-        //pnlOrders.append(CreateOrder(order));
-        //divOrder.effect( "bounce", { times: 3 }, "slow" );
-        //divOrder.effect("bounce", "slow");
-    });
+
 
 }
 
@@ -599,6 +608,7 @@ function CreateBatchPanel(idBatch, QueueNo) {
             sendRequest('updateOrderIdBatchAndIdStatus', 'idOrder=' + idOrder + '&idStatus=2&idBatch=' + idBatch, function (response) {
                 console.log(response);
             });
+            alert($(".o_itemsPanel").has(".order"));
         }
     }).disableSelection();
     //divPanel.append(QueueNo);

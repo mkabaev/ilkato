@@ -313,15 +313,15 @@ function doInit(callback) {
             setItemsToLS('o_', data.orders);
             setItemsToLS('b_', data.batches);
 
-            localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
-            var dates = [];
-            $(data.orders).each(function (indx, order) {
-                dates.push(order.DDate);
-            });
-            localStorage.dates = $.unique(dates);
-            updateInterface_user();
-            //clearStorage();
-            //loadDataToStorage();
+            //localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
+            //var dates = [];
+            //$(data.orders).each(function (indx, order) {
+            //    dates.push(order.DDate);
+            //});
+            //localStorage.dates = $.unique(dates);
+            //updateInterface_user();
+            ////clearStorage();
+            ////loadDataToStorage();
             createWorkplace(localStorage.wp_type);
             addEventListeners();
         });
