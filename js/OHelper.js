@@ -608,7 +608,13 @@ function CreateBatchPanel(idBatch, QueueNo) {
             sendRequest('updateOrderIdBatchAndIdStatus', 'idOrder=' + idOrder + '&idStatus=2&idBatch=' + idBatch, function (response) {
                 console.log(response);
             });
-            alert($(".o_itemsPanel").has(".order"));
+
+            if ($(".o_itemsPanel:empty").length === 0) { //if no empty batches then create one
+                var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+                sendRequest('createBatch', 'date=' + dt, function (response) {
+                    console.log(response);
+                });
+            }
         }
     }).disableSelection();
     //divPanel.append(QueueNo);

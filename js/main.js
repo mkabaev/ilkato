@@ -298,6 +298,7 @@ function doInit(callback) {
     if (localStorage.uid === "undefined") {
         showSelectUserDialog();
     } else {
+        updateInterface_user();
         //set USER ONLINE on server and then get active orders
         sendRequest("login", "uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session, function (data) {
             $.each(localStorage, function (key, value) {
@@ -569,7 +570,8 @@ function afterSelUser(sender) {
     //localStorage.clear();
     localStorage.wp_id = $(sender).attr("idWorkplace");
     localStorage.wp_type = $(sender).attr("idType");
-    localStorage.uid = $(sender).attr("idPerson");;
+    localStorage.uid = $(sender).attr("idPerson");
+    ;
     localStorage.user_name = $(sender).text();
 //    $("#SelUsers").remove();
     doInit();
