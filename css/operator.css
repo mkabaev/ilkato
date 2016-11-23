@@ -41,13 +41,24 @@
 
 /*где делать заказ*/
 .ord-workplace-3{
+    
+
+}
+
+/*NS*/
+.ord-workplace-4 .ui-widget-header {
+    border: 1px solid #009933;
+    background: limegreen;
+}
+/*.ord-workplace-4.ui-widget {
+    background: #ccffcc;
+}*/
+/*.ord-workplace-4{
     border: 4px double green;
     background-color: lightgreen;
-}
-.ord-workplace-4{
-    border: 4px double red;
-    background-color: lightsalmon;
-}
+}*/
+
+
 
 #o_ordersPanel .order {
     /*    width:auto;*/
