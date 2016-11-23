@@ -211,7 +211,7 @@ function createOperatorInterface() {
         //updateOInterface_batches(getBatchesFromLS()); ?
     });
 
-    if (localStorage.getItem("activeDate") === null||localStorage.getItem("activeDate")==="") {
+    if (localStorage.getItem("activeDate") === null || localStorage.getItem("activeDate") === "") {
         $("#datepicker").datepicker("setDate", new Date());
     } else {
         $("#datepicker").datepicker("setDate", new Date(localStorage.activeDate));
@@ -237,8 +237,8 @@ function selectDate(date) {
         setItemsToLS('b_', data.batches);
         $("#o_activeOrdersPanel").empty();//right panel
         updateOInterface_batches(data.batches);
-
-        $("#o_ordersPanel").empty();//left panel
+        var pnlOrders = $("#o_ordersPanel");
+        pnlOrders.empty();//left panel
         console.log("sorted orders:");
         var orders = data.orders;//getOrdersFromLS();
         orders = orders.filter(function (currentValue, index, arr) {
