@@ -48,7 +48,7 @@ function addEventListeners() {
 }
 function ordUpdate(e) {
     console.log('ordUpdate fired:');
-    console.log(e.data);
+    //console.log(e.data);
     var order = JSON.parse(e.data);
     console.log(order);
     setItemsToLS("o_", [order]);

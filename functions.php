@@ -125,8 +125,12 @@ function getSessionUpdates($id_session) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
-
+//$db->conn->beginTransaction();
+    
     $stmt = $db->conn->prepare("SELECT * from app_sessiondata where id_session=:id_session");
+    
+    
+    
     $stmt->bindParam(':id_session', $id_session);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
@@ -140,7 +144,7 @@ function getSessionUpdates($id_session) {
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $res = $stmt->execute();
-
+//$db->conn->commit();
     //foreach ($orders AS $key => $order) {
     //    $orders[$key]['client'] = json_decode($order['client']);
     //    $orders[$key]['products'] = json_decode($order['products']);
@@ -202,10 +206,12 @@ function updateOrderKithcenID($idOrder, $idKitchen) {
     $query = "UPDATE ilkato.orders SET idKitchen=:idKitchen WHERE id=:idOrder";
     //$query = "UPDATE employees SET isOnline=true WHERE id=3";
     //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+//$db->conn->beginTransaction();
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idOrder', $idOrder);
     $stmt->bindParam(':idKitchen', $idKitchen);
     $res = $stmt->execute();
+//$db->conn->commit();
     return $res;
 }
 

@@ -31,9 +31,8 @@ while (true) { //$i < 3
 //echo PHP_EOL;
         ob_end_flush();
         flush();
-        //sleep(1);
     }
-    sleep(1);
+    sleep(2);
 
     //$i = $i + 1;
 //            echo "data: msg\n\n";

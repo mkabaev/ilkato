@@ -202,13 +202,15 @@ function createOperatorInterface() {
 //            IDs.push($(this).attr("idBatch"));
 //        });
 
+    sendRequest('getUsers', '', function (data) {
+        console.log(data);
+    });
+//        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+  //      sendRequest('createBatch', 'date=' + dt, function (response) {
+    //        console.log(response);
+      //  });
 
-        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-        sendRequest('createBatch', 'date=' + dt, function (response) {
-            console.log(response);
-        });
-
-        //updateOInterface_batches(getBatchesFromLS()); ?
+        ////updateOInterface_batches(getBatchesFromLS()); ?
     });
 
     if (localStorage.getItem("activeDate") === null || localStorage.getItem("activeDate") === "") {
@@ -318,26 +320,23 @@ function CreateOrder(order, isOperator) {
     var divOrder = $('<div/>', {
         id: order.id,
         class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
-        attr: {'idKitchen': order.idKitchen}
+        attr: {'idKitchen': order.idKitchen, 'idBatch': order.idBatch}
     });
-
     var divOrderHeader = $('<div/>', {
         //id: order_id,
         class: 'order-header ui-widget-header ui-corner-top',
         html: order.No //+'<div class="imgRoll"/>'
     });
-
-
 //    if (stop_time == null) {
 //        stop_time = '-'
 //    };
-
 //var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
     var strAddress = 'адрес не указан';
     if (order.Client) {
         strAddress = order.Client.Street + ', ' + order.Client.Building;
     }
     var comments = order.Comment.split('|');
+
     var divOrderContent = $('<div/>', {
         //id: "content_"+order_id,
         class: 'order-content',
@@ -345,7 +344,7 @@ function CreateOrder(order, isOperator) {
         html: '<div><span class=comment>' + comments[0] + '</span><hr/>' + strAddress + '</div>'
     });
 
-    var dt = new Date(order.CreateDate)
+    //var dt = new Date(order.CreateDate)
     var divTime = $('<div/>', {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
@@ -429,6 +428,7 @@ function CreateOrder(order, isOperator) {
         var idKitchen = $(this).attr('idKitchen');
         console.log("updating idKitchen in order");
         sendRequest('updateOrderKithcenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (data) {
+            console.log("resul:");
             console.log(data);
             var order = JSON.parse(localStorage.getItem('o_' + idOrder));
             order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
@@ -439,17 +439,17 @@ function CreateOrder(order, isOperator) {
 
     });
 
-    var rCount = 0;
-    var pCount = 0;
-    if (order.Products !== null) {
-        rCount = order.Products.filter(function (currentValue, index, arr) {
-            return currentValue.idType == 1;
-        }).length;
-
-        pCount = order.Products.filter(function (currentValue, index, arr) {
-            return currentValue.idType == 2;
-        }).length;
-    }
+//    var rCount = 0;
+//    var pCount = 0;
+//    if (order.Products !== null) {
+//        rCount = order.Products.filter(function (currentValue, index, arr) {
+//            return currentValue.idType == 1;
+//        }).length;
+//
+//        pCount = order.Products.filter(function (currentValue, index, arr) {
+//            return currentValue.idType == 2;
+//        }).length;
+//    }
 
 
     var log = '';
@@ -579,6 +579,10 @@ function CreateBatchPanel(idBatch, QueueNo) {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
+
+
+    
+    
         var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
         sendRequest('createBatch', 'date=' + dt, function (response) {
             console.log(response);
@@ -627,13 +631,26 @@ function updateInterface_order(order) {
 
     switch (localStorage.wp_type) {
         case "2"://O
-            if (!divOrder.length) {
+            if (!divOrder.length) { //new order
                 divOrder = CreateOrder(order, 1);
-            }
-            if (order.idBatch != null) {
-                divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-            } else {
-                ordersPanel.append(divOrder);
+                if (order.idBatch != null) {
+                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+                } else {
+                    ordersPanel.append(divOrder);
+                }
+            } else {// update existing
+                if (order.idBatch != divOrder.attr("idBatch")) {
+                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+                }
+                divOrder.replaceWith(CreateOrder(order, 1));
+                //todo if idbatch changed
+
+//                if (order.idBatch != null) {
+//                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
+//                } else {
+//                    divOrder.replaceWith(CreateOrder(order, 1));
+//                    //ordersPanel.append(divOrder);
+//                }
             }
 
             break;

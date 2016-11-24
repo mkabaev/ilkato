@@ -587,6 +587,7 @@ function sendRequest(action, paramsstr, callback) {
         //url: "helper.php?",
         url: "helper.php",
         cache: false,
+        timeout: 30000,
         success: function (jsondata) {
             $("body").removeClass("ui-state-error");
             if (callback) {
