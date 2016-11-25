@@ -202,13 +202,13 @@ function createOperatorInterface() {
 //            IDs.push($(this).attr("idBatch"));
 //        });
 
-    sendRequest('getUsers', '', function (data) {
-        console.log(data);
-    });
+        sendRequest('getUsers', '', function (data) {
+            console.log(data);
+        });
 //        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-  //      sendRequest('createBatch', 'date=' + dt, function (response) {
-    //        console.log(response);
-      //  });
+        //      sendRequest('createBatch', 'date=' + dt, function (response) {
+        //        console.log(response);
+        //  });
 
         ////updateOInterface_batches(getBatchesFromLS()); ?
     });
@@ -348,9 +348,13 @@ function CreateOrder(order, isOperator) {
     var divTime = $('<div/>', {
         class: 'time',
         //dt.getHours()+':'+dt.getMinutes() 
-        html: 'Принят в <span class="CTime">' + order.CTime + '</span><br/>Доставить к <span class="DTime">' + order.DTime + '</span><br/><br/><span class="status">' + idStatusToString(order.idStatus) + '</span>'//order_time
-                //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
+        //html: 'Принят в <span class="CTime">' + order.CTime + '</span><br/>Доставить к <span class="DTime">' + order.DTime + '</span><br/>'//order_time
+        //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
     });
+    var coockingTime = Math.max(calcCoockingTime(order.Products, 1), calcCoockingTime(order.Products, 2));
+    divTime.append('<span class="status">' + idStatusToString(order.idStatus) + '</span>');
+    divTime.append('<br/><br/>Время на заказ <span class="DTime">' + coockingTime.toHHMMSS() + '</span>');
+    divTime.append('<br/>Доставить к <span class="DTime">' + order.DTime + '</span>');
 
     divOrderHeader.append(divTime);
 
@@ -409,10 +413,11 @@ function CreateOrder(order, isOperator) {
         });
     } else {
         divOrder.click(function (event) {
-            //if (localStorage.activeOrder != order.id) {
+            //if (divOrder.attr("id") != order.id) {
             updateOrderViewer(order.id);
             $(".order").removeClass('selected');
             divOrder.addClass('selected');
+            //TODO START TIMER?
             //}
         });
 
@@ -581,8 +586,8 @@ function CreateBatchPanel(idBatch, QueueNo) {
 //        });
 
 
-    
-    
+
+
         var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
         sendRequest('createBatch', 'date=' + dt, function (response) {
             console.log(response);
@@ -657,9 +662,9 @@ function updateInterface_order(order) {
         case "3"://K
             if (!divOrder.length) {
                 divOrder = CreateOrder(order);
-            }
-            ordersPanel.append(divOrder);
-
+                ordersPanel.append(divOrder);
+            }//TODO сделать чтоб добавлялся только заказ с нужным idBatch
+            divOrder.replaceWith(CreateOrder(order));
             break;
     }
 //    if (localStorage.wp_type === "2") {//O

@@ -36,19 +36,37 @@ function createKitchenInterface() {
         return secA - secB;
     });
     console.log(orders);
+    if (orders.length) {
+        var order = orders[0]; //active order
+        localStorage.activeOrder = order.id;
+        var idBatch = order.idBatch;
 
-    $(orders).each(function (indx, order) {
-        var divOrder = CreateOrder(order);
+        $(orders).each(function (indx, order) {
+            if (order.idBatch === idBatch) {
+                var divOrder = CreateOrder(order);
+                pnlOrders.append(divOrder);
+            }
+        });
 
-        pnlOrders.append(divOrder);
-    });
+        console.log("activeOrder status: " + order.idStatus);
+        var ct = Math.max(calcCoockingTime(order.Products, 1), calcCoockingTime(order.Products, 2));
+        if (ct > 0) {
+            console.log("ct>0, start timer with ct=" + ct);
+            createTimer('timer', 'ktimer', ct, 240).appendTo($('#workplace'));
+
+//            if (!startTimer(ct, function (sec) {
+//                localStorage.timer = sec;
+//            })) {
+//                console.log("create timer");
+//                //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
+//                createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
+//            }
+//            $("#timer").show();
+        }
 
 
 
-
-
-
-
+    }
 
 
 
@@ -287,39 +305,11 @@ function updateOrderViewer(id) {
             $('#tableP tbody').html(ArrayToTableItems(itemsP));
             $('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
 
-            if (localStorage.wp_type === "3") {//show timer for kitchen iface
-                console.log("order status: " + order.idStatus);
-                if (localStorage.activeOrder != id) {//then reset timer
-                    localStorage.activeOrder = id;
-                    stopTimer();
-                    $("#timer").hide();
-                    var ct = Math.max(coockingTimeR, coockingTimeP);
-                    if (ct > 0) {
-                        console.log("ct>0, start timer with ct=" + ct);
-                        if (!startTimer(ct, function (sec) {
-                            localStorage.timer = sec;
-                        })) {
-                            console.log("create timer");
-                            //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
-                            createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
-                        }
-                        $("#timer").show();
-                    }
-                } else { // set timer to prev value
-                    console.log("prev:" + localStorage.timer);
-                    stopTimer();
-                    if (!startTimer(localStorage.timer, function (sec) {
-                        localStorage.timer = sec;
-                    })) {
-                        console.log("create timer2");
-                        //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
-                        createTimer('timer', 'ktimer', localStorage.timer, 340).appendTo($('#workplace'));
-                    }
-                    $("#timer").show();
-                }
-            } else { // for operator UI
-                localStorage.removeItem("activeOrder");
-            }
+
+
+
+
+
 
 //    $('body').append(localStorage.getItem(localStorage.key(i))); 
         } else {

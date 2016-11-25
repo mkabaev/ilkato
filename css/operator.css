@@ -26,6 +26,10 @@
     border-color: red;
 }
 
+.status {
+    font-size:larger;
+    float:right;
+}
 /*принятые*/
 #o_ordersPanel{
     border: 1px solid #eee;
@@ -40,9 +44,11 @@
 }
 
 /*где делать заказ*/
-.ord-workplace-3{
-    
 
+.ord-workplace-null .ui-widget-header {
+    border:none;
+    background: none;
+    color: #666666;
 }
 
 /*NS*/

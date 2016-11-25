@@ -57,13 +57,14 @@
                 //console.log(document.attributes);
                 $('#workplace').addClass('wp-' + type);
                 switch (type) {
-                    case '2':
+                case '2':
                         createOperatorInterface();
                         break;
-                    case '3':
+                        case '3':
+
                         createKitchenInterface();
                         break;
-                    default:
+                        default:
                         alert('select interface type');
                         break;
                 }

@@ -11,6 +11,7 @@
     left:80px;
     /*    right:10px;*/
 }
+
 .orderViewer table{
     font-size: 0.9em;
     white-space: nowrap;
@@ -129,6 +130,7 @@ div.imgPizza {
     top: 20px;    
     font-size: 40px;
     font-weight:bold;
+    z-index: 1000;
 }
 .ktimer canvas {
     position: absolute;
