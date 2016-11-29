@@ -261,14 +261,14 @@
 .o_orderViewerDlg .orderViewer{
     left:0;
     right: 0;
-    top:"10px";
+    top:10px;
 }
-.o_orderViewerDlg .orderViewer #orderheader{
+/*.o_orderViewerDlg .orderViewer #orderheader{
     visibility: visible;
-}
+}*/
 
 /*скрываем кнопку кухне*/
-.ui-selectmenu-button{
+/*.ui-selectmenu-button{
     visibility: hidden;
 }
 .o_orderViewerDlg .orderViewer .ui-selectmenu-button{
@@ -276,7 +276,7 @@
     position: absolute;
     top:-44px;
     right: 200px;
-}
+}*/
 
 .ord-status-7{
     opacity: 0.2;

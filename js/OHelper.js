@@ -474,6 +474,128 @@ function CreateOrder(order, isOperator) {
     return divOrder;
 }
 
+function createOrderEditor(order) {
+    var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
+    var tableItems = null;
+    var footerItems = null;
+    if (order.Products) {
+        var itemsR = order.Products.filter(function (row) {
+            return row.idType === 1;
+        });
+        var itemsP = order.Products.filter(function (row) {
+            return row.idType === 2;
+        });
+        var coockingTimeR = calcCoockingTime(itemsR, 1);
+        var coockingTimeP = calcCoockingTime(itemsP, 2);
+//TODO: check func speed
+//var sum = itemsR.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
+        var totalSummR = 0;
+        var totalWeightR = 0;
+        $.each(itemsR, function (key, val) {
+            totalSummR += val.Price;
+            totalWeightR += val.Weight;
+        });
+        var totalSummP = 0;
+        var totalWeightP = 0;
+        $.each(itemsP, function (key, val) {
+            totalSummP += val.Price;
+            totalWeightP += val.Weight;
+        });
+
+        itemsR = itemsR.map(function (oldItem) {
+            var newItem = {};
+            newItem.id = oldItem.id;
+            newItem.Name = oldItem.Name;
+            newItem.Count = oldItem.Count;
+            newItem.Weight = oldItem.Weight;
+            newItem.Price = oldItem.Price;
+            newItem.Time = oldItem.CookingTime;
+            return newItem;
+        });
+
+        tableItems = order.Products.map(function (oldItem) {
+            var newItem = {};
+            newItem.id = oldItem.id;
+            newItem.Name = oldItem.Name;
+            newItem.Count = oldItem.Count;
+            newItem.Weight = oldItem.Weight;
+            newItem.Price = oldItem.Price;
+            newItem.Time = oldItem.CookingTime;
+            return newItem;
+        });
+
+        itemsP = itemsP.map(function (oldItem) {
+            var newItem = {};
+            newItem.id = oldItem.id;
+            newItem.Name = oldItem.Name;
+            newItem.Count = oldItem.Count;
+            newItem.Weight = oldItem.Weight;
+            newItem.Price = oldItem.Price;
+            newItem.Time = oldItem.CookingTime;
+            return newItem;
+        });
+        //$('#tableP tbody').html(ArrayToTableItems(itemsP));
+        //$('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
+        footerItems=["", "Всего", totalWeightP, totalSummP];
+
+    }
+
+
+    var div = $('<div/>', {
+        id: "o_ordEdit",
+        class: 'ui-widget ui-widget-content',
+        //attr: {'order_id': '123', 'ts': timestamp}
+    }).append('<div class="pricingPic"></div>');
+    var select = $('<select/>', {
+        id: "selstatus",
+        name: "status",
+//        class: 'ui-widget-header',
+    }).append('<label for="status">Статус</label>').appendTo(div);
+    var divHeader = $('<div/>', {
+        id: "orderheader",
+        class: 'ui-widget-header',
+    });
+    var divNumber = $('<div/>', {
+        //id: "number",
+    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
+    div.append(divHeader);
+
+    //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
+
+    div.append(CreateTable('table', 'tProducts', headerItems, tableItems, ["", "", 123, 888]));
+    //$('#table tbody').html(ArrayToTableItems(itemsAll));
+    //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
+
+    div.append('<div id="ordlog"></div>');
+    div.append('<div><label for="comment">Комментарий:</label><input type="text" name="comment" id="comment" value="' + order.Comment + '"></div>');
+    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
+    //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
+
+    $(select).selectmenu({
+//        create: function (event, ui) {
+////            $('.ui-selectmenu-menu').css({'height': '100px', 'overflow': 'auto'});
+//            $('.ui-selectmenu-menu').css({'z-index': '10000000'});
+//        },
+//        open: function (event, ui)
+//        {
+//            $('.ui-selectmenu-menu').zIndex($(‘#dialog’).zIndex() + 1);
+//        },
+        width: 140,
+//        position: {
+//            my: "left+10 top",
+//            at: "left top+20"
+//        },
+        change: function (event, ui) {
+            var idOrder = parseInt($('#ordViewer').attr("idOrder"));
+            var idStatus = parseInt($(this).val()) + 1;
+            sendRequest('updateOrderStatus', 'idOrder=' + idOrder + '&idStatus=' + idStatus, function (response) {
+                console.log(response);
+            });
+        }
+    });
+    return div;
+}
+
 function showOrderDialog(order) {
 
     //var dlgV=$('#dlgV');
@@ -483,12 +605,12 @@ function showOrderDialog(order) {
     dlgV.dialog("option", "height", 600);
     dlgV.dialog("option", "width", 1100);
 
-    var ov = createOrderViewer('ordViewer', 'orderViewer');
+    var ov = createOrderEditor(order);
     //ov.addClass('ul_selec');
     dlgV.append(ov.fadeIn(1000));
 
     //}
-    updateOrderViewer(order.id);
+//    updateOrderViewer(order.id);
 //    $("#selstatus").on('selectmenuopen', function (event, ui)
 //    {
 //        alert($(dlgV).zIndex());
