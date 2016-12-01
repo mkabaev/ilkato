@@ -474,10 +474,43 @@ function CreateOrder(order, isOperator) {
     return divOrder;
 }
 
+//var clientsCache = {};
+var clientsCache = [
+    {
+        value: "asdasd",
+        label: "79277501811",
+        desc: "the write less, do more, JavaScript library",
+        icon: "jquery_32x32.png"
+    },
+    {
+        value: "jquery",
+        label: "jQuery",
+        desc: "the write less, do more, JavaScript library",
+        icon: "jquery_32x32.png"
+    },
+    {
+        value: "jquery-ui",
+        label: "jQuery UI",
+        desc: "the official user interface library for jQuery",
+        icon: "jqueryui_32x32.png"
+    },
+    {
+        value: "sizzlejs",
+        label: "Sizzle JS",
+        desc: "a pure-JavaScript CSS selector engine",
+        icon: "sizzlejs_32x32.png"
+    }
+];
+clientsCache=[ "Choice1", "Choice2", "Choice3" ];
 function createOrderEditor(order) {
     var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
     var tableItems = null;
     var footerItems = null;
+
+
+
+
+
     if (order.Products) {
         var itemsR = order.Products.filter(function (row) {
             return row.idType === 1;
@@ -536,21 +569,53 @@ function createOrderEditor(order) {
         });
         //$('#tableP tbody').html(ArrayToTableItems(itemsP));
         //$('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
-        footerItems=["", "Всего", totalWeightP, totalSummP];
-
+        footerItems = ["", "Всего", totalWeightP, totalSummP];
     }
-
 
     var div = $('<div/>', {
         id: "o_ordEdit",
         class: 'ui-widget ui-widget-content',
         //attr: {'order_id': '123', 'ts': timestamp}
     }).append('<div class="pricingPic"></div>');
+
+    div.append('<div class="ui-widget"><label for="phone">Телефон:</label><input id="phone"></div>');
+//    div.find("#phone").autocomplete({
+//        source: clientsCache
+//    });
+    div.find("#phone").autocomplete({
+        minLength: 0,
+//       source: clientsCache,
+        source: function (request, response) {
+            console.log(request.term);
+            var term = request.term;
+            if (term in clientsCache) {
+                alert(term);
+                response(clientsCache[ term ]);
+                return;
+            }
+//            $.getJSON("helper.php", request, function (data, status, xhr) {
+//                clientsCache[ term ] = data;
+//                response(data);
+//            });
+        },
+        focus: function (event, ui) {
+            //alert(ui.item.label);
+            return false;
+        },
+        select: function (event, ui) {
+            alert(ui.item.desc);
+
+
+            return false;
+        }
+    });
+
     var select = $('<select/>', {
         id: "selstatus",
         name: "status",
 //        class: 'ui-widget-header',
     }).append('<label for="status">Статус</label>').appendTo(div);
+
     var divHeader = $('<div/>', {
         id: "orderheader",
         class: 'ui-widget-header',
@@ -604,7 +669,7 @@ function showOrderDialog(order) {
     //dlgV.dialog( "option", "resizable", true );
     dlgV.dialog("option", "height", 600);
     dlgV.dialog("option", "width", 1100);
-
+    console.log(order);
     var ov = createOrderEditor(order);
     //ov.addClass('ul_selec');
     dlgV.append(ov.fadeIn(1000));

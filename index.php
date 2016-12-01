@@ -49,6 +49,10 @@
             //123   |   ordUpdate   |   {...}
             function createWorkplace(type) {
                 stopTimer();
+//                $("#topmenu").append('<div class="ui-widget"><label for="phone">Телефон:</label><input type="text" name="phone" id="phone"></div>');
+//                $("#phone").autocomplete({
+//                    source: clientsCache
+//                });
                 $('#workplace').empty();
                 $('#topwidget').remove();
                 $('#workplace').removeClass('wp-2');
@@ -57,14 +61,14 @@
                 //console.log(document.attributes);
                 $('#workplace').addClass('wp-' + type);
                 switch (type) {
-                case '2':
+                    case '2':
                         createOperatorInterface();
                         break;
-                        case '3':
+                    case '3':
 
                         createKitchenInterface();
                         break;
-                        default:
+                    default:
                         alert('select interface type');
                         break;
                 }
