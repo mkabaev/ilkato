@@ -501,7 +501,7 @@ var clientsCache = [
         icon: "sizzlejs_32x32.png"
     }
 ];
-clientsCache=[ "Choice1", "Choice2", "Choice3" ];
+clientsCache = [];
 function createOrderEditor(order) {
     var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
     var tableItems = null;
@@ -578,35 +578,66 @@ function createOrderEditor(order) {
         //attr: {'order_id': '123', 'ts': timestamp}
     }).append('<div class="pricingPic"></div>');
 
-    div.append('<div class="ui-widget"><label for="phone">Телефон:</label><input id="phone"></div>');
+    var fs = $('<fieldset/>', {
+        //id: "cgClient",
+        //class: 'ui-widget ui-widget-content',
+        //class: 'controlgroup',
+//attr: {'order_id': '123', 'ts': timestamp}
+    }).append('<legend>Клиент</legend>').appendTo(div);
+
+
+    var cgOrder = $('<div/>', {
+        id: "cgOrder",
+        //class: 'ui-widget ui-widget-content',
+        //class: 'controlgroup',
+//attr: {'order_id': '123', 'ts': timestamp}
+    }).appendTo(div);
+    cgOrder.append('<div id="ordlog"></div>');
+    cgOrder.append('<div><label for="comment">Комментарий:</label><input type="text" name="comment" id="comment" value="' + order.Comment + '"></div>');
+    cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
+    cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
+    cgOrder.append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP">');
+    cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
+    cgOrder.append('<button>Тынц</button>');
+
+    var cgClient = $('<div/>', {
+        id: "cgClient",
+        //class: 'ui-widget ui-widget-content',
+        //class: 'controlgroup',
+//attr: {'order_id': '123', 'ts': timestamp}
+    }).appendTo(fs);
+
+    cgClient.append('<label for="phone">Телефон:</label><input id="phone">');
+    cgClient.append('<label for="name">Имя:</label><input id="name">');
+
 //    div.find("#phone").autocomplete({
 //        source: clientsCache
 //    });
     div.find("#phone").autocomplete({
-        minLength: 0,
+        minLength: 4,
 //       source: clientsCache,
         source: function (request, response) {
-            console.log(request.term);
             var term = request.term;
             if (term in clientsCache) {
-                alert(term);
-                response(clientsCache[ term ]);
+                console.log("from cache");
+                response(clientsCache[term]);
                 return;
             }
-//            $.getJSON("helper.php", request, function (data, status, xhr) {
-//                clientsCache[ term ] = data;
-//                response(data);
-//            });
+            $.getJSON("search.php?s=clients", request, function (data, status, xhr) {
+                clientsCache[term] = data;
+                console.log("from server:");
+                console.log(data);
+                response(data);
+            });
         },
         focus: function (event, ui) {
-            //alert(ui.item.label);
-            return false;
+            console.log(ui.item.idPerson);
+            //return false;
         },
         select: function (event, ui) {
-            alert(ui.item.desc);
-
-
-            return false;
+            console.log(ui.item);
+            $("#name").val(ui.item.idClient);
+            //return false;
         }
     });
 
@@ -614,7 +645,8 @@ function createOrderEditor(order) {
         id: "selstatus",
         name: "status",
 //        class: 'ui-widget-header',
-    }).append('<label for="status">Статус</label>').appendTo(div);
+    }).append('<label for="status">Статус</label>');
+    div.append(select);
 
     var divHeader = $('<div/>', {
         id: "orderheader",
@@ -627,12 +659,10 @@ function createOrderEditor(order) {
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    div.append(CreateTable('table', 'tProducts', headerItems, tableItems, ["", "", 123, 888]));
+    div.append(CreateTable('table', 'tProducts', headerItems, tableItems, footerItems));//["", "", 123, 888]
     //$('#table tbody').html(ArrayToTableItems(itemsAll));
     //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
 
-    div.append('<div id="ordlog"></div>');
-    div.append('<div><label for="comment">Комментарий:</label><input type="text" name="comment" id="comment" value="' + order.Comment + '"></div>');
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
 
@@ -657,6 +687,13 @@ function createOrderEditor(order) {
                 console.log(response);
             });
         }
+    });
+
+    cgClient.controlgroup({
+        "direction": "vertical"
+    });
+    cgOrder.controlgroup({
+        //"direction": "vertical"
     });
     return div;
 }

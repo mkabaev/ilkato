@@ -311,3 +311,46 @@
     /*    opacity: 0.2;*/
     animation: blinker 500ms linear infinite;
 }
+
+
+
+.o_orderViewerDlg fieldset{
+    width: 200px;
+    padding: 10px;
+}
+
+.o_orderViewerDlg .tProducts{
+    position: absolute;
+    right: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+/*    width: 600px;*/
+}
+
+.ui-controlgroup {
+    font-size: 14px;
+}
+
+.ui-controlgroup-vertical {
+    width: 100%;
+}
+
+.ui-controlgroup.ui-controlgroup-vertical > button.ui-button,
+.ui-controlgroup.ui-controlgroup-vertical > .ui-controlgroup-label {
+    text-align: center;
+}
+.ui-controlgroup-horizontal .ui-spinner-input {
+    width: 20px;
+}
+
+fieldset{
+    position: absolute;
+    left: 40px;
+    top: 60px;
+}
+#cgOrder{
+    position: absolute;
+    left: 40px;
+    top: 160px;
+    width: 800px;
+}
