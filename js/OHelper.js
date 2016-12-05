@@ -575,6 +575,7 @@ function createOrderEditor(order) {
 
     var cgClient = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
     cgClient.append('+7<input id="phone" placeholder="Телефон">');
+    cgClient.append('<input id="card" placeholder="№ карты">');
     cgClient.append('<input id="name" placeholder="Имя">');
     cgClient.append('<input id="address" name="address" type="text" placeholder="Адрес">');
     cgClient.append('<input id="kv" placeholder="кв.">');
@@ -697,11 +698,13 @@ function createOrderEditor(order) {
     cgOrder.css("width", 560);
     cgOrder.append('<div id="ordlog"></div>');
     var select = $('<select/>', {
-        id: "selstatus",
+        id: "o_selstatus",
         name: "status",
 //        class: 'ui-widget-header',
     }).append('<label for="status">Статус</label>');
-    cgOrder.append(select);
+    $(".ui-dialog-titlebar").append(select);
+//    cgOrder.append(select);
+
     cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
     cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
     //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
@@ -709,11 +712,18 @@ function createOrderEditor(order) {
     cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
     //cgOrder.append('<button>Тынц</button>');
 
+    cgOrder.append('<input id="filter">');
     var tProducts = CreateTable('table', 'tProducts0', headerItems, tableItems, footerItems);//["", "", 123, 888]
-    $('#table').filterTable({
-        inputSelector: '#name'
-    });
     cgOrder.append(tProducts);
+
+    cgOrder.find('#filter').keyup(function () {
+        var rows = cgOrder.find("tbody").find("tr").hide();
+        var data = this.value.split(" ");
+        $.each(data, function (i, v) {
+            rows.filter(":contains('" + v + "')").show();
+        });
+    });
+
 //$('#table tbody').html(ArrayToTableItems(itemsAll));
     //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
 
@@ -757,6 +767,9 @@ function createOrderEditor(order) {
             });
         }
     });
+    select.val(order.idStatus - 1);
+    select.selectmenu('refresh', true);
+
 
     cgClient.controlgroup({
         "direction": "vertical"
