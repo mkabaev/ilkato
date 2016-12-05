@@ -573,12 +573,12 @@ function createOrderEditor(order) {
 ////attr: {'order_id': '123', 'ts': timestamp}
 //    }).append('<legend>Клиент</legend>').appendTo(div);
 
+//1
     var cgClient = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
     cgClient.append('+7<input id="phone" placeholder="Телефон">');
     cgClient.append('<input id="card" placeholder="№ карты">');
     cgClient.append('<input id="name" placeholder="Имя">');
     cgClient.append('<input id="address" name="address" type="text" placeholder="Адрес">');
-    cgClient.append('<input id="kv" placeholder="кв.">');
     cgClient.append('<input id="et" placeholder="этаж">');
     cgClient.append('<input id="info" placeholder="Доп. инфориация">');
     cgClient.append('<div id="map" class="panel-map"></div>');
@@ -602,7 +602,7 @@ function createOrderEditor(order) {
         //count: 5,
         /* Вызывается, когда пользователь выбирает одну из подсказок */
         onSelect: function (suggestion) {
-            console.log(suggestion);
+            console.log(suggestion.data.house_fias_id);
             mapUpdate(suggestion.value, 16);
         }
     });
@@ -694,8 +694,35 @@ function createOrderEditor(order) {
         }
     });
 
-    var cgOrder = $('<div/>', {class: 'ui-widget controlgroup'}).appendTo(div);
-    cgOrder.css("width", 560);
+//2
+    var cgMenu = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
+    cgMenu.css("width", 270);
+    var divMenuProducts = $('<div/>', {
+        id: "divMenuProducts",
+    }).append("<h1>Меню</h1>").appendTo(cgMenu);
+
+    var tableItemsMenu = order.Products.map(function (oldItem) {
+        var newItem = {};
+        newItem.id = oldItem.id;
+        newItem.Name = oldItem.Name;
+        newItem.Weight = oldItem.Weight;
+        newItem.Price = oldItem.Price;
+        return newItem;
+    });
+    var tMenuProducts = CreateTable('tMenuProducts', 'tMenuProducts', ['Название', 'Вес', 'Цена'], tableItemsMenu, undefined);//["", "", 123, 888]
+    var inpFilter = $('<input class="filter">');
+    divMenuProducts.append(inpFilter, tMenuProducts);
+    inpFilter.keyup(function () {
+        var rows = tMenuProducts.find("tbody tr").hide();
+        var data = this.value.split(" ");
+        $.each(data, function (i, v) {
+            rows.filter(":contains('" + v + "')").show();
+        });
+    });
+
+//3
+    var cgOrder = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
+    cgOrder.css("width", 400);
     cgOrder.append('<div id="ordlog"></div>');
     var select = $('<select/>', {
         id: "o_selstatus",
@@ -704,47 +731,20 @@ function createOrderEditor(order) {
     }).append('<label for="status">Статус</label>');
     $(".ui-dialog-titlebar").append(select);
 //    cgOrder.append(select);
-
     cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
+    cgOrder.append('<input name="DTime" id="DTime" value="12:30" placeholder="доставить к" >');
     cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
     //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
     cgOrder.append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP">');
     cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
     //cgOrder.append('<button>Тынц</button>');
-
-    cgOrder.append('<input id="filter">');
-    var tProducts = CreateTable('table', 'tProducts0', headerItems, tableItems, footerItems);//["", "", 123, 888]
+    var tProducts = CreateTable('tProducts1', 'tProducts1', headerItems, tableItems, footerItems);//["", "", 123, 888]
     cgOrder.append(tProducts);
-
-    cgOrder.find('#filter').keyup(function () {
-        var rows = cgOrder.find("tbody").find("tr").hide();
-        var data = this.value.split(" ");
-        $.each(data, function (i, v) {
-            rows.filter(":contains('" + v + "')").show();
-        });
-    });
-
-//$('#table tbody').html(ArrayToTableItems(itemsAll));
-    //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
-
-
-
-
-//    var divHeader = $('<div/>', {
-//        id: "orderheader",
-//        class: 'ui-widget-header',
-//    });
-//    var divNumber = $('<div/>', {
-//        //id: "number",
-//    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
-//    div.append(divHeader);
-
-    //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
-
+    cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
+    cgOrder.append('<label for="pay">Метод оплаты</label><input name="pay" id="pay" value="нал, карта, онлайн">');
 
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
-
     $(select).selectmenu({
 //        create: function (event, ui) {
 ////            $('.ui-selectmenu-menu').css({'height': '100px', 'overflow': 'auto'});
@@ -784,11 +784,11 @@ function showOrderDialog(order) {
 
     //var dlgV=$('#dlgV');
     //if (!dlgV.length) {
-    var dlgV = CreateDialog('dlgV', 'Заказ ' + order.No, 'o_orderViewerDlg');
+    var dlgV = CreateDialog('dlgE', 'Заказ ' + order.No, 'o_orderEditDlg');
     //dlgV.dialog( "option", "resizable", true );
-    dlgV.dialog("option", "height", 600);
-    dlgV.dialog("option", "width", 1100);
-    console.log(order);
+    dlgV.dialog("option", "height", 700);
+    dlgV.dialog("option", "width", 1200);
+    //console.log(order);
     var ov = createOrderEditor(order);
     //ov.addClass('ul_selec');
     dlgV.append(ov.fadeIn(1000));

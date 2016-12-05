@@ -258,10 +258,8 @@
     margin-bottom: 0.2em;
 }*/
 
-.o_orderViewerDlg .orderViewer{
-    left:0;
-    right: 0;
-    top:10px;
+.o_orderEditDlg{
+    font-size: 12px;
 }
 /*.o_orderViewerDlg .orderViewer #orderheader{
     visibility: visible;
@@ -312,7 +310,7 @@
     animation: blinker 500ms linear infinite;
 }
 
-.o_orderViewerDlg .tProducts{
+.o_orderEditDlg .tProducts{
     position: absolute;
     right: 10px;
     font-size: 14px;
@@ -357,6 +355,7 @@
     width: 420px;
     padding: 6px;
     margin: 6px;
+    height: 610px;
 }
 
 .panel-map {

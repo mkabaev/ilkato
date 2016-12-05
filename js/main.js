@@ -413,6 +413,7 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     //tBody.append('<tr><td>Ролл сет Обжорка</td><td>1</td></tr>');
 
 
+
     return table;
 }
 
