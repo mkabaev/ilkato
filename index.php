@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/operator.css">
         <link rel="stylesheet" href="css/kitchen.css">
-        
+
 
         <script src="js-ext/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
         <script src="js-ext/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
@@ -19,14 +19,10 @@
         <script src="js-ext/jquery.scannerdetection.js"></script>
 
         <script src="js-ext/easy-pie-chart.js"></script>
-        <script src="js-ext/jquery.kladr.min.js"></script>
-        <script src="js-ext/jquery.filtertable.min.js"></script>
-        
-        <!--<link rel="stylesheet" href="js-ext/jquery.kladr.min.css">-->
-<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+        <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
- <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.8/css/suggestions.css" type="text/css" rel="stylesheet" />       
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.8/js/jquery.suggestions.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.8/css/suggestions.css" type="text/css" rel="stylesheet" />       
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.8/js/jquery.suggestions.min.js"></script>
 
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>

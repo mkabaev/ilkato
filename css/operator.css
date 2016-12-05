@@ -312,13 +312,6 @@
     animation: blinker 500ms linear infinite;
 }
 
-
-
-.o_orderViewerDlg fieldset{
-    width: 200px;
-    padding: 10px;
-}
-
 .o_orderViewerDlg .tProducts{
     position: absolute;
     right: 10px;
@@ -327,7 +320,7 @@
     /*    width: 600px;*/
 }
 
-.ui-controlgroup {
+/*.ui-controlgroup {
     font-size: 14px;
 }
 
@@ -341,7 +334,7 @@
 }
 .ui-controlgroup-horizontal .ui-spinner-input {
     width: 20px;
-}
+}*/
 
 /*fieldset{
     position: absolute;
@@ -384,6 +377,8 @@ input {
     color: #666;
 }
 
-.filter-table .quick { margin-left: 0.5em; font-size: 0.8em; text-decoration: none; }
-.fitler-table .quick:hover { text-decoration: underline; }
-td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
+#o_selstatus-button{
+    position: absolute;
+    right: 1px;
+    top: 1px;
+}
