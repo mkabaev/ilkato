@@ -577,6 +577,9 @@ function createOrderEditor(order) {
     cgClient.append('+7<input id="phone" placeholder="Телефон">');
     cgClient.append('<input id="name" placeholder="Имя">');
     cgClient.append('<input id="address" name="address" type="text" placeholder="Адрес">');
+    cgClient.append('<input id="kv" placeholder="кв.">');
+    cgClient.append('<input id="et" placeholder="этаж">');
+    cgClient.append('<input id="info" placeholder="Доп. инфориация">');
     cgClient.append('<div id="map" class="panel-map"></div>');
     var $address = cgClient.find('#address');
     $address.suggestions({
