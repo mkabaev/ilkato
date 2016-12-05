@@ -13,7 +13,7 @@ function searchClients($term) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
-    $stmt = $db->conn->prepare("SELECT Phone as label, idClient, idPerson, Name from v_clients where Phone like '".$term."%' limit 20");
+    $stmt = $db->conn->prepare("SELECT Phone as label, idClient, idPerson, Name from v_clients where Phone like '7".$term."%' limit 10");
 //    $stmt->bindParam(':term', $term);
     $stmt->execute();
     //$result = $stmt->fetchAll(PDO::FETCH_COLUMN);

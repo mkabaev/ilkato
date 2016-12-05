@@ -474,42 +474,30 @@ function CreateOrder(order, isOperator) {
     return divOrder;
 }
 
-//var clientsCache = {};
-var clientsCache = [
-    {
-        value: "asdasd",
-        label: "79277501811",
-        desc: "the write less, do more, JavaScript library",
-        icon: "jquery_32x32.png"
-    },
-    {
-        value: "jquery",
-        label: "jQuery",
-        desc: "the write less, do more, JavaScript library",
-        icon: "jquery_32x32.png"
-    },
-    {
-        value: "jquery-ui",
-        label: "jQuery UI",
-        desc: "the official user interface library for jQuery",
-        icon: "jqueryui_32x32.png"
-    },
-    {
-        value: "sizzlejs",
-        label: "Sizzle JS",
-        desc: "a pure-JavaScript CSS selector engine",
-        icon: "sizzlejs_32x32.png"
+function mapUpdate(address, zoom) {
+    if (address) {//&& map_created
+        var geocode = ymaps.geocode(address);
+        geocode.then(function (res) {
+            map.geoObjects.each(function (geoObject) {
+                map.geoObjects.remove(geoObject);
+            });
+
+            var position = res.geoObjects.get(0).geometry.getCoordinates(),
+                    placemark = new ymaps.Placemark(position, {}, {});
+
+            map.geoObjects.add(placemark);
+            map.setCenter(position, zoom);
+        });
     }
-];
-clientsCache = [];
+}
+
+var clientsCache = [];
+//var map = null,
+//        map_created = false;
 function createOrderEditor(order) {
     var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
     var tableItems = null;
     var footerItems = null;
-
-
-
-
 
     if (order.Products) {
         var itemsR = order.Products.filter(function (row) {
@@ -574,46 +562,107 @@ function createOrderEditor(order) {
 
     var div = $('<div/>', {
         id: "o_ordEdit",
-        class: 'ui-widget ui-widget-content',
+        //class: 'ui-widget ui-widget-content',
         //attr: {'order_id': '123', 'ts': timestamp}
     }).append('<div class="pricingPic"></div>');
 
-    var fs = $('<fieldset/>', {
-        //id: "cgClient",
-        //class: 'ui-widget ui-widget-content',
-        //class: 'controlgroup',
-//attr: {'order_id': '123', 'ts': timestamp}
-    }).append('<legend>Клиент</legend>').appendTo(div);
+//    var fs = $('<fieldset/>', {
+//        //id: "cgClient",
+//        //class: 'ui-widget ui-widget-content',
+//        //class: 'controlgroup',
+////attr: {'order_id': '123', 'ts': timestamp}
+//    }).append('<legend>Клиент</legend>').appendTo(div);
 
+    var cgClient = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
+    cgClient.append('+7<input id="phone" placeholder="Телефон">');
+    cgClient.append('<input id="name" placeholder="Имя">');
+    cgClient.append('<input id="address" name="address" type="text" placeholder="Адрес">');
+    cgClient.append('<div id="map" class="panel-map"></div>');
+    var $address = cgClient.find('#address');
+    $address.suggestions({
+        serviceUrl: "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
+        token: "eab53cb4ce6873e6346bd24d131331c637ca23bf",
+        type: "ADDRESS",
+        constraints: {
+            label: "Самара",
+            // ограничиваем поиск Новосибирском
+            locations: {
+                region: "Самарская",
+                city: "Самара"
+            },
+            // даем пользователю возможность снять ограничение
+            deletable: false
+        },
+        // в списке подсказок не показываем область и город
+        restrict_value: true,
+        //count: 5,
+        /* Вызывается, когда пользователь выбирает одну из подсказок */
+        onSelect: function (suggestion) {
+            console.log(suggestion);
+            mapUpdate(suggestion.value, 16);
+        }
+    });
 
-    var cgOrder = $('<div/>', {
-        id: "cgOrder",
-        //class: 'ui-widget ui-widget-content',
-        //class: 'controlgroup',
-//attr: {'order_id': '123', 'ts': timestamp}
-    }).appendTo(div);
-    cgOrder.append('<div id="ordlog"></div>');
-    cgOrder.append('<div><label for="comment">Комментарий:</label><input type="text" name="comment" id="comment" value="' + order.Comment + '"></div>');
-    cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
-    cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
-    cgOrder.append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP">');
-    cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
-    cgOrder.append('<button>Тынц</button>');
+    ymaps.ready(function () {
+        map = new ymaps.Map('map', {
+            center: [53.204552, 50.224026],
+            zoom: 12,
+            controls: []
+        }, {
+            //searchControlProvider: 'yandex#search'
+        });
 
-    var cgClient = $('<div/>', {
-        id: "cgClient",
-        //class: 'ui-widget ui-widget-content',
-        //class: 'controlgroup',
-//attr: {'order_id': '123', 'ts': timestamp}
-    }).appendTo(fs);
+        map.geoObjects.add(new ymaps.Placemark([53.188384, 50.141830], {
+            balloonContent: 'клиент <strong>вип</strong>'
+        }, {
+            preset: 'islands#icon',
+            iconColor: '#0095b6'
+        }));
 
-    cgClient.append('<label for="phone">Телефон:</label><input id="phone">');
-    cgClient.append('<label for="name">Имя:</label><input id="name">');
+// Создаем геообъект с типом геометрии "Точка".
+        ILKatoGeoObject = new ymaps.GeoObject({
+            // Описание геометрии.
+            geometry: {
+                type: "Point",
+                coordinates: [53.204552, 50.224026]
+            },
+            // Свойства.
+            properties: {
+                // Контент метки.
+                iconContent: 'IL-Kato',
+                hintContent: 'наша кухня'
+            }
+        }, {
+            // Опции.
+            // Иконка метки будет растягиваться под размер ее содержимого.
+            preset: 'islands#blackStretchyIcon',
+            // Метку можно перемещать.
+            //draggable: true
+        });
+        map.geoObjects.add(ILKatoGeoObject);
 
+    });
+//    ymaps.ready(function () {
+////        if (map_created)
+////           return;
+////        map_created = true;
+//        map = new ymaps.Map('map', {
+//            center: [55.76, 37.64],
+//            zoom: 12,
+//            controls: []
+//        });
+//        map.controls.add('zoomControl', {
+//            position: {
+//                right: 10,
+//                top: 10
+//            }
+//        });
+//        mapUpdate('г.Самара', 12);
+//    });
 //    div.find("#phone").autocomplete({
 //        source: clientsCache
 //    });
-    div.find("#phone").autocomplete({
+    cgClient.find("#phone").autocomplete({
         minLength: 4,
 //       source: clientsCache,
         source: function (request, response) {
@@ -641,27 +690,44 @@ function createOrderEditor(order) {
         }
     });
 
+    var cgOrder = $('<div/>', {class: 'ui-widget controlgroup'}).appendTo(div);
+    cgOrder.css("width", 560);
+    cgOrder.append('<div id="ordlog"></div>');
     var select = $('<select/>', {
         id: "selstatus",
         name: "status",
 //        class: 'ui-widget-header',
     }).append('<label for="status">Статус</label>');
-    div.append(select);
+    cgOrder.append(select);
+    cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
+    cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
+    //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
+    cgOrder.append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP">');
+    cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
+    //cgOrder.append('<button>Тынц</button>');
 
-    var divHeader = $('<div/>', {
-        id: "orderheader",
-        class: 'ui-widget-header',
+    var tProducts = CreateTable('table', 'tProducts0', headerItems, tableItems, footerItems);//["", "", 123, 888]
+    $('#table').filterTable({
+        inputSelector: '#name'
     });
-    var divNumber = $('<div/>', {
-        //id: "number",
-    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
-    div.append(divHeader);
+    cgOrder.append(tProducts);
+//$('#table tbody').html(ArrayToTableItems(itemsAll));
+    //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
+
+
+
+
+//    var divHeader = $('<div/>', {
+//        id: "orderheader",
+//        class: 'ui-widget-header',
+//    });
+//    var divNumber = $('<div/>', {
+//        //id: "number",
+//    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
+//    div.append(divHeader);
 
     //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
 
-    div.append(CreateTable('table', 'tProducts', headerItems, tableItems, footerItems));//["", "", 123, 888]
-    //$('#table tbody').html(ArrayToTableItems(itemsAll));
-    //$('#table tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
 
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]

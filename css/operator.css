@@ -324,7 +324,7 @@
     right: 10px;
     font-size: 14px;
     white-space: nowrap;
-/*    width: 600px;*/
+    /*    width: 600px;*/
 }
 
 .ui-controlgroup {
@@ -343,14 +343,47 @@
     width: 20px;
 }
 
-fieldset{
+/*fieldset{
     position: absolute;
     left: 40px;
     top: 60px;
-}
-#cgOrder{
+}*/
+/*#cgOrder{
     position: absolute;
-    left: 40px;
+    right: 40px;
     top: 160px;
-    width: 800px;
+    width: 160px;
+}*/
+
+.controlgroup{
+    /*position: absolute;*/
+    /*    right: 40px;
+        top: 160px;*/
+    margin-top: 40px;
+    float:left;
+    width: 420px;
+    padding: 6px;
+    margin: 6px;
 }
+
+.panel-map {
+    width: 400px;
+    height: 400px;
+    padding: 10px;
+    border: 1px solid #d8d8d8;
+    background: #ffffff;
+    /*background-size: 400px 250px;*/
+}
+
+input {
+    height: 2em;
+    width: 170px;
+    border: 1px solid #d8d8d8;
+    padding: 0 7px;
+    margin: 2px;
+    color: #666;
+}
+
+.filter-table .quick { margin-left: 0.5em; font-size: 0.8em; text-decoration: none; }
+.fitler-table .quick:hover { text-decoration: underline; }
+td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
