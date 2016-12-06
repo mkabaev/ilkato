@@ -701,7 +701,7 @@ function createOrderEditor(order) {
         id: "divMenuProducts",
     }).append("<h1>Меню</h1>").appendTo(cgMenu);
 
-    var tableItemsMenu = order.Products.map(function (oldItem) {
+    var tableItemsMenu = AllProducts.map(function (oldItem) {
         var newItem = {};
         newItem.id = oldItem.id;
         newItem.Name = oldItem.Name;
@@ -716,8 +716,12 @@ function createOrderEditor(order) {
         var rows = tMenuProducts.find("tbody tr").hide();
         var data = this.value.split(" ");
         $.each(data, function (i, v) {
-            rows.filter(":contains('" + v + "')").show();
+            rows.filter(":containsi('" + v + "')").show();
         });
+    });
+    tMenuProducts.find("td").click(function () {
+        $(this).parent().css("font-weight", "bold");
+        alert($(this).parent().attr("item_id"));
     });
 
 //3
@@ -738,8 +742,22 @@ function createOrderEditor(order) {
     cgOrder.append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP">');
     cgOrder.append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS">');
     //cgOrder.append('<button>Тынц</button>');
-    var tProducts = CreateTable('tProducts1', 'tProducts1', headerItems, tableItems, footerItems);//["", "", 123, 888]
+    var tProducts = CreateTable('tProducts', 'tProducts', headerItems, tableItems, footerItems);//["", "", 123, 888]
     cgOrder.append(tProducts);
+    tProducts.find("tr").hover(
+            function () {
+                $(this).append('<div ><span id="bRem" class="ui-icon ui-icon-close"></span></div>');
+                $("#bRem").click(function () {
+                    alert($(this).parent().parent().attr("item_id"));
+                    return false;
+                })
+                //jQuery( this ).css("opacity","0.5");
+            }, function () {
+        $(this).find("div:last").remove();
+        //jQuery( this ).css("opacity","1");
+    }
+    );
+
     cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
     cgOrder.append('<label for="pay">Метод оплаты</label><input name="pay" id="pay" value="нал, карта, онлайн">');
 

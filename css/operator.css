@@ -310,13 +310,17 @@
     animation: blinker 500ms linear infinite;
 }
 
-.o_orderEditDlg .tProducts{
+.o_orderEditDlg .tProducts #bRem{
+    margin: 10px;
+}
+
+/*.o_orderViewerDlg .tProducts{
     position: absolute;
     right: 10px;
     font-size: 14px;
     white-space: nowrap;
-    /*    width: 600px;*/
-}
+        width: 600px;
+}*/
 
 /*.ui-controlgroup {
     font-size: 14px;
@@ -356,6 +360,7 @@
     padding: 6px;
     margin: 6px;
     height: 610px;
+    overflow-y: auto;
 }
 
 .panel-map {
@@ -380,4 +385,16 @@ input {
     position: absolute;
     right: 1px;
     top: 1px;
+}
+
+.tMenuProducts th,.tMenuProducts td{
+    border: 0;
+}
+
+.tMenuProducts tbody tr{
+    /*border: 1px solid orange;*/
+}
+
+.tMenuProducts tbody tr:hover {
+    font-weight: bold;
 }

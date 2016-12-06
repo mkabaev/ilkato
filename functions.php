@@ -163,31 +163,22 @@ function getUsers() {
     return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
 }
 
-//function getCouriers() {
-//    $db = new DB_delivery();
-//    $query = "SELECT id, name FROM testform_courier limit 20";
-//    $stmt = $db->conn->prepare($query);
-//    $stmt->execute();
-//    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//    return json_encode($items, JSON_UNESCAPED_UNICODE);
-//}
-//function getOrderProducts($order_id) {
-//    $db = new DB_delivery();
-//    $query = 'SELECT tip.product_id,
-//        tip.count,
-//        tip.price,
-//        tip.comment,
-//        tip.income_date_time,
-//        tp.name,
-//        tp.comment ProductComment,
-//        tp.picture_id FROM testform_issue_products tip LEFT JOIN testform_menu_products tp ON tip.product_id=tp.id WHERE tip.issue_id=:order_id';
-//    $stmt = $db->conn->prepare($query);
-//    $stmt->bindParam(':order_id', $order_id);
-//    //$date = '2015.12.18';
-//    $stmt->execute();
-//    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//    return json_encode($rows, JSON_UNESCAPED_UNICODE);
-//}
+function getProducts() {
+    $db = new DB();
+    
+    $query = "SET @@group_concat_max_len:=10000000";
+    $stmt = $db->conn->prepare($query);
+    $stmt->execute();
+
+    //$query = "SELECT concat('\"Products\":[',group_concat(JSON_object('id',p.id, 'idType',p.idType, 'idPicture',p.idPicture, 'Name',p.Name, 'idGroup',p.idGroup, 'Weight',p.Weight, 'CookingTime',p.CookingTime, 'Comment',p.comment, 'idPricingType',bp.idPricingType, 'Price',bp.Price)),']') as Products FROM branches_products bp left join products p ON bp.idProduct=p.id WHERE bp.isActive=1 AND bp.idBranch=1";
+    $query = "SELECT p.id, p.idType, p.idPicture, p.Name, p.idGroup, p.Weight, p.CookingTime, p.comment, bp.idPricingType, bp.Price FROM branches_products bp left join products p ON bp.idProduct=p.id WHERE bp.isActive=1 AND bp.idBranch=1";
+    $stmt = $db->conn->prepare($query);
+    $stmt->execute();
+    //$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
+}
 
 function updateUserStatus($idPerson, $isOnline) {
     $db = new DB();

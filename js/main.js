@@ -1,3 +1,5 @@
+var AllProducts = []; //справочник продуктов
+
 function WorkPlace(name) {
     this.name = name;
     this._speed = 0;
@@ -293,7 +295,19 @@ function doInit(callback) {
 //        }, null)
 //    }); 
 
-
+//загружаем справочник продуктов, пока юзер авторизуется
+    if (localStorage.getItem("Products") === null) {
+        sendRequest('getProducts', '', function (response) {
+            AllProducts = response;
+            //console.log("LOADED:");
+            //console.log(AllProducts);
+            localStorage.Products = JSON.stringify(response);
+        });
+    } else {
+        AllProducts = JSON.parse(localStorage.Products);
+        //console.log("EXISTS:");
+        //console.log(AllProducts);
+    }
 
     if (localStorage.uid === "undefined") {
         showSelectUserDialog();
@@ -688,6 +702,15 @@ $.datepicker.regional['ru'] = {
     isRTL: false
 };
 $.datepicker.setDefaults($.datepicker.regional['ru']);
+
+// extend jquery filter for case insensitive
+$.extend($.expr[':'], {
+  'containsi': function(elem, i, match, array)
+  {
+    return (elem.textContent || elem.innerText || '').toLowerCase()
+    .indexOf((match[3] || "").toLowerCase()) >= 0;
+  }
+});
 
 $(document).ready(function () {
     //K_RequestServer();

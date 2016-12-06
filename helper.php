@@ -37,28 +37,16 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         //, JSON_NUMERIC_CHECK
         break;
-    case 'getOrderProducts':
-        echo getOrderProducts($_POST["order_id"]);
+    case 'getProducts':
+        echo getProducts();
         break;
     case 'updateOrderStatus':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
         $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_VALIDATE_INT);
         echo updateOrderStatus($idOrder, $idStatus);
         break;
-    case 'SetCourierToOrders':
-        echo SetCourierToOrders($_POST["json"], $_POST["courier_id"]);
-        break;
-    case 'getCouriers':
-        echo getCouriers();
-        break;
     case 'getUsers':
         echo getUsers();
-        break;
-    case 'SetOrderPosition':
-        echo SetOrderPosition($_POST["issue_id"], $_POST["x"], $_POST["y"]);
-        break;
-    case 'SetOrderProducts':
-        echo SetOrderProducts($_POST["issue_id"], $_POST["weightR"], $_POST["weightP"]);
         break;
     case 'updateOrderKithcenID':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
