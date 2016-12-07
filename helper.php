@@ -48,10 +48,10 @@ switch ($action) {
     case 'getUsers':
         echo getUsers();
         break;
-    case 'updateOrderKithcenID':
+    case 'updateOrderKitchenID':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
         $idKitchen = filter_input(INPUT_POST, 'idKitchen', FILTER_VALIDATE_INT);
-        echo updateOrderKithcenID($idOrder, $idKitchen);
+        echo updateOrderKitchenID($idOrder, $idKitchen);
         break;
     case 'updateOrderIdBatch':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
@@ -87,6 +87,11 @@ switch ($action) {
     case 'updateBatchesQueue':
         $ids = filter_input(INPUT_POST, 'ids');
         $result = updateBatchesQueue(json_decode($ids));
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
+        break;
+    case 'createOrder':
+        $date = filter_input(INPUT_POST, 'date');
+        $result = createOrder($date);
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'createBatch':

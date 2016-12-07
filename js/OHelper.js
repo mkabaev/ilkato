@@ -178,17 +178,17 @@ function createOperatorInterface() {
 
     var bAdd = $("<button/>", {
         //type: 'checkbox',
-        id: 'bAddBatch',
+        id: 'bCreateOrder',
         //name: 'n' + order.id
         //class: 'orderDoneButton'
-    }).appendTo(topwidget);
+    }).appendTo($("#topmenu"));
 
     bAdd.button({
         icons: {
             primary: "ui-icon-plus",
             //secondary: "ui-icon-triangle-1-s"
         },
-        text: false
+        text: 'false'
     }
     );
 //    bAdd.css({'width': '25px', 'height': '25px', })
@@ -201,7 +201,7 @@ function createOperatorInterface() {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-
+            showOrderEditor();
         sendRequest('getUsers', '', function (data) {
             console.log(data);
         });
@@ -432,7 +432,7 @@ function CreateOrder(order, isOperator) {
         var idOrder = $(this).parent().parent().parent().attr('id');
         var idKitchen = $(this).attr('idKitchen');
         console.log("updating idKitchen in order");
-        sendRequest('updateOrderKithcenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (data) {
+        sendRequest('updateOrderKitchenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (data) {
             console.log("resul:");
             console.log(data);
             var order = JSON.parse(localStorage.getItem('o_' + idOrder));

@@ -192,7 +192,7 @@ function updateUserStatus($idPerson, $isOnline) {
     return $res;
 }
 
-function updateOrderKithcenID($idOrder, $idKitchen) {
+function updateOrderKitchenID($idOrder, $idKitchen) {
     $db = new DB();
     $query = "UPDATE ilkato.orders SET idKitchen=:idKitchen WHERE id=:idOrder";
     //$query = "UPDATE employees SET isOnline=true WHERE id=3";
@@ -241,6 +241,31 @@ function updateBatch($id, $idCourier, $QueueNo) {
     $stmt->bindParam(':QueueNo', $QueueNo);
     $res = $stmt->execute();
     return $res;
+}
+
+function createOrder($date = null) {
+    $db = new DB();
+    $query = "INSERT INTO batches(isActive,DDate) VALUES (1,:date)";
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':date', $date);
+    if (!isset($date)) {
+        $date = date('Y.m.d'); //set curent
+    }
+    $res = $stmt->execute();
+    //return $db->conn->lastInsertId();
+    return $res;
+
+
+    $db = new DB();
+    $query = "SELECT * from batches where DDate=:date";
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':date', $date);
+    //$date = date('Y.m.d');
+    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
+    $stmt->execute();
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    return $items;
 }
 
 function createBatch($date = null) {
