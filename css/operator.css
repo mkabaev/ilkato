@@ -56,6 +56,7 @@
     border: 1px solid #009933;
     background: limegreen;
 }
+.ord-workplace-4 th,.ord-workplace-4 tbody td{border-color: limegreen;}
 /*.ord-workplace-4.ui-widget {
     background: #ccffcc;
 }*/
@@ -310,8 +311,17 @@
     animation: blinker 500ms linear infinite;
 }
 
-.o_orderEditDlg .tProducts #bRem{
-    margin: 10px;
+/*.o_orderEditDlg .tProducts .rowButton{
+    right: 5px;
+    position: absolute;
+}*/
+
+.o_orderEditDlg .tProducts{
+    width: 100%;
+}
+
+.o_orderEditDlg #divProducts{
+    width: 100%;
 }
 
 /*.o_orderViewerDlg .tProducts{
@@ -359,8 +369,36 @@
     width: 420px;
     padding: 6px;
     margin: 6px;
-    height: 610px;
+    height: 574px;
     overflow-y: auto;
+}
+
+.controlgroup #phone, .controlgroup #phone2{
+    width: 70px;
+}
+.controlgroup #card{
+    width: 50px;
+}
+.controlgroup #name{
+    width: 126px;
+}
+.controlgroup #address{
+    width: 418px;
+}
+.controlgroup #et{
+    width: 26px;
+}
+.controlgroup #info{
+    width: 340px;
+}
+.controlgroup #comment{
+    width: 370px;
+}
+.controlgroup #DTime{
+    width: 30px;
+}
+.controlgroup #DTime{
+    width: 30px;
 }
 
 .panel-map {
@@ -382,9 +420,7 @@ input {
 }
 
 #o_selstatus-button{
-    position: absolute;
-    right: 1px;
-    top: 1px;
+float: right;
 }
 
 .tMenuProducts th,.tMenuProducts td{
@@ -397,4 +433,9 @@ input {
 
 .tMenuProducts tbody tr:hover {
     font-weight: bold;
+}
+
+#bOk{
+    width: 100px;
+    float: bottom;
 }

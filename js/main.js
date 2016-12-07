@@ -1,5 +1,3 @@
-var AllProducts = []; //справочник продуктов
-
 function WorkPlace(name) {
     this.name = name;
     this._speed = 0;
@@ -32,7 +30,7 @@ WorkPlace.prototype.stop = function () {
     alert(this.name + ' стоит');
 };
 
-var wp = new WorkPlace('blaa');
+//.var wp = new WorkPlace('blaa');
 
 
 function printHTML(htmlTemplate, order) {
@@ -165,7 +163,7 @@ function createSelectPanel(id, _class, items, callback) {
     return div;
 }
 
-function CreateDialog(id, caption, _class) {
+function CreateDialog(id, caption, _class, enableAnimation = true) {
     var divDialog = $('<div/>', {
         //id: 'dlg_' + id,
         id: id,
@@ -182,27 +180,31 @@ function CreateDialog(id, caption, _class) {
         autoOpen: false,
         modal: true,
         resizable: false,
-        show: {
-            effect: "blind",
-            duration: 300
-        },
-        hide: {
-            effect: "explode",
-            duration: 300
-        },
+//        show: {
+//            effect: "blind",
+//            duration: 300
+//        },
+//        hide: {
+//            effect: "explode",
+//            duration: 300
+//        },
         open: function () {
             $('.ui-widget-overlay').bind('click', function () {
                 divDialog.dialog('close');
                 divDialog.dialog('destroy');
             })
         },
-        close: function () {
-            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
-//            $(this).dialog('destroy').remove();
-            $(this).remove();
-        },
-        dialogClass: "noclose"
+//        close: function () {
+//            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
+////            $(this).dialog('destroy').remove();
+//            $(this).remove();
+//        },
+        dialogClass: "noclose"//+_class
     });
+    if (enableAnimation){
+        divDialog.dialog("option", "show", {effect: "blind", duration: 300});
+        divDialog.dialog("option", "hide", {effect: "explode", duration: 300});
+    }
     return divDialog;
 }
 
@@ -432,7 +434,7 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
 }
 
 function UpdateTableItems(table, tableItems) {
-    $(table > 'tbody').html(ArrayToTableItems(tableItems));
+    $(table).find('tbody').html(ArrayToTableItems(tableItems));
 }
 
 function ArrayToTableHeader(headerItems) {
@@ -705,11 +707,11 @@ $.datepicker.setDefaults($.datepicker.regional['ru']);
 
 // extend jquery filter for case insensitive
 $.extend($.expr[':'], {
-  'containsi': function(elem, i, match, array)
-  {
-    return (elem.textContent || elem.innerText || '').toLowerCase()
-    .indexOf((match[3] || "").toLowerCase()) >= 0;
-  }
+    'containsi': function (elem, i, match, array)
+    {
+        return (elem.textContent || elem.innerText || '').toLowerCase()
+                .indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
 });
 
 $(document).ready(function () {

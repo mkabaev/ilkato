@@ -28,10 +28,11 @@
         <script src="js/services.js"></script>
         <script src="js/KHelper.js"></script>
         <script src="js/OHelper.js"></script>
+        <script src="js/orderEditor.js"></script>
         <script src="js/timer.js"></script>
     </head>
     <body>
-        <div id="topmenu" class="ui-widget ui-state-focus" style="height:24px;">
+        <div id="topmenu" class="ui-widget ui-state-focus" style="height:42px;">
             <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
             <div id="settings" title="Please provide your firstname." ><span class="ui-icon ui-icon-gear"></span>Настройки</div>
         </div>
