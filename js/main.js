@@ -163,7 +163,7 @@ function createSelectPanel(id, _class, items, callback) {
     return div;
 }
 
-function CreateDialog(id, caption, _class, enableAnimation = true) {
+function CreateDialog(id, caption, _class, enableAnimation) {
     var divDialog = $('<div/>', {
         //id: 'dlg_' + id,
         id: id,
@@ -194,14 +194,14 @@ function CreateDialog(id, caption, _class, enableAnimation = true) {
                 divDialog.dialog('destroy');
             })
         },
-//        close: function () {
-//            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
-////            $(this).dialog('destroy').remove();
-//            $(this).remove();
-//        },
+        close: function () {
+            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
+//            $(this).dialog('destroy').remove();
+            $(this).remove();
+        },
         dialogClass: "noclose"//+_class
     });
-    if (enableAnimation){
+    if (enableAnimation===undefined) {
         divDialog.dialog("option", "show", {effect: "blind", duration: 300});
         divDialog.dialog("option", "hide", {effect: "explode", duration: 300});
     }

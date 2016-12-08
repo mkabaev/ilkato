@@ -294,12 +294,11 @@ function createOrderEditor(order) {
         var target = $(e.target);
         var id = target.attr("item_id"); //id kitchen
         var dlg = target.parent().parent();
-        dlg.removeClass('ord-workplace-3 ord-workplace-4');
+        dlg.removeClass('ord-workplace-3 ord-workplace-4 ord-workplace-null');
         dlg.addClass("ord-workplace-" + id);
         //if (target.is(":checked")) {
         //} else {
         //}
-
 //        alert(target.attr("id"));
     });
 
