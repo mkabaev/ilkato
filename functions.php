@@ -245,7 +245,7 @@ function updateBatch($id, $idCourier, $QueueNo) {
 
 function createOrder($date = null) {
     $db = new DB();
-    $query = "INSERT INTO batches(isActive,DDate) VALUES (1,:date)";
+    $query = "INSERT INTO orders(asd,DDate) VALUES (1,:date)";
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':date', $date);
     if (!isset($date)) {

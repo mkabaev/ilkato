@@ -370,7 +370,19 @@
     padding: 6px;
     margin: 6px;
     height: 574px;
+}
+
+.controlgroup #divMenuProducts{
+    height: 480px;
+    margin-top: 10px;
     overflow-y: auto;
+    float: bottom;
+}
+.controlgroup #divProducts{
+    height: 480px;
+    margin-top: 10px;
+    overflow-y: auto;
+    float: bottom;
 }
 
 .controlgroup #phone, .controlgroup #phone2{

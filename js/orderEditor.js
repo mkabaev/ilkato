@@ -206,9 +206,12 @@ function createOrderEditor(order) {
 //2
     var cgMenu = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
     cgMenu.css("width", 270);
+    cgMenu.append("<h1>Меню</h1>")
+    var inpFilter = $('<input class="filter">');
+    cgMenu.append(inpFilter);
     var divMenuProducts = $('<div/>', {
         id: "divMenuProducts",
-    }).append("<h1>Меню</h1>").appendTo(cgMenu);
+    }).appendTo(cgMenu);
 
     var tableItemsMenu = AllProducts.map(function (oldItem) {
         var newItem = {};
@@ -219,8 +222,7 @@ function createOrderEditor(order) {
         return newItem;
     });
     var tMenuProducts = CreateTable('tMenuProducts', 'tMenuProducts', ['Название', 'Вес', 'Цена'], tableItemsMenu, undefined);//["", "", 123, 888]
-    var inpFilter = $('<input class="filter">');
-    divMenuProducts.append(inpFilter, tMenuProducts);
+    divMenuProducts.append(tMenuProducts);
     inpFilter.keyup(function () {
         var rows = tMenuProducts.find("tbody tr").hide();
         var data = this.value.split(" ");
