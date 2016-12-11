@@ -126,11 +126,11 @@ function getSessionUpdates($id_session) {
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
 //$db->conn->beginTransaction();
-    
+
     $stmt = $db->conn->prepare("SELECT * from app_sessiondata where id_session=:id_session");
-    
-    
-    
+
+
+
     $stmt->bindParam(':id_session', $id_session);
     //$date = date('Y.m.d');
     //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
@@ -165,7 +165,7 @@ function getUsers() {
 
 function getProducts() {
     $db = new DB();
-    
+
     $query = "SET @@group_concat_max_len:=10000000";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
@@ -243,29 +243,29 @@ function updateBatch($id, $idCourier, $QueueNo) {
     return $res;
 }
 
-function createOrder($date = null) {
+function createOrder($order) {
     $db = new DB();
-    $query = "INSERT INTO orders(asd,DDate) VALUES (1,:date)";
+    //SELECT MAX(No)+1 from orders WHERE DDate='2016-11-27'
+    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,:idStatus,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:DDate,:DTime)";
     $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':date', $date);
+    $stmt->bindParam(':idBranch', $idBranch);
+    $stmt->bindParam(':idClient', $idClient);
+    $stmt->bindParam(':idPricingType', $idPricingType);
+    $stmt->bindParam(':idStatus', $idStatus);
+    $stmt->bindParam(':idKitchen', $idKitchen);
+    $stmt->bindParam(':idBatch', $idBatch);
+    $stmt->bindParam(':idCreatedBy', $idCreatedBy);
+    $stmt->bindParam(':Price', $Price);
+    $stmt->bindParam(':Comment', $Comment);
+    $stmt->bindParam(':QueueNo', $QueueNo);
+    $stmt->bindParam(':DDate', $DDate);
+    $stmt->bindParam(':DTime', $DTime);
     if (!isset($date)) {
         $date = date('Y.m.d'); //set curent
     }
     $res = $stmt->execute();
     //return $db->conn->lastInsertId();
     return $res;
-
-
-    $db = new DB();
-    $query = "SELECT * from batches where DDate=:date";
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':date', $date);
-    //$date = date('Y.m.d');
-    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
-    $stmt->execute();
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
-    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
-    return $items;
 }
 
 function createBatch($date = null) {
@@ -277,10 +277,8 @@ function createBatch($date = null) {
         $date = date('Y.m.d'); //set curent
     }
     $res = $stmt->execute();
-    return $res;
+    //return $res;
 
-
-    $db = new DB();
     $query = "SELECT * from batches where DDate=:date";
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':date', $date);

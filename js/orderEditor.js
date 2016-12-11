@@ -371,6 +371,7 @@ function createOrderEditor(order) {
     //cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
     cgOrder.append(selectPayType);
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
+//"Client":{"id":20914,"Code":"","Flat":27,"Name":"","Floor":8,"Phone":79376436017,"Street":"антоново овсеенко","Building":"59В","Entrance":1}
 
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
     //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]

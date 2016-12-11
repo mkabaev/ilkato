@@ -201,7 +201,7 @@ function CreateDialog(id, caption, _class, enableAnimation) {
         },
         dialogClass: "noclose"//+_class
     });
-    if (enableAnimation===undefined) {
+    if (enableAnimation === undefined) {
         divDialog.dialog("option", "show", {effect: "blind", duration: 300});
         divDialog.dialog("option", "hide", {effect: "explode", duration: 300});
     }
@@ -661,6 +661,38 @@ function setItemsToLS(prefix, data) {
             console.log('ERROR setItemstoLS: val is null');
         }
     });
+}
+
+//собирает необходимые данные для создания заказа на сервере. Если клиент новый, то отправляются данные клиента вместо его id
+function prepareDataToCreateOrderOnServer(order) {
+    var Client = {};
+    if (order.Client.id) {
+        Client = {id: order.Client.id}
+    } else {
+        Client = order.Client;
+    }
+    var Products = order.Products.map(function (oldItem) {
+        var newItem = {};
+        newItem.id = oldItem.id;
+        return newItem;
+    });
+
+    var newOrder = {
+        idBranch: order.idBranch,
+        idPricingType: order.idPricingType,
+        idStatus: order.idStatus,
+        idKitchen: order.idKitchen,
+        idBatch: order.idBatch,
+        idCreatedBy: order.idCreatedBy,
+        Price: order.Price,
+        Comment: order.Comment,
+        QueueNo: order.QueueNo,
+        DDate: order.DDate,
+        DTime: order.DTime,
+        Client: Client,
+        Products: Products,
+    }
+    return newOrder;
 }
 
 function idStatusToString(idStatus) {
