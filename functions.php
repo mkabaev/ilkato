@@ -248,21 +248,21 @@ function createOrder($order) {
     //SELECT MAX(No)+1 from orders WHERE DDate='2016-11-27'
     $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,:idStatus,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:DDate,:DTime)";
     $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':idBranch', $idBranch);
-    $stmt->bindParam(':idClient', $idClient);
-    $stmt->bindParam(':idPricingType', $idPricingType);
-    $stmt->bindParam(':idStatus', $idStatus);
-    $stmt->bindParam(':idKitchen', $idKitchen);
-    $stmt->bindParam(':idBatch', $idBatch);
-    $stmt->bindParam(':idCreatedBy', $idCreatedBy);
-    $stmt->bindParam(':Price', $Price);
-    $stmt->bindParam(':Comment', $Comment);
-    $stmt->bindParam(':QueueNo', $QueueNo);
-    $stmt->bindParam(':DDate', $DDate);
-    $stmt->bindParam(':DTime', $DTime);
-    if (!isset($date)) {
-        $date = date('Y.m.d'); //set curent
-    }
+    $stmt->bindParam(':idBranch', $order['idBranch']);
+    $stmt->bindParam(':idClient', $order['idClient']);
+    $stmt->bindParam(':idPricingType', $order['idPricingType']);
+    $stmt->bindParam(':idStatus', $order['idStatus']);
+    $stmt->bindParam(':idKitchen', $order['idKitchen']);
+    $stmt->bindParam(':idBatch', $order['idBatch']);
+    $stmt->bindParam(':idCreatedBy', $order['idCreatedBy']);
+    $stmt->bindParam(':Price', $order['Price']);
+    $stmt->bindParam(':Comment', $order['Comment']);
+    $stmt->bindParam(':QueueNo', $order['QueueNo']);
+    $stmt->bindParam(':DDate', $order['DDate']);
+    $stmt->bindParam(':DTime', $order['DTime']);
+//    if (!isset($order['DDate'])) {
+//        $order['DDate'] = date('Y.m.d'); //set curent
+//    }
     $res = $stmt->execute();
     //return $db->conn->lastInsertId();
     return $res;

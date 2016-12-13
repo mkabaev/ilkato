@@ -231,19 +231,21 @@ function createOrderEditor(order) {
         });
     });
     tMenuProducts.find("tr").click(function () {
-        var idProduct=parseInt($(this).attr("item_id"));
+        var idProduct = parseInt($(this).attr("item_id"));
         //$(this).css("font-weight", "bold");
 
         //alert($(this).parent().attr("item_id"));
         //var tProducts = CreateTable('tProducts', 'tProducts', headerItems, tableItems, footerItems);//["", "", 123, 888]
         //divProducts.append(tProducts);
-        var newProduct=AllProducts.find(function(thisArg){return thisArg.id===idProduct;});
-        newProduct.Count=1; //add record
-        var Products=[];
-        Products=order.Products;
+        var newProduct = AllProducts.find(function (thisArg) {
+            return thisArg.id === idProduct;
+        });
+        newProduct.Count = 1; //add record
+        var Products = [];
+        Products = order.Products;
         Products.push(newProduct);
         //console.log(Products);
-        order.Products=Products;
+        order.Products = Products;
         tableItems = order.Products.map(function (oldItem) {
             var newItem = {};
             newItem.id = oldItem.id;
@@ -374,6 +376,14 @@ function createOrderEditor(order) {
     selectPayType.selectmenu('refresh', true);
     //cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
+    cgOrder.children('#bOk').click(function () {
+        alert('sdfgh');
+//        var json;
+//        sendRequest('CreateOrder', 'order=' + json, function (response) {
+//            console.log(response);
+//        });
+
+    });
 //"Client":{"id":20914,"Code":"","Flat":27,"Name":"","Floor":8,"Phone":79376436017,"Street":"антоново овсеенко","Building":"59В","Entrance":1}
 
     select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));

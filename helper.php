@@ -90,8 +90,8 @@ switch ($action) {
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'createOrder':
-        $date = filter_input(INPUT_POST, 'date');
-        $result = createOrder($date);
+        $json = filter_input(INPUT_POST, 'order');
+        $result = createOrder(json_decode($json,TRUE));
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'createBatch':
