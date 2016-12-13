@@ -311,13 +311,17 @@
     animation: blinker 500ms linear infinite;
 }
 
-/*.o_orderEditDlg .tProducts .rowButton{
-    right: 5px;
-    position: absolute;
-}*/
+.o_orderEditDlg .tProducts .rowButton{
+    /*right: 5px;*/
+    /*position: absolute;*/
+    padding: 0;
+    margin: 0;
+    float: right;
+}
 
 .o_orderEditDlg .tProducts{
-    width: 100%;
+    width: 450px;
+    /*table-layout: fixed;*/
 }
 
 .o_orderEditDlg #divProducts{

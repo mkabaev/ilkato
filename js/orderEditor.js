@@ -267,7 +267,7 @@ function createOrderEditor(order) {
 
 //3
     var cgOrder = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
-    cgOrder.css("width", 400);
+    cgOrder.css("width", 460);
     cgOrder.append('<div id="ordlog"></div>');
     var select = $('<select/>', {
         id: "o_selstatus",
@@ -277,7 +277,10 @@ function createOrderEditor(order) {
     $(".ui-dialog-titlebar").append(select);
     $(".ui-dialog-titlebar").append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP" item_id=3>');
     $(".ui-dialog-titlebar").append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS" item_id=4>');
+    $(".ui-dialog-titlebar").append('<label for="DTime">Доставить к</label><input name="DTime" id="DTime" value="12:30">');
+    $(".ui-dialog-titlebar").append('<label for="self">Савмовывоз</label><input type="checkbox" name="self" id="self">');
     $("#rP,#rNS").checkboxradio();
+    $("#self").checkboxradio();
 
     switch (order.idKitchen) {
         case 3:
@@ -306,8 +309,6 @@ function createOrderEditor(order) {
 
 //    cgOrder.append(select);
     cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
-    cgOrder.append('<label for="DTime">Доставить к</label><input name="DTime" id="DTime" value="12:30">');
-    cgOrder.append('<label for="insurance">Савмовывоз</label><input type="checkbox" name="insurance" id="insurance">');
     //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
 
     var divProducts = $('<div/>', {
@@ -324,25 +325,28 @@ function createOrderEditor(order) {
         //    return false;
         //})
     });
-//    tProducts.find("tbody tr").hover(
-//            function () {
+    tProducts.find("tbody tr").hover(
+            function () {
 //                $(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
-//                $("#bRem").click(function () {
-//                    alert($(this).parent().parent().attr("item_id"));
-//                    return false;
-//                })
-//                //jQuery( this ).css("opacity","0.5");
-//            }, function () {
-//        $(this).find("div:last").remove();
-//        //jQuery( this ).css("opacity","1");
-//    }
-//    );
+                $(this).children().last().append('<span id="bRem" class="ui-icon ui-icon-close rowButton"></span>');
+                $("#bRem").click(function () {
+                    alert($(this).parent().parent().attr("item_id"));
+                    return false;
+                });
+                //jQuery( this ).css("opacity","0.5");
+            }, function () {
+        //$(this).find("div:last").remove();
+        $(this).find("span:last").remove();
+        //jQuery( this ).css("opacity","1");
+    }
+    );
 
     var selectPayType = $('<select/>', {
         id: "o_paytype",
         name: "paytype",
 //        class: 'ui-widget-header',
     }).append('<label for="paytype">Тип оплаты</label>');
+    cgOrder.append(selectPayType);
     selectPayType.append(ArrayToOptionItems(["Ниличными", "Картой", "Онлайн"]));
     selectPayType.selectmenu({
 //        create: function (event, ui) {
@@ -369,7 +373,6 @@ function createOrderEditor(order) {
     selectPayType.val(1);
     selectPayType.selectmenu('refresh', true);
     //cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
-    cgOrder.append(selectPayType);
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
 //"Client":{"id":20914,"Code":"","Flat":27,"Name":"","Floor":8,"Phone":79376436017,"Street":"антоново овсеенко","Building":"59В","Entrance":1}
 
