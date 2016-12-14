@@ -241,11 +241,12 @@ function createOrderEditor(order) {
             return thisArg.id === idProduct;
         });
         newProduct.Count = 1; //add record
-        var Products = [];
-        Products = order.Products;
-        Products.push(newProduct);
-        //console.log(Products);
-        order.Products = Products;
+        order.Products.push(newProduct);
+        //var Products = [];
+        //Products = order.Products;
+        //Products.push(newProduct);
+        console.log(order.Products);
+        //order.Products = Products;
         tableItems = order.Products.map(function (oldItem) {
             var newItem = {};
             newItem.id = oldItem.id;
@@ -257,14 +258,9 @@ function createOrderEditor(order) {
             return newItem;
         });
         UpdateTableItems(tProducts, tableItems);
-        $(tProducts.find("tbody tr")).click(function () {
-            //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
-            //$("#bRem").click(function () {
-            $(this).empty();
-//alert($(this).attr("item_id"));
-            //    return false;
-            //})
-        });
+        bindEventsToTable(tProducts);
+
+
     });
 
 //3
@@ -330,6 +326,7 @@ function createOrderEditor(order) {
 //        },
         onSelect: function () {
             var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+            order.DDate = dt;
             //selectDate(dt);
         }
     });
@@ -344,29 +341,8 @@ function createOrderEditor(order) {
 
     var tProducts = CreateTable('tProducts', 'tProducts', headerItems, tableItems, footerItems);//["", "", 123, 888]
     divProducts.append(tProducts);
-    $(tProducts.find("tbody tr")).dblclick(function () {
-        //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
-        //$("#bRem").click(function () {
-        //alert($(this).attr("item_id"));
-        //    return false;
-        //})
-    });
-    tProducts.find("tbody tr").hover(
-            function () {
-//                $(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
-                $(this).children().last().append('<span id="bRem" class="ui-icon ui-icon-close rowButton"></span>');
-                $("#bRem").click(function () {
-                    //alert($(this).parent().parent().attr("item_id"));
-                    $(this).parent().parent().remove();
-                    return false;
-                });
-                //jQuery( this ).css("opacity","0.5");
-            }, function () {
-        //$(this).find("div:last").remove();
-        $(this).find("span:last").remove();
-        //jQuery( this ).css("opacity","1");
-    }
-    );
+
+    bindEventsToTable(tProducts);
 
     var selectPayType = $('<select/>', {
         id: "o_paytype",
@@ -402,7 +378,7 @@ function createOrderEditor(order) {
     //cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
     cgOrder.children('#bOk').click(function () {
-        alert('sdfgh');
+        console.log(order);
 //        var json;
 //        sendRequest('CreateOrder', 'order=' + json, function (response) {
 //            console.log(response);
@@ -428,14 +404,19 @@ function createOrderEditor(order) {
 //            at: "left top+20"
 //        },
         change: function (event, ui) {
-            var idOrder = parseInt($('#ordViewer').attr("idOrder"));
-            var idStatus = parseInt($(this).val()) + 1;
-            sendRequest('updateOrderStatus', 'idOrder=' + idOrder + '&idStatus=' + idStatus, function (response) {
-                console.log(response);
-            });
+            order.idStatus = parseInt($(this).val()) + 1;
+            if (order.id !== null)//если заказ редактируется (а не создается)
+            {
+                sendRequest('updateOrderStatus', 'idOrder=' + order.id + '&idStatus=' + order.idStatus, function (response) {
+                    console.log(response);
+                });
+
+            }
+            //var idOrder = parseInt($('#ordViewer').attr("idOrder"));
+            //var idStatus = parseInt($(this).val()) + 1;
         }
     });
-    select.val(order.idStatus - 1);
+    select.val(order.idStatus === null ? 0 : order.idStatus - 1);
     select.selectmenu('refresh', true);
 
     cgClient.controlgroup({
@@ -451,8 +432,8 @@ function createOrderEditor(order) {
 }
 
 function showOrderEditor(order) {
-    if (order===undefined){
-        order=createEmptyOrderObj();
+    if (order === undefined) {
+        order = createEmptyOrderObj();
     }
     var dlg = CreateDialog('dlgE', 'Заказ ' + order.No, 'o_orderEditDlg', false);
     //dlgV.dialog( "option", "resizable", true );
@@ -466,20 +447,58 @@ function showOrderEditor(order) {
 }
 
 function createEmptyOrderObj() {
-    var order={};
-    order.id=null;
-    order.No=null;
-    order.idBranch=null;
-    order.idClient=null;
-    order.idPricingType=null;
-    order.idStatus=null;
-    order.idKitchen=null;
-    order.idBatch=null;
-    order.idCreatedBy=null;
-    order.Price=null;
-    order.Comment=null;
-    order.QueueNo=null;
-    order.DDate=null;
-    order.DTime=null;
+    var order = {};
+    order.id = null;
+    order.No = null;
+    order.idBranch = null;
+    order.idClient = null;
+    order.idPricingType = null;
+    order.idStatus = null;
+    order.idKitchen = null;
+    order.idBatch = null;
+    order.idCreatedBy = null;
+    order.Price = null;
+    order.Comment = null;
+    order.QueueNo = null;
+    order.DDate = null;
+    order.DTime = null;
+    order.Products = [];
+    order.Client = {};
     return order;
+}
+
+function bindEventsToTable(table) {
+    table.find("tbody tr").hover(
+            function () {
+//                $(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
+                $(this).children().last().append('<span id="bRem" class="ui-icon ui-icon-close rowButton"></span>');
+                $("#bRem").click(function () {
+                    //alert($(this).parent().parent().attr("item_id"));
+                    $(this).parent().parent().remove();
+                    return false;
+                });
+                //jQuery( this ).css("opacity","0.5");
+            }, function () {
+        //$(this).find("div:last").remove();
+        $(this).find("span:last").remove();
+        //jQuery( this ).css("opacity","1");
+    }
+    );
+
+    table.find("tbody tr").dblclick(function () {
+        //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
+        //$("#bRem").click(function () {
+        //alert($(this).attr("item_id"));
+        //    return false;
+        //})
+    });
+    
+    table.find("tbody tr").click(function () {
+        //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
+        //$("#bRem").click(function () {
+        $(this).empty();
+//alert($(this).attr("item_id"));
+        //    return false;
+        //})
+    });
 }
