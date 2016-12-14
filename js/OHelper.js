@@ -202,9 +202,9 @@ function createOperatorInterface() {
 //            IDs.push($(this).attr("idBatch"));
 //        });
             showOrderEditor();
-        sendRequest('getUsers', '', function (data) {
-            console.log(data);
-        });
+//        sendRequest('getUsers', '', function (data) {
+//            console.log(data);
+//        });
 //        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
         //      sendRequest('createBatch', 'date=' + dt, function (response) {
         //        console.log(response);

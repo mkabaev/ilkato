@@ -276,11 +276,11 @@ function createOrderEditor(order) {
         name: "status",
 //        class: 'ui-widget-header',
     }).append('<label for="status">Статус</label>');
-    $(".ui-dialog-titlebar").append(select);
-    $(".ui-dialog-titlebar").append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP" item_id=3>');
-    $(".ui-dialog-titlebar").append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS" item_id=4>');
-    $(".ui-dialog-titlebar").append('<label for="DTime">Доставить к</label><input name="DTime" id="DTime" value="12:30">');
-    $(".ui-dialog-titlebar").append('<label for="self">Савмовывоз</label><input type="checkbox" name="self" id="self">');
+    $('.ui-dialog-titlebar').append(select);
+    $('.ui-dialog-titlebar').append('<label for="rP">Печерская</label><input type="radio" name="chkPlace" id="rP" item_id=3>');
+    $('.ui-dialog-titlebar').append('<label for="rNS">Ново-Садовая</label><input type="radio" name="chkPlace" id="rNS" item_id=4>');
+    $('.ui-dialog-titlebar').append('<label for="self">Савмовывоз</label><input type="checkbox" name="self" id="self">');
+
     $("#rP,#rNS").checkboxradio();
     $("#self").checkboxradio();
 
@@ -309,6 +309,30 @@ function createOrderEditor(order) {
 //        alert(target.attr("id"));
     });
 
+    var cgDDate = $('<div/>', {class: 'ui-widget controlgroupDDate ui-controlgroup-horizontal'}).appendTo(cgOrder);
+    cgDDate.append('Дата: <input type="text" id="DDate"/>');
+    cgDDate.append('<label for="DTime">Доставить к</label><input name="DTime" id="DTime" value="12:30">');
+    //localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
+
+    cgDDate.children("#DDate").datepicker({
+        showOn: "button",
+        buttonImage: "images/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date",
+        //minDate: -1,
+        //maxDate: "+1M +10D",
+        //maxDate: +3,
+        //dateFormat: "yy-mm-dd",
+//        beforeShowDay: function (date) {
+//            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+//            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
+//            return [localStorage.dates.indexOf(string) != -1]
+//        },
+        onSelect: function () {
+            var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+            //selectDate(dt);
+        }
+    });
 //    cgOrder.append(select);
     cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
     //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
@@ -323,7 +347,7 @@ function createOrderEditor(order) {
     $(tProducts.find("tbody tr")).dblclick(function () {
         //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
         //$("#bRem").click(function () {
-        alert($(this).attr("item_id"));
+        //alert($(this).attr("item_id"));
         //    return false;
         //})
     });
@@ -332,7 +356,8 @@ function createOrderEditor(order) {
 //                $(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
                 $(this).children().last().append('<span id="bRem" class="ui-icon ui-icon-close rowButton"></span>');
                 $("#bRem").click(function () {
-                    alert($(this).parent().parent().attr("item_id"));
+                    //alert($(this).parent().parent().attr("item_id"));
+                    $(this).parent().parent().remove();
                     return false;
                 });
                 //jQuery( this ).css("opacity","0.5");
@@ -426,6 +451,9 @@ function createOrderEditor(order) {
 }
 
 function showOrderEditor(order) {
+    if (order===undefined){
+        order=createEmptyOrderObj();
+    }
     var dlg = CreateDialog('dlgE', 'Заказ ' + order.No, 'o_orderEditDlg', false);
     //dlgV.dialog( "option", "resizable", true );
     dlg.dialog("option", "height", 700);
@@ -437,3 +465,21 @@ function showOrderEditor(order) {
     dlg.dialog('open');
 }
 
+function createEmptyOrderObj() {
+    var order={};
+    order.id=null;
+    order.No=null;
+    order.idBranch=null;
+    order.idClient=null;
+    order.idPricingType=null;
+    order.idStatus=null;
+    order.idKitchen=null;
+    order.idBatch=null;
+    order.idCreatedBy=null;
+    order.Price=null;
+    order.Comment=null;
+    order.QueueNo=null;
+    order.DDate=null;
+    order.DTime=null;
+    return order;
+}

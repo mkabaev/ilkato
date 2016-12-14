@@ -408,13 +408,22 @@
     width: 340px;
 }
 .controlgroup #comment{
-    width: 370px;
+    width: 410px;
 }
-.controlgroup #DTime{
+
+.controlgroupDDate{
+    float: right;
+}
+.controlgroupDDate input,.controlgroupDDate img,.controlgroupDDate label{
+    margin-left: 2px;
+    margin-right: 2px;
+    vertical-align: middle;
+}
+.controlgroupDDate #DTime{
     width: 30px;
 }
-.controlgroup #DTime{
-    width: 30px;
+.controlgroupDDate #DDate{
+    width: 70px;
 }
 
 .panel-map {

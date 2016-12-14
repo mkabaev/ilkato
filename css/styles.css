@@ -46,7 +46,7 @@ body {
 }*/
 
 /*select menu hack*/
-.ui-dialog{
+.ui-dialog,.ui-dialog-titlebar{
 z-index: 100 !important;
 }
 
