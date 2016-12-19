@@ -1,14 +1,14 @@
 var clientsCache = [];//сюда кэшируем клиентов для поиска по номеру телефона
 var AllProducts = []; //справочник продуктов
-
+var curOrder = {};
 //var map = null,
 //        map_created = false;
-function createOrderEditor(order) {
-    if (order.Products) {
-        var itemsR = order.Products.filter(function (row) {
+function createOrderEditor() { //TODO  all orders to global
+    if (curOrder.Products) {
+        var itemsR = curOrder.Products.filter(function (row) {
             return row.idType === 1;
         });
-        var itemsP = order.Products.filter(function (row) {
+        var itemsP = curOrder.Products.filter(function (row) {
             return row.idType === 2;
         });
         var coockingTimeR = calcCoockingTime(itemsR, 1);
@@ -42,7 +42,7 @@ function createOrderEditor(order) {
         var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
         var tableItems = null;
         var footerItems = null;
-        tableItems = order.Products.map(function (oldItem) {
+        tableItems = curOrder.Products.map(function (oldItem) {
             var newItem = {};
             newItem.id = oldItem.id;
             newItem.Name = oldItem.Name;
@@ -176,7 +176,7 @@ function createOrderEditor(order) {
 //        source: clientsCache
 //    });
     cgClient.find("#phone, #phone2").autocomplete({
-        minLength: 4,
+        minLength: 5,
 //       source: clientsCache,
         source: function (request, response) {
             var term = request.term;
@@ -193,15 +193,35 @@ function createOrderEditor(order) {
             });
         },
         focus: function (event, ui) {
+            $(this).val(ui.item.label);
             console.log(ui.item.idPerson);
-            //return false;
+            return false;
         },
         select: function (event, ui) {
-            console.log(ui.item);
-            //$("#name").val(ui.item.idClient);
             //return false;
+        },
+        change: function (event, ui) {
+            console.log(ui.item);hh
+            //if (!ui.item) {
+            //    console.log('new client');
+            //    curOrder.Client.Phones=$(this).val();
+            //}
+            //$("#name").val(ui.item.idClient);
+        },
+    })
+            .autocomplete("instance")._renderItem = function (ul, item) {
+        var nm = "";
+        if (item.Name !== "") {
+            nm = '<br>' + item.Name;
         }
-    });
+        var cm = "";
+        if (item.Comment !== "") {
+            cm = '<br>' + item.Comment;
+        }
+        return $("<li>")
+                .append('<div style="margin-left:20px;"><img style="position:absolute; left:-18px;" src="images/user16.png">' + item.label + '<i>' + nm + cm + '</i></div>')
+                .appendTo(ul);
+    };
 
 //2
     var cgMenu = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
@@ -241,13 +261,13 @@ function createOrderEditor(order) {
             return thisArg.id === idProduct;
         });
         newProduct.Count = 1; //add record
-        order.Products.push(newProduct);
+        curOrder.Products.push(newProduct);
         //var Products = [];
         //Products = order.Products;
         //Products.push(newProduct);
-        console.log(order.Products);
+        console.log(curOrder.Products);
         //order.Products = Products;
-        tableItems = order.Products.map(function (oldItem) {
+        tableItems = curOrder.Products.map(function (oldItem) {
             var newItem = {};
             newItem.id = oldItem.id;
             newItem.Name = oldItem.Name;
@@ -280,7 +300,7 @@ function createOrderEditor(order) {
     $("#rP,#rNS").checkboxradio();
     $("#self").checkboxradio();
 
-    switch (order.idKitchen) {
+    switch (curOrder.idKitchen) {
         case 3:
             $("#rP").prop("checked", true);
             $("#rP").checkboxradio('refresh');
@@ -326,12 +346,12 @@ function createOrderEditor(order) {
 //        },
         onSelect: function () {
             var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-            order.DDate = dt;
+            curOrder.DDate = dt;
             //selectDate(dt);
         }
     });
 //    cgOrder.append(select);
-    cgOrder.append('<input type="text" name="comment" id="comment" value="' + order.Comment + '" placeholder="Комментарий" >');
+    cgOrder.append('<input type="text" name="comment" id="comment" value="' + curOrder.Comment + '" placeholder="Комментарий" >');
     //cgOrder.append('<label for="horizontal-spinner" class="ui-controlgroup-label"> of cars</label><input id="horizontal-spinner" class="ui-spinner-input">');
 
     var divProducts = $('<div/>', {
@@ -378,7 +398,7 @@ function createOrderEditor(order) {
     //cgOrder.append('<label for="c">Количество персон</label><input name="с" id="с">');
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
     cgOrder.children('#bOk').click(function () {
-        console.log(order);
+        console.log(curOrder);
 //        var json;
 //        sendRequest('CreateOrder', 'order=' + json, function (response) {
 //            console.log(response);
@@ -404,10 +424,10 @@ function createOrderEditor(order) {
 //            at: "left top+20"
 //        },
         change: function (event, ui) {
-            order.idStatus = parseInt($(this).val()) + 1;
-            if (order.id !== null)//если заказ редактируется (а не создается)
+            curOrder.idStatus = parseInt($(this).val()) + 1;
+            if (curOrder.id !== null)//если заказ редактируется (а не создается)
             {
-                sendRequest('updateOrderStatus', 'idOrder=' + order.id + '&idStatus=' + order.idStatus, function (response) {
+                sendRequest('updateOrderStatus', 'idOrder=' + curOrder.id + '&idStatus=' + curOrder.idStatus, function (response) {
                     console.log(response);
                 });
 
@@ -416,7 +436,7 @@ function createOrderEditor(order) {
             //var idStatus = parseInt($(this).val()) + 1;
         }
     });
-    select.val(order.idStatus === null ? 0 : order.idStatus - 1);
+    select.val(curOrder.idStatus === null ? 0 : curOrder.idStatus - 1);
     select.selectmenu('refresh', true);
 
     cgClient.controlgroup({
@@ -433,15 +453,17 @@ function createOrderEditor(order) {
 
 function showOrderEditor(order) {
     if (order === undefined) {
-        order = createEmptyOrderObj();
+        curOrder = createEmptyOrderObj();
+    } else {
+        curOrder = order;
     }
-    var dlg = CreateDialog('dlgE', 'Заказ ' + order.No, 'o_orderEditDlg', false);
+    var dlg = CreateDialog('dlgE', 'Заказ ' + curOrder.No, 'o_orderEditDlg', false);
     //dlgV.dialog( "option", "resizable", true );
     dlg.dialog("option", "height", 700);
     dlg.dialog("option", "width", 1280);
-    dlg.dialog("option", "dialogClass", 'noclose ord-workplace-' + order.idKitchen);
+    dlg.dialog("option", "dialogClass", 'noclose ord-workplace-' + curOrder.idKitchen);
     //console.log(order);
-    var editor = createOrderEditor(order);
+    var editor = createOrderEditor(curOrder);
     dlg.append(editor.fadeIn(1000));
     dlg.dialog('open');
 }
@@ -474,6 +496,13 @@ function bindEventsToTable(table) {
                 $(this).children().last().append('<span id="bRem" class="ui-icon ui-icon-close rowButton"></span>');
                 $("#bRem").click(function () {
                     //alert($(this).parent().parent().attr("item_id"));
+                    //console.log(curOrder);
+                    console.log(curOrder.Products);
+                    var idProduct = parseInt($(this).parent().parent().attr("item_id"));
+                    curOrder.Products = curOrder.Products.filter(function (currentValue, index, arr) {
+                        return currentValue.id !== idProduct;
+                    });
+                    console.log(curOrder.Products);
                     $(this).parent().parent().remove();
                     return false;
                 });
@@ -492,11 +521,12 @@ function bindEventsToTable(table) {
         //    return false;
         //})
     });
-    
+
     table.find("tbody tr").click(function () {
         //$(this).children().last().append('<div><span id="bRem" class="ui-icon ui-icon-close rowButton"></span></div>');
         //$("#bRem").click(function () {
-        $(this).empty();
+        //$(this).empty();
+
 //alert($(this).attr("item_id"));
         //    return false;
         //})

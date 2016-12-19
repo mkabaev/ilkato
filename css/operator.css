@@ -364,6 +364,11 @@
     width: 160px;
 }*/
 
+ul li i{
+font-size: 12px;
+color: gray;
+}
+
 .controlgroup{
     /*position: absolute;*/
     /*    right: 40px;
