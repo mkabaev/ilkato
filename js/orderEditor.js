@@ -98,12 +98,12 @@ function createOrderEditor() { //TODO  all orders to global
         type: "ADDRESS",
         constraints: {
             label: "Самара",
-            // ограничиваем поиск Новосибирском
+            // ограничиваем поиск Самарой
             locations: {
                 region: "Самарская",
                 city: "Самара"
             },
-            // даем пользователю возможность снять ограничение
+            // не даем пользователю возможность снять ограничение
             deletable: false
         },
         // в списке подсказок не показываем область и город
@@ -111,7 +111,8 @@ function createOrderEditor() { //TODO  all orders to global
         //count: 5,
         /* Вызывается, когда пользователь выбирает одну из подсказок */
         onSelect: function (suggestion) {
-            console.log(suggestion.data.house_fias_id);
+            //console.log(suggestion.data.house_fias_id);
+            console.log(suggestion.data);
             mapUpdate(suggestion.value, 16);
         }
     });
