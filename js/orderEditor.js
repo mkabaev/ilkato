@@ -201,7 +201,8 @@ function createOrderEditor() { //TODO  all orders to global
             //return false;
         },
         change: function (event, ui) {
-            console.log(ui.item);hh
+            console.log(ui.item);
+            hh
             //if (!ui.item) {
             //    console.log('new client');
             //    curOrder.Client.Phones=$(this).val();
@@ -399,6 +400,7 @@ function createOrderEditor() { //TODO  all orders to global
     cgOrder.append('<button id="bOk" class="ui-button ui-widget ui-corner-all">OK</button>');
     cgOrder.children('#bOk').click(function () {
         console.log(curOrder);
+        $(div).parent().dialog('close');
 //        var json;
 //        sendRequest('CreateOrder', 'order=' + json, function (response) {
 //            console.log(response);
@@ -452,12 +454,12 @@ function createOrderEditor() { //TODO  all orders to global
 }
 
 function showOrderEditor(order) {
-    if (order === undefined) {
-        curOrder = createEmptyOrderObj();
-    } else {
-        curOrder = order;
-    }
-    var dlg = CreateDialog('dlgE', 'Заказ ' + curOrder.No, 'o_orderEditDlg', false);
+    curOrder = createOrderObj(order);
+
+console.log('curOrder');
+console.log(curOrder);
+    var ordNo = curOrder.id === null ? " - Новый заказ" : curOrder.No;
+    var dlg = CreateDialog('dlgE', 'Заказ ' + ordNo, 'o_orderEditDlg', false);
     //dlgV.dialog( "option", "resizable", true );
     dlg.dialog("option", "height", 700);
     dlg.dialog("option", "width", 1280);
@@ -466,27 +468,6 @@ function showOrderEditor(order) {
     var editor = createOrderEditor(curOrder);
     dlg.append(editor.fadeIn(1000));
     dlg.dialog('open');
-}
-
-function createEmptyOrderObj() {
-    var order = {};
-    order.id = null;
-    order.No = null;
-    order.idBranch = null;
-    order.idClient = null;
-    order.idPricingType = null;
-    order.idStatus = null;
-    order.idKitchen = null;
-    order.idBatch = null;
-    order.idCreatedBy = null;
-    order.Price = null;
-    order.Comment = null;
-    order.QueueNo = null;
-    order.DDate = null;
-    order.DTime = null;
-    order.Products = [];
-    order.Client = {};
-    return order;
 }
 
 function bindEventsToTable(table) {

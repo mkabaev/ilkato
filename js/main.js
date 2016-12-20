@@ -1,3 +1,50 @@
+function createEmptyClientObj() {
+    var client = {};
+    client.id = null;
+    client.Name = null;
+    client.Phones = [];
+    return client;
+}
+function createOrderObj(order) {
+    var _order = {};
+    if (order === undefined) {
+        _order.id = null;
+        _order.No = null;
+        _order.idBranch = null;
+        _order.idClient = null;
+        _order.idPricingType = null;
+        _order.idStatus = null;
+        _order.idKitchen = null;
+        _order.idBatch = null;
+        _order.idCreatedBy = null;
+        _order.Price = null;
+        _order.Comment = null;
+        _order.QueueNo = null;
+        _order.DDate = null;
+        _order.DTime = null;
+        _order.Products = [];
+        _order.Client = createEmptyClientObj();
+    } else {
+        _order.id = order.id === undefined ? null : order.id;
+        _order.No = order.No === undefined ? null : order.No;
+        _order.idBranch = order.idBranch === undefined ? null : order.idBranch;
+        _order.idClient = order.idClient === undefined ? null : order.idClient;
+        _order.idPricingType = order.idPricingType === undefined ? null : order.idPricingType;
+        _order.idStatus = order.idStatus === undefined ? null : order.idStatus;
+        _order.idKitchen = order.idKitchen === undefined ? null : order.idKitchen;
+        _order.idBatch = order.idBatch === undefined ? null : order.idBatch;
+        _order.idCreatedBy = order.idCreatedBy === undefined ? null : order.idCreatedBy;
+        _order.Price = order.Price === undefined ? null : order.Price;
+        _order.Comment = order.Comment === undefined ? null : order.Comment;
+        _order.QueueNo = order.QueueNo === undefined ? null : order.QueueNo;
+        _order.DDate = order.DDate === undefined ? null : order.DDate;
+        _order.DTime = order.DTime === undefined ? null : order.DTime;
+        _order.Products = order.Products === undefined||order.Products === null ? [] : order.Products;
+        _order.Client = order.Client === undefined ? createEmptyClientObj() : order.Client;
+    }
+    return _order;
+}
+
 function WorkPlace(name) {
     this.name = name;
     this._speed = 0;
