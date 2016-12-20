@@ -40,6 +40,10 @@ switch ($action) {
     case 'getProducts':
         echo getProducts();
         break;
+    case 'getClient':
+        $idClient = filter_input(INPUT_POST, 'idClient', FILTER_VALIDATE_INT);
+        echo getClient($idClient);
+        break;
     case 'updateOrderStatus':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
         $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_VALIDATE_INT);

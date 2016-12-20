@@ -121,6 +121,17 @@ function getBatches($date) {
     return $items;
 }
 
+function getClient($idClient) {
+    $db = new DB();
+    $query = "SELECT JSON_OBJECT('id', `c`.`idClient`, 'Name', `c`.`Name`, 'Street', `c`.`Street`, 'Building', `c`.`Building`, 'Flat', `c`.`Flat`, 'Entrance', `c`.`Entrance`, 'Floor', `c`.`Floor`, 'Code', `c`.`Code`, 'Phone', `c`.`Phone`, 'Card', `c`.`Card`) AS `Client` FROM v_clients c WHERE c.idClient=:idClient";
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':idClient', $idClient);
+    $stmt->execute();
+    $item = $stmt->fetch(PDO::FETCH_ASSOC); //FETCH_ASSOC
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+    return $item['Client'];
+}
+
 function getSessionUpdates($id_session) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "

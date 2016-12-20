@@ -474,7 +474,7 @@ function CreateOrder(order, isOperator) {
     return divOrder;
 }
 
-function mapUpdate(address, zoom) {
+function mapUpdate(address, zoom) { //address - адрес или lat,lon в текстовом виде
     if (address) {//&& map_created
         var geocode = ymaps.geocode(address);
         geocode.then(function (res) {

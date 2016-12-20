@@ -3,6 +3,7 @@ function createEmptyClientObj() {
     client.id = null;
     client.Name = null;
     client.Phones = [];
+    client.Card=null;
     return client;
 }
 function createOrderObj(order) {
