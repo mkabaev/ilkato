@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h3>Products</h3>
+        <div id="products">ждем...</div>
+        <h3>Clients</h3>
+        <div id="clients">ждем...</div>
+                <h3>Orders</h3>
+        <div id="orders">ждем...</div>
+        <script>
+            $.ajax({
+                dataType: 'json',
+                type: "POST",
+                data: "action=getProducts",
+                url: "helper.php",
+                cache: false,
+                timeout: 30000,
+                success: function (data) {
+                    $("#products").text(JSON.stringify(data[7]));
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("status: " + xhr.status + " | " + thrownError);
+                }
+            });
+
+            $.ajax({
+                dataType: 'json',
+                type: "POST",
+                data: "action=getClients",
+                url: "helper.php",
+                cache: false,
+                timeout: 30000,
+                success: function (data) {
+                    $("#clients").text(JSON.stringify(data));
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("status: " + xhr.status + " | " + thrownError);
+                }
+            });
+            
+            $.ajax({
+                dataType: 'json',
+                type: "POST",
+                data: "action=getOrders&date=2016-11-23",
+                url: "helper.php",
+                cache: false,
+                timeout: 30000,
+                success: function (data) {
+                    $("#orders").text(JSON.stringify(data[3]));
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("status: " + xhr.status + " | " + thrownError);
+                }
+            });
+        </script>
+    </body>
+</html>

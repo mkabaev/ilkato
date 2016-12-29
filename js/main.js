@@ -651,7 +651,6 @@ function sendRequest(action, paramsstr, callback) {
         dataType: 'json',
         type: "POST",
         data: "action=" + action + "&" + paramsstr,
-        //url: "helper.php?",
         url: "helper.php",
         cache: false,
         timeout: 30000,

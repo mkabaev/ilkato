@@ -44,6 +44,10 @@ switch ($action) {
         $idClient = filter_input(INPUT_POST, 'idClient', FILTER_VALIDATE_INT);
         echo getClient($idClient);
         break;
+    case 'getClients':
+        $clients =getClients();//= implode(",", getClients());
+        echo $clients;
+        break;
     case 'updateOrderStatus':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
         $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_VALIDATE_INT);
@@ -95,7 +99,7 @@ switch ($action) {
         break;
     case 'createOrder':
         $json = filter_input(INPUT_POST, 'order');
-        $result = createOrder(json_decode($json,TRUE));
+        $result = createOrder(json_decode($json, TRUE));
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
     case 'createBatch':

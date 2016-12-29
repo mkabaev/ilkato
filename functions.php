@@ -132,6 +132,18 @@ function getClient($idClient) {
     return $item['Client'];
 }
 
+function getClients() {
+    $db = new DB();
+    $query = "SELECT Client from v_clients2";
+    $stmt = $db->conn->prepare($query);
+    $stmt->execute();
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
+    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK|JSON_UNESCAPED_SLASHES);
+echo join('<br>', $array);Aas
+
+}
+
 function getSessionUpdates($id_session) {
     //. "SUBSTRING_INDEX( ti.comment , '|', 1 ) AS comment, "
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
