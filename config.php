@@ -1,9 +1,8 @@
 <?php
-//define('DB_HOSTNAME', '192.168.0.10'); //LOCALHOST на 39 компе доступ запрещен к mysql       192.168.0.39 213.178.54.5
-define('DB_HOSTNAME', 'localhost'); //LOCALHOST на 39 компе доступ запрещен к mysql       192.168.0.39 213.178.54.5
-define('DB_USERNAME', 'ilkato');
-define('DB_PASSWORD', 'Skorpions');
-define('DB_DATABASE', 'ilkato');
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'DBUSER');
+define('DB_PASSWORD', 'DBPASS');
+define('DB_DATABASE', 'DBNAME');
 define('DB_PORT', 3306);
 
 //
