@@ -1,51 +1,65 @@
-function createEmptyClientObj() {
-    var client = {};
-    client.id = null;
-    client.Name = null;
-    client.Phones = [];
-    client.Addresses=[];
-    client.Card=null;
-    client.Comment=null;
-    return client;
+function createClientObj() {
+    var c = {};
+    c.id = null;
+    c.Name = null;
+    c.Phones = []; // [{"Phone":9277034366,"isDefault":1}]
+    c.Addresses = []; //[{"Flat":null,"Floor":6,"Address":"советской армии 203 252","geo_lat":null,"geo_lon":null,"house_id":null,"isDefault":null}]
+    c.Card = null;
+    c.Comment = null;
+    return c;
 }
+
+function createProductObj() {
+    var p = {};
+    p.id = null;
+    p.Name = null;
+    p.Count = null;
+    p.Price = null;
+    p.Weight = null;
+    p.idType = null;
+    p.isCooked = null;
+    p.CookingTime = null;
+    return p;
+}
+
 function createOrderObj(order) {
-    var _order = {};
+    var o = {};
     if (order === undefined) {
-        _order.id = null;
-        _order.No = null;
-        _order.idBranch = null;
-        _order.idClient = null;
-        _order.idPricingType = null;
-        _order.idStatus = null;
-        _order.idKitchen = null;
-        _order.idBatch = null;
-        _order.idCreatedBy = null;
-        _order.Price = null;
-        _order.Comment = null;
-        _order.QueueNo = null;
-        _order.DDate = null;
-        _order.DTime = null;
-        _order.Products = [];
-        _order.Client = createEmptyClientObj();
+        o.id = null;
+        o.No = null;
+        o.idBranch = null;
+        //o.idClient = null; //?
+        o.idPricingType = null;
+        o.idStatus = null;
+        o.idKitchen = null;
+        o.idBatch = null;
+        o.idCreatedBy = null;
+        o.Price = null;
+        o.Comment = null;
+        o.QueueNo = null;
+        o.DDate = null;
+        o.DTime = null;
+        o.Products = [];
+        o.Client = createClientObj();
     } else {
-        _order.id = order.id === undefined ? null : order.id;
-        _order.No = order.No === undefined ? null : order.No;
-        _order.idBranch = order.idBranch === undefined ? null : order.idBranch;
-        _order.idClient = order.idClient === undefined ? null : order.idClient;
-        _order.idPricingType = order.idPricingType === undefined ? null : order.idPricingType;
-        _order.idStatus = order.idStatus === undefined ? null : order.idStatus;
-        _order.idKitchen = order.idKitchen === undefined ? null : order.idKitchen;
-        _order.idBatch = order.idBatch === undefined ? null : order.idBatch;
-        _order.idCreatedBy = order.idCreatedBy === undefined ? null : order.idCreatedBy;
-        _order.Price = order.Price === undefined ? null : order.Price;
-        _order.Comment = order.Comment === undefined ? null : order.Comment;
-        _order.QueueNo = order.QueueNo === undefined ? null : order.QueueNo;
-        _order.DDate = order.DDate === undefined ? null : order.DDate;
-        _order.DTime = order.DTime === undefined ? null : order.DTime;
-        _order.Products = order.Products === undefined||order.Products === null ? [] : order.Products;
-        _order.Client = order.Client === undefined ? createEmptyClientObj() : order.Client;
+        o.id = order.id === undefined ? null : order.id;
+        o.No = order.No === undefined ? null : order.No;
+        o.idBranch = order.idBranch === undefined ? null : order.idBranch;
+        //o.idClient = order.idClient === undefined ? null : order.idClient;
+        o.idPricingType = order.idPricingType === undefined ? null : order.idPricingType;
+        o.idStatus = order.idStatus === undefined ? null : order.idStatus;
+        o.idKitchen = order.idKitchen === undefined ? null : order.idKitchen;
+        o.idBatch = order.idBatch === undefined ? null : order.idBatch;
+        o.idCreatedBy = order.idCreatedBy === undefined ? null : order.idCreatedBy;
+        o.Price = order.Price === undefined ? null : order.Price;
+        o.Comment = order.Comment === undefined ? null : order.Comment;
+        o.QueueNo = order.QueueNo === undefined ? null : order.QueueNo;
+        o.DDate = order.DDate === undefined ? null : order.DDate;
+        o.DTime = order.DTime === undefined ? null : order.DTime;
+        o.Products = order.Products === undefined || order.Products === null ? [] : order.Products;
+        o.Client = order.Client === undefined ? createClientObj() : order.Client;
     }
-    return _order;
+    return o;
 }
 
 function WorkPlace(name) {

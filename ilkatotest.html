@@ -6,63 +6,212 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <body>
-        <h3>Products</h3>
-        <div id="products">ждем...</div>
-        <h3>Clients</h3>
-        <div id="clients">ждем...</div>
-                <h3>Orders</h3>
-        <div id="orders">ждем...</div>
-        <script>
-            $.ajax({
-                dataType: 'json',
-                type: "POST",
-                data: "action=getProducts",
-                url: "helper.php",
-                cache: false,
-                timeout: 30000,
-                success: function (data) {
-                    $("#products").text(JSON.stringify(data[7]));
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert("status: " + xhr.status + " | " + thrownError);
-                }
-            });
+        <button onclick="test_getOrder()">getOrder</button>
+        <button onclick="test_setOrder()">setOrder</button>
+        <button onclick="test_setClient()">setClient</button>
+        <button onclick="test_getSiteUpdates()">getSiteUpdates</button>
+        <button onclick="test_getClientByPhone()">getClientByPhone</button>
+        <button onclick="test_getClients()">getClients</button>
+        <button onclick="test_getProducts()">getProducts</button>
+        <button onclick="test_getOrdersByClient()">getOrdersByClient</button>
+        <p>result</p>
+        <div id="result" style="border:1px black solid"></div>
 
-            $.ajax({
-                dataType: 'json',
-                type: "POST",
-                data: "action=getClients",
-                url: "helper.php",
-                cache: false,
-                timeout: 30000,
-                success: function (data) {
-                    $("#clients").text(JSON.stringify(data));
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert("status: " + xhr.status + " | " + thrownError);
-                }
-            });
-            
-            $.ajax({
-                dataType: 'json',
-                type: "POST",
-                data: "action=getOrders&date=2016-11-23",
-                url: "helper.php",
-                cache: false,
-                timeout: 30000,
-                success: function (data) {
-                    $("#orders").text(JSON.stringify(data[3]));
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert("status: " + xhr.status + " | " + thrownError);
-                }
-            });
+        <script>
+
+            function test_getOrder() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getOrder&id=51979",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_setClient() {
+                var Client = {};
+
+                //если id задан, то клиент обновиться                
+                //если не задан или равен null, то клиент создастся
+                //На сервере проверится дефолтный телефонный номер клиента. Если он уже занят другим клиентом, то в ответе вернется ощибка. Вместе с ошибкой вернется объект клиента с указанным телефоном.
+
+                Client.id = 9226;
+                
+                Client.Name = 'Ванек';
+                Client.Surname = 'Пупкин';
+                Client.Phones = [{"Phone": 9277777778, "isDefault": 1},{"Phone": 9626040203}];
+                Client.Addresses = [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}]
+                Client.Card = "1234";
+                Client.Comment = "тут коммент";
+                Client.Org = 'ОАО "ТяпЛяпСтрой"';
+
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=setClient&client=" + JSON.stringify(Client),
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        //$("#clients").text(data);
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_setOrder() {
+                var Client = {};
+                Client.id = null; //если id задан, то клиент обновится в базе. Иначе - создастся новый
+                Client.Name = 'Пупкин Иван';
+                Client.Phones = [{"Phone": 9277777777, "isDefault": 1}]
+                Client.Addresses = [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}]
+                //Client.Card = null;
+                //Client.Comment = null;
+
+                var Order = {};
+                Order.id = null;//51979 //если передаем - то заказ редактируется. Если нет - создается
+                Order.No = null;
+                Order.idBranch = 1;
+                Order.idPricingType = null;
+                Order.idStatus = null;
+                Order.idKitchen = null;
+                Order.idBatch = null;
+                Order.idCreatedBy = null;
+                Order.Price = null;
+                Order.Comment = null;
+                Order.QueueNo = null;
+                Order.DDate = "17-02-03"; //"yy-mm-dd"
+                Order.DTime = "15:00";
+                Order.Products = [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}];
+                Order.Client = Client;
+
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=setOrder&order=" + JSON.stringify(Order),
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        //$("#clients").text(data);
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_getSiteUpdates() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getSiteUpdates&idSite=12",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_getClientByPhone() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getClientByPhone&Phone=9277501811",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_getClients() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getClients",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_getProducts() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getProducts",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function test_getOrdersByClient() {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=getOrdersByClient&id=923",
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").text(JSON.stringify(data));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
         </script>
     </body>
 </html>

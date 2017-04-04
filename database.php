@@ -10,7 +10,7 @@ require_once 'config.php';
 
 class DB {
 
-    public $conn;
+    public $conn; //protected?
 
     function __construct() {
         try {
@@ -24,6 +24,40 @@ class DB {
             die();
         }
     }
+    
+    function insertArray($table, $array) {
+    $fields=array_keys($array);
+    $values=array_values($array);
+    $fieldlist=implode(',', $fields); 
+    $qs=str_repeat("?,",count($fields)-1);
+
+    $sql="INSERT INTO `".$table."` (".$fieldlist.") VALUES (${qs}?)";
+
+    $q = $this->conn->prepare($sql);
+    return $q->execute($values);
+  }
+
+  function updateArray($table, $id, $array) {
+    $fields=array_keys($array);
+    $values=array_values($array);
+    $fieldlist=implode(',', $fields); 
+    $qs=str_repeat("?,",count($fields)-1);
+    $firstfield = true;
+
+    $sql = "UPDATE `".$table."` SET";
+    for ($i = 0; $i < count($fields); $i++) {
+        if(!$firstfield) {
+        $sql .= ", ";   
+        }
+        $sql .= " ".$fields[$i]."=?";
+        $firstfield = false;
+    }
+    $sql .= " WHERE `id` =?";
+
+    $sth = $this->conn->prepare($sql);
+    $values[] = $id;
+    return $sth->execute($values);
+  }
 
     //public function printtest() {
     //    foreach ($this->dbh->query('SELECT * from cls_boats') as $row) {

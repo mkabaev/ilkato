@@ -89,10 +89,27 @@ function createOrderEditor() { //TODO  all orders to global
     cgClient.append('<input id="name" placeholder="Имя">');
     cgClient.append('<input id="info" placeholder="Доп. инфориация">');
 
-    cgClient.append('<input id="address" name="address" type="text" placeholder="Адрес">');
-    cgClient.append('<input id="floor" placeholder="этаж">');
+    var cgAddress = $('<div/>', {class: 'ui-widget ui-widget-content'}).appendTo(cgClient);
+
+    cgAddress.append('<h3>Владимирская 43</h3>');
+    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+    cgAddress.append('<h3>Ленинская 149</h3>');
+    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+    cgAddress.append('<h3>Новый адрес...</h3>');
+    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+    //cgAddress.css("height","200px")
     cgClient.append('<div id="map" class="panel-map"></div>');
-    var $address = cgClient.find('#address');
+    
+//var acr = $('<div id="accordion"><h3>Section 1</h3><div><p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p></div><h3>Section 2</h3><div><p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p></div></div>');
+//acr.appendTo(cgClient);
+//acr.accordion();
+//acr.appendTo(cgAddress);
+    cgAddress.accordion({
+      heightStyle: "content", //fill",
+      //active: 2,
+      //icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" } //можно и без этого
+    });
+    var $address = cgClient.find('.address');
     $address.suggestions({
         serviceUrl: "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
         token: "eab53cb4ce6873e6346bd24d131331c637ca23bf",
@@ -200,17 +217,22 @@ function createOrderEditor() { //TODO  all orders to global
             });
         },
         focus: function (event, ui) {
-            $(this).val(ui.item.label);
-            console.log(ui.item.idPerson);
+            //$(this).val(ui.item.label);
+            //console.log(ui.item.id);
             return false;
         },
         select: function (event, ui) {
+            $(this).val(ui.item.label);
+            console.log("clientSelect");
             //return false;
         },
         change: function (event, ui) {
             //console.log(ui.item);
-            sendRequest('getClient', 'idClient=' + ui.item.idClient, function (response) {
-                //console.log(curOrder.Client);
+            // prev sendRequest('getClient', 'idClient=' + ui.item.idClient, function (response) {
+                console.log("clientChange");
+            sendRequest('getClient', 'id=' + ui.item.id, function (response) {
+                console.log("response");
+                console.log(response);
                 curOrder.Client = response;
                 //console.log(curOrder.Client);
                 updateEditorClient(curOrder.Client);
@@ -459,6 +481,10 @@ function createOrderEditor() { //TODO  all orders to global
     cgClient.controlgroup({
 //        "direction": "vertical"
     });
+//    cgAddress.controlgroup({
+//        "direction": "vertical"
+//    });
+
     cgMenu.controlgroup({
 //        "direction": "vertical"
     });
@@ -476,8 +502,9 @@ function showOrderEditor(order) {
     var ordNo = curOrder.id === null ? " - Новый заказ" : curOrder.No;
     var dlg = CreateDialog('dlgE', 'Заказ ' + ordNo, 'o_orderEditDlg', false);
     //dlgV.dialog( "option", "resizable", true );
-    dlg.dialog("option", "height", 700);
+    dlg.dialog("option", "height", 700); //$(window).height()
     dlg.dialog("option", "width", 1280);
+    //$("#DlgID").parent().css('height', $(window).height());
     dlg.dialog("option", "dialogClass", 'noclose ord-workplace-' + curOrder.idKitchen);
     //console.log(order);
     var editor = createOrderEditor(curOrder);
@@ -533,8 +560,8 @@ function updateEditorClient(client) {
     if (client.id === null) {
 
     } else {
-        $('#phone').val(client.Phones[0]);
-        $('#phone2').val(client.Phones[0]);
+        $('#phone').val(client.Phones[0].Phone);
+        $('#phone2').val(client.Phones[1].Phone);
         $('#address').val(client.Street + ', ' + client.Building + ' ' + client.Flat);
         $("#card").val(client.Card);
         $("#name").val(client.Name);

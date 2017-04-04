@@ -403,12 +403,13 @@ color: gray;
 .controlgroup #name{
     width: 126px;
 }
-.controlgroup #address{
+.controlgroup address{
     width: 418px;
 }
-.controlgroup #et{
+.controlgroup et{
     width: 26px;
 }
+
 .controlgroup #info{
     width: 340px;
 }
