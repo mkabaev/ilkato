@@ -1,8 +1,10 @@
 var clientsCache = [];//сюда кэшируем клиентов для поиска по номеру телефона
 var AllProducts = []; //справочник продуктов
 var curOrder = {};
-//var map = null,
-//        map_created = false;
+
+//var map;
+//var markers;
+
 function createOrderEditor() { //TODO  all orders to global
     if (curOrder.Products) {
         var itemsR = curOrder.Products.filter(function (row) {
@@ -81,185 +83,145 @@ function createOrderEditor() { //TODO  all orders to global
 ////attr: {'order_id': '123', 'ts': timestamp}
 //    }).append('<legend>Клиент</legend>').appendTo(div);
 
-//1
-    var cgClient = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
-    cgClient.append('+7<input id="phone" placeholder="Телефон">');
-    cgClient.append('+7<input id="phone2" placeholder="Телефон">');
-    cgClient.append('<input id="card" placeholder="№ карты">');
-    cgClient.append('<input id="name" placeholder="Имя">');
-    cgClient.append('<input id="info" placeholder="Доп. инфориация">');
-
-    var cgAddress = $('<div/>', {class: 'ui-widget ui-widget-content'}).appendTo(cgClient);
-
-    cgAddress.append('<h3>Владимирская 43</h3>');
-    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
-    cgAddress.append('<h3>Ленинская 149</h3>');
-    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
-    cgAddress.append('<h3>Новый адрес...</h3>');
-    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
-    //cgAddress.css("height","200px")
-    cgClient.append('<div id="map" class="panel-map"></div>');
-    
-//var acr = $('<div id="accordion"><h3>Section 1</h3><div><p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p></div><h3>Section 2</h3><div><p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p></div></div>');
-//acr.appendTo(cgClient);
-//acr.accordion();
-//acr.appendTo(cgAddress);
-    cgAddress.accordion({
-      heightStyle: "content", //fill",
-      //active: 2,
-      //icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" } //можно и без этого
-    });
-    var $address = cgClient.find('.address');
-    $address.suggestions({
-        serviceUrl: "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
-        token: "eab53cb4ce6873e6346bd24d131331c637ca23bf",
-        type: "ADDRESS",
-        constraints: {
-            label: "Самара",
-            // ограничиваем поиск Самарой
-            locations: {
-                region: "Самарская",
-                city: "Самара"
-            },
-            // не даем пользователю возможность снять ограничение
-            deletable: false
-        },
-        // в списке подсказок не показываем область и город
-        restrict_value: true,
-        count: 5, //Максимальное количество подсказок в выпадающем списке. Не может быть больше 20.
-        autoSelectFirst: true,
-        /* Вызывается, когда пользователь выбирает одну из подсказок */
-        onSelect: function (suggestion) {
-            //console.log(suggestion.data.house_fias_id);
-            console.log(suggestion.data);
-            //mapUpdate(suggestion.value, 16);
-            mapUpdate(suggestion.data.geo_lat + ',' + suggestion.data.geo_lon, 16);
-        },
-//        onSuggestionsFetch:function (suggestions) {
-//            console.log(suggestions);
-//        }
+//1  
+    var cgClient = $('<div/>').appendTo(div).personData({
+        value: 20,
+        complete25: function (event, data) {
+            alert("Callbacks are great!");
+        }
     });
 
-    ymaps.ready(function () {
-        map = new ymaps.Map('map', {
-            center: [53.204552, 50.224026],
-            zoom: 12,
-            controls: []
-        }, {
-            //searchControlProvider: 'yandex#search'
-        });
 
-        map.geoObjects.add(new ymaps.Placemark([53.188384, 50.141830], {
-            balloonContent: 'клиент <strong>вип</strong>'
-        }, {
-            preset: 'islands#icon',
-            iconColor: '#0095b6'
-        }));
+    cgClient.personData("option", "value", 25);
 
-// Создаем геообъект с типом геометрии "Точка".
-        ILKatoGeoObject = new ymaps.GeoObject({
-            // Описание геометрии.
-            geometry: {
-                type: "Point",
-                coordinates: [53.204552, 50.224026]
-            },
-            // Свойства.
-            properties: {
-                // Контент метки.
-                iconContent: 'IL-Kato',
-                hintContent: 'наша кухня'
-            }
-        }, {
-            // Опции.
-            // Иконка метки будет растягиваться под размер ее содержимого.
-            preset: 'islands#blackStretchyIcon',
-            // Метку можно перемещать.
-            //draggable: true
-        });
-        map.geoObjects.add(ILKatoGeoObject);
 
-    });
-//    ymaps.ready(function () {
-////        if (map_created)
-////           return;
-////        map_created = true;
-//        map = new ymaps.Map('map', {
-//            center: [55.76, 37.64],
-//            zoom: 12,
-//            controls: []
-//        });
-//        map.controls.add('zoomControl', {
-//            position: {
-//                right: 10,
-//                top: 10
+//EXTEND PLUGIN
+//    $.ctrl.personData.prototype.reset = function () {
+//        this._setOption("value", 0);
+//        console.log("reset fired");
+//    };
+//    cgClient.personData("reset");
+
+//    var cgClient = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
+//    cgClient.append('+7<input id="phone" placeholder="Телефон">');
+//    cgClient.append('+7<input id="phone2" placeholder="Телефон">');
+//    cgClient.append('<input id="card" placeholder="№ карты">');
+//    cgClient.append('<input id="name" placeholder="Имя">');
+//    cgClient.append('<input id="info" placeholder="Доп. инфориация">'); 
+//
+//    var cgAddress = $('<div/>', {class: 'ui-widget ui-widget-content'}).appendTo(cgClient);
+//
+//    cgAddress.append('<h3>Владимирская 43</h3>');
+//    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+//    cgAddress.append('<h3>Ленинская 149</h3>');
+//    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+//    cgAddress.append('<h3>Новый адрес...</h3>');
+//    cgAddress.append('<div><input class="address" type="text" placeholder="Адрес"><input id="floor" placeholder="этаж"></div>');
+//    //cgAddress.css("height","200px")
+//    cgClient.append('<div id="map" class="panel-map"></div>');
+//
+////var acr = $('<div id="accordion"><h3>Section 1</h3><div><p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p></div><h3>Section 2</h3><div><p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p></div></div>');
+////acr.appendTo(cgClient);
+////acr.accordion();
+////acr.appendTo(cgAddress);
+//    cgAddress.accordion({
+//        heightStyle: "content", //fill",
+//        //active: 2,
+//        //icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" } //можно и без этого
+//    });
+//    var $address = cgClient.find('.address');
+//    $address.suggestions({
+//        serviceUrl: "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
+//        token: "eab53cb4ce6873e6346bd24d131331c637ca23bf",
+//        type: "ADDRESS",
+//        constraints: {
+//            label: "Самара",
+//            // ограничиваем поиск Самарой
+//            locations: {
+//                region: "Самарская",
+//                city: "Самара"
+//            },
+//            // не даем пользователю возможность снять ограничение
+//            deletable: false
+//        },
+//        // в списке подсказок не показываем область и город
+//        restrict_value: true,
+//        count: 5, //Максимальное количество подсказок в выпадающем списке. Не может быть больше 20.
+//        autoSelectFirst: true,
+//        /* Вызывается, когда пользователь выбирает одну из подсказок */
+//        onSelect: function (suggestion) {
+//            //console.log(suggestion.data.house_fias_id);
+////            console.log(suggestion.data);
+//            //mapUpdate(suggestion.value, 16);
+////            mapUpdate(suggestion.data.geo_lat, suggestion.data.geo_lon, 16);
+//        },
+////        onSuggestionsFetch:function (suggestions) {
+////            console.log(suggestions);
+////        }
+//    });
+////    ymaps.ready(initYMap);
+//
+//    cgClient.find("#phone, #phone2").autocomplete({
+//        minLength: 5,
+////       source: clientsCache,
+//        source: function (request, response) {
+//            var term = request.term;
+//            if (term in clientsCache) {
+//                console.log("from cache");
+//                response(clientsCache[term]);
+//                return;
 //            }
-//        });
-//        mapUpdate('г.Самара', 12);
-//    });
-//    div.find("#phone").autocomplete({
-//        source: clientsCache
-//    });
-    cgClient.find("#phone, #phone2").autocomplete({
-        minLength: 5,
-//       source: clientsCache,
-        source: function (request, response) {
-            var term = request.term;
-            if (term in clientsCache) {
-                console.log("from cache");
-                response(clientsCache[term]);
-                return;
-            }
-            $.getJSON("search.php?s=clients", request, function (data, status, xhr) {
-                clientsCache[term] = data;
-                console.log("from server:");
-                console.log(data);
-                response(data);
-            });
-        },
-        focus: function (event, ui) {
-            //$(this).val(ui.item.label);
-            //console.log(ui.item.id);
-            return false;
-        },
-        select: function (event, ui) {
-            $(this).val(ui.item.label);
-            console.log("clientSelect");
-            //return false;
-        },
-        change: function (event, ui) {
-            //console.log(ui.item);
-            // prev sendRequest('getClient', 'idClient=' + ui.item.idClient, function (response) {
-                console.log("clientChange");
-            sendRequest('getClient', 'id=' + ui.item.id, function (response) {
-                console.log("response");
-                console.log(response);
-                curOrder.Client = response;
-                //console.log(curOrder.Client);
-                updateEditorClient(curOrder.Client);
-                $($address).suggestions().setOptions({hint: "Исправить адрес на:"});
-                //$($address).suggestions().update(); //показывает подсказки и не скрывает пока не выберешь
-                $($address).focus();
-            });
-            //if (!ui.item) {
-            //    console.log('new client');
-            //    curOrder.Client.Phones=$(this).val();
-            //}
-            //$("#name").val(ui.item.idClient);
-        },
-    })
-            .autocomplete("instance")._renderItem = function (ul, item) {
-        var nm = "";
-        if (item.Name !== "") {
-            nm = '<br>' + item.Name;
-        }
-        var cm = "";
-        if (item.Comment !== "") {
-            cm = '<br>' + item.Comment;
-        }
-        return $("<li>")
-                .append('<div style="margin-left:20px;"><img style="position:absolute; left:-18px;" src="images/user16.png">' + item.label + '<i>' + nm + cm + '</i></div>')
-                .appendTo(ul);
-    };
+//            $.getJSON("search.php?s=clients", request, function (data, status, xhr) {
+//                clientsCache[term] = data;
+//                console.log("from server:");
+//                console.log(data);
+//                response(data);
+//            });
+//        },
+//        focus: function (event, ui) {
+//            //$(this).val(ui.item.label);
+//            //console.log(ui.item.id);
+//            return false;
+//        },
+//        select: function (event, ui) {
+//            $(this).val(ui.item.label);
+//            console.log("clientSelect");
+//            //return false;
+//        },
+//        change: function (event, ui) {
+//            //console.log(ui.item);
+//            // prev sendRequest('getClient', 'idClient=' + ui.item.idClient, function (response) {
+//            console.log("clientChange");
+//            sendRequest('getClient', 'id=' + ui.item.id, function (response) {
+//                console.log("response");
+//                console.log(response);
+//                curOrder.Client = response;
+//                //console.log(curOrder.Client);
+//                updateEditorClient(curOrder.Client);
+//                $($address).suggestions().setOptions({hint: "Исправить адрес на:"});
+//                //$($address).suggestions().update(); //показывает подсказки и не скрывает пока не выберешь
+//                $($address).focus();
+//            });
+//            //if (!ui.item) {
+//            //    console.log('new client');
+//            //    curOrder.Client.Phones=$(this).val();
+//            //}
+//            //$("#name").val(ui.item.idClient);
+//        },
+//    })
+//            .autocomplete("instance")._renderItem = function (ul, item) {
+//        var nm = "";
+//        if (item.Name !== "") {
+//            nm = '<br>' + item.Name;
+//        }
+//        var cm = "";
+//        if (item.Comment !== "") {
+//            cm = '<br>' + item.Comment;
+//        }
+//        return $("<li>")
+//                .append('<div style="margin-left:20px;"><img style="position:absolute; left:-18px;" src="images/user16.png">' + item.label + '<i>' + nm + cm + '</i></div>')
+//                .appendTo(ul);
+//    };
 
 //2
     var cgMenu = $('<div/>', {class: 'ui-widget ui-widget-content controlgroup'}).appendTo(div);
@@ -364,8 +326,8 @@ function createOrderEditor() { //TODO  all orders to global
     });
 
     var cgDDate = $('<div/>', {class: 'ui-widget controlgroupDDate ui-controlgroup-horizontal'}).appendTo(cgOrder);
-    cgDDate.append('Дата: <input type="text" id="DDate"/>');
-    cgDDate.append('<label for="DTime">Доставить к</label><input name="DTime" id="DTime" value="12:30">');
+    cgDDate.append('Дата: <input type="date" id="DDate"/>');
+    cgDDate.append('<label for="DTime">Доставить к</label><input type="time" name="DTime" id="DTime" value="12:30">');
     //localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
 
     cgDDate.children("#DDate").datepicker({
@@ -478,9 +440,9 @@ function createOrderEditor() { //TODO  all orders to global
     select.val(curOrder.idStatus === null ? 0 : curOrder.idStatus - 1);
     select.selectmenu('refresh', true);
 
-    cgClient.controlgroup({
-//        "direction": "vertical"
-    });
+//    cgClient.controlgroup({
+////        "direction": "vertical"
+//    });
 //    cgAddress.controlgroup({
 //        "direction": "vertical"
 //    });
@@ -510,6 +472,7 @@ function showOrderEditor(order) {
     var editor = createOrderEditor(curOrder);
     dlg.append(editor.fadeIn(1000));
     dlg.dialog('open');
+    // initMap();
 }
 
 function bindEventsToTable(table) {
@@ -561,7 +524,7 @@ function updateEditorClient(client) {
 
     } else {
         $('#phone').val(client.Phones[0].Phone);
-        $('#phone2').val(client.Phones[1].Phone);
+        //$('#phone2').val(client.Phones[1].Phone);
         $('#address').val(client.Street + ', ' + client.Building + ' ' + client.Flat);
         $("#card").val(client.Card);
         $("#name").val(client.Name);

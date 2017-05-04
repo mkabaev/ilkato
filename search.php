@@ -14,7 +14,7 @@ function searchClients($term) {
     //. "DATE_FORMAT(mk.startCoocking, '%H:%i') start_time, "
     $db = new DB();
     // prev  $stmt = $db->conn->prepare("SELECT SUBSTR(Phone,2) as label, idClient, idPerson, Name, Comment from v_clients where Phone like '7".$term."%' limit 10");
-    $stmt = $db->conn->prepare("SELECT Phone as label, id, Name, Comment from v_clientsNew where Phone like '".$term."%' limit 10");
+    $stmt = $db->conn->prepare("SELECT Phone as label, id, Name, Comment from v_clients where Phone like '".$term."%' limit 10");
 //    $stmt->bindParam(':term', $term);
     $stmt->execute();
     //$result = $stmt->fetchAll(PDO::FETCH_COLUMN);

@@ -311,6 +311,7 @@
     animation: blinker 500ms linear infinite;
 }
 
+
 .o_orderEditDlg .tProducts .rowButton{
     /*right: 5px;*/
     /*position: absolute;*/
@@ -328,57 +329,9 @@
     width: 100%;
 }
 
-/*.o_orderViewerDlg .tProducts{
-    position: absolute;
-    right: 10px;
-    font-size: 14px;
-    white-space: nowrap;
-        width: 600px;
-}*/
-
-/*.ui-controlgroup {
-    font-size: 14px;
-}
-
-.ui-controlgroup-vertical {
-    width: 100%;
-}
-
-.ui-controlgroup.ui-controlgroup-vertical > button.ui-button,
-.ui-controlgroup.ui-controlgroup-vertical > .ui-controlgroup-label {
-    text-align: center;
-}
-.ui-controlgroup-horizontal .ui-spinner-input {
-    width: 20px;
-}*/
-
-/*fieldset{
-    position: absolute;
-    left: 40px;
-    top: 60px;
-}*/
-/*#cgOrder{
-    position: absolute;
-    right: 40px;
-    top: 160px;
-    width: 160px;
-}*/
-
 ul li i{
-font-size: 12px;
-color: gray;
-}
-
-.controlgroup{
-    /*position: absolute;*/
-    /*    right: 40px;
-        top: 160px;*/
-    margin-top: 40px;
-    float:left;
-    width: 420px;
-    padding: 6px;
-    margin: 6px;
-    height: 574px;
+    font-size: 12px;
+    color: gray;
 }
 
 .controlgroup #divMenuProducts{
@@ -387,6 +340,12 @@ color: gray;
     overflow-y: auto;
     float: bottom;
 }
+
+.controlgroup{
+    margin: 6px;
+    padding: 4px;
+}
+
 .controlgroup #divProducts{
     height: 480px;
     margin-top: 10px;
@@ -394,64 +353,22 @@ color: gray;
     float: bottom;
 }
 
-.controlgroup #phone, .controlgroup #phone2{
-    width: 70px;
-}
-.controlgroup #card{
-    width: 50px;
-}
-.controlgroup #name{
-    width: 126px;
-}
-.controlgroup address{
-    width: 418px;
-}
-.controlgroup et{
-    width: 26px;
-}
-
-.controlgroup #info{
-    width: 340px;
-}
-.controlgroup #comment{
-    width: 410px;
-}
-
 .controlgroupDDate{
     float: right;
+    margin: 6px;
 }
 .controlgroupDDate input,.controlgroupDDate img,.controlgroupDDate label{
     margin-left: 2px;
     margin-right: 2px;
     vertical-align: middle;
 }
-.controlgroupDDate #DTime{
-    width: 30px;
-}
+
 .controlgroupDDate #DDate{
-    width: 70px;
-}
-
-.panel-map {
-    width: 400px;
-    height: 400px;
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    background: #ffffff;
-    /*background-size: 400px 250px;*/
-}
-
-input {
-    height: 2em;
-    width: 170px;
-    border: 1px solid #d8d8d8;
-    padding: 0 7px;
-    margin: 2px;
-    color: #666;
+    width: 110px;
 }
 
 #o_selstatus-button{
-float: right;
+    float: right;
 }
 
 .tMenuProducts th,.tMenuProducts td{

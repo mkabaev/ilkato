@@ -201,7 +201,7 @@ function createOperatorInterface() {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-            showOrderEditor();
+        showOrderEditor();
 //        sendRequest('getUsers', '', function (data) {
 //            console.log(data);
 //        });
@@ -474,21 +474,30 @@ function CreateOrder(order, isOperator) {
     return divOrder;
 }
 
-function mapUpdate(address, zoom) { //address - адрес или lat,lon в текстовом виде
-    if (address) {//&& map_created
-        var geocode = ymaps.geocode(address);
-        geocode.then(function (res) {
-            map.geoObjects.each(function (geoObject) {
-                map.geoObjects.remove(geoObject);
-            });
+function mapUpdate(lat, lon, zoom) { //address - адрес или lat,lon в текстовом виде
+//    if (address) {//&& map_created
+//        var geocode = ymaps.geocode(address);
+//        geocode.then(function (res) {
+//            map.geoObjects.each(function (geoObject) {
+//                map.geoObjects.remove(geoObject);
+//            });
+//
+//            var position = res.geoObjects.get(0).geometry.getCoordinates(),
+//                    placemark = new ymaps.Placemark(position, {}, {});
+//
+//            map.geoObjects.add(placemark);
+//            map.setCenter(position, zoom);
+//        });
+//    }
+    var lonLat = new OpenLayers.LonLat(lon, lat)
+            .transform(
+                    new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                    map.getProjectionObject() // to Spherical Mercator Projection
+                    );
 
-            var position = res.geoObjects.get(0).geometry.getCoordinates(),
-                    placemark = new ymaps.Placemark(position, {}, {});
+    markers.addMarker(new OpenLayers.Marker(lonLat));
 
-            map.geoObjects.add(placemark);
-            map.setCenter(position, zoom);
-        });
-    }
+    map.setCenter(lonLat, zoom);
 }
 
 function CreateBatchPanel(idBatch, QueueNo) {

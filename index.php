@@ -11,19 +11,43 @@
         <link rel="stylesheet" href="css/kitchen.css">
 
 
-        <script src="js-ext/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+        <!--<script src="js-ext/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>-->
+        <script src="js-ext/jquery-3.2.1.min.js"></script>
         <script src="js-ext/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <!--        <script src="js-ext/jquery-ui-1.12.0.custom/external/jquery/jquery.js"></script>
         <script src="js-ext/jquery-ui-1.12.0.custom/jquery-ui.js"></script>-->
         <script src="js-ext/jquery.ui.touch-punch.min.js"></script>
         <script src="js-ext/jquery.scannerdetection.js"></script>
-
         <script src="js-ext/easy-pie-chart.js"></script>
-        <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
-        <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.8/css/suggestions.css" type="text/css" rel="stylesheet" />       
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.8/js/jquery.suggestions.min.js"></script>
+        <!--Yandex maps-->
+        <!--<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
+        <!--Google maps-->
+        <!--<script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkIHkx8lFZFjbmqTfFqFANF6OFeRCWSnc&callback=initMap">
+        </script>-->
+        <!--<script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkIHkx8lFZFjbmqTfFqFANF6OFeRCWSnc">
+        </script>-->
+
+        <!--OpenStreetMap-->
+        <!--<script src="https://openlayers.org/en/v4.1.0/build/ol.js"></script>-->
+        <!--<script src="http://www.openlayers.org/api/OpenLayers.js"></script>-->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+              integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+              crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+                integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+        crossorigin=""></script>
+        <!--SUGGESTIONS-->
+        <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.10/css/suggestions.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.10/js/jquery.suggestions.min.js"></script>
+
+        <!--person data plugin-->
+        <link rel="stylesheet" href="js/jquery.ctrl.persondata.css">
+        <script src="js/jquery.ctrl.persondata.js"></script>
+        
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>
         <script src="js/KHelper.js"></script>
@@ -108,7 +132,6 @@
 //        alert('es closed');
 //    }
 
-            //wp.
         </script>
         <!--
                 <ul id="o_sortable3" class="connectedSortable">

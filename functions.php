@@ -139,7 +139,7 @@ function getOrdersByClient($id) {
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
 
     foreach ($items AS $key => $order) {
-        $items[$key]['Client'] = json_decode($order['Client']);
+        $items[$key]['Client'] = json_decode($order['Client'], JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
         $items[$key]['Products'] = json_decode($order['Products']);
         $items[$key]['Log'] = json_decode($order['Log']);
     }
@@ -227,6 +227,11 @@ function getClientObjByPhone($Phone) {
     }
 }
 
+/**
+ * Добавление\редактирование клиента. Если id присутствует, то редактируем. Проверяем, не существует ли в базе клмента с таким номером телефона.
+ * @param json $Client
+ * @return type
+ */
 function setClient($Client) {
     //Client - 
     //{"id": 10, "Org": null, "Card": "0810", "Name": null,
@@ -237,6 +242,7 @@ function setClient($Client) {
     $db = new DB();
     $clientByPhone = null;
     //$Phone=null;
+    //определяем есть ли в базе клиент с таким номером
     if (isset($Client["Phones"])) {
         foreach ($Client['Phones'] as $p) {
             $Phone = $p['Phone'];
@@ -247,9 +253,11 @@ function setClient($Client) {
             }
         }
     }
+
+    // если есть id, то редактируем клиента
     if (isset($Client["id"])) { //modify client
         if ($clientByPhone !== null & $clientByPhone->id !== $Client["id"]) {
-            return '{"status":0,"msg":"error: phone already exists on server","data":'.json_encode($clientByPhone, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES).'}';
+            return '{"status":0,"msg":"error: phone already exists on server","data":' . json_encode($clientByPhone, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES) . '}';
         }
 
         $id = $Client["id"];
@@ -275,10 +283,10 @@ function setClient($Client) {
         $stmt->bindParam(':Surname', $Surname, PDO::PARAM_STR);
         $stmt->execute();
 
-        //first clear phones
+//first clear phones
         $count = $db->conn->exec("DELETE FROM person_phones WHERE idPerson=" . $id);
-        //then insert new phones
 
+//then insert new phones
         $query = 'INSERT INTO person_phones (idPerson,Phone,isDefault) VALUES(:id,:Phone,:isDefault)';
         $stmt = $db->conn->prepare($query);
         $Phone = 1;
@@ -294,9 +302,8 @@ function setClient($Client) {
         }
         return '{"status":1,"msg":"modified","data":' . getClient($id) . '}';
     } else { //create client
-        
         if ($clientByPhone !== null) {
-            return '{"status":0,"msg":"error: client phone already exists on server","data":'.json_encode($clientByPhone, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES).'}';
+            return '{"status":0,"msg":"error: client phone already exists on server","data":' . json_encode($clientByPhone, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES) . '}';
         }
 
         $Org = isset($Client['Org']) ? $Client['Org'] : null;
@@ -495,11 +502,11 @@ function updateBatch($id, $idCourier, $QueueNo) {
 function createOrder($order) {
     $db = new DB();
     //SELECT MAX(No)+1 from orders WHERE DDate='2016-11-27'
-    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,1,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:DDate,:DTime)";
+    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,CDate,CTime,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,1,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:CDate,:CTime,:DDate,:DTime)";
 //    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,DDate,DTime,No) VALUES (:idBranch,:idClient,:idPricingType,:idStatus,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:DDate,:DTime,(SELECT MAX(No)+1 from orders WHERE DDate='".$order['DDate']."'))";
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':idBranch', $order['idBranch']);
-    $stmt->bindParam(':idClient', $order['Client']['id']);
+    $stmt->bindParam(':idClient', $order['Client']['id']); //);
     //$order['Client']['id']
     //$order['Products'][1]['id']
     $stmt->bindParam(':idPricingType', $order['idPricingType']);
@@ -507,39 +514,50 @@ function createOrder($order) {
     $stmt->bindParam(':idKitchen', $order['idKitchen']);
     $stmt->bindParam(':idBatch', $order['idBatch']);
     $stmt->bindParam(':idCreatedBy', $order['idCreatedBy']);
+//No
     $stmt->bindParam(':Price', $order['Price']);
+//ts
     $stmt->bindParam(':Comment', $order['Comment']);
     $stmt->bindParam(':QueueNo', $order['QueueNo']);
+    $stmt->bindParam(':CDate', $order['CDate']);
+    $stmt->bindParam(':CTime', $order['CTime']);
     $stmt->bindParam(':DDate', $order['DDate']);
     $stmt->bindParam(':DTime', $order['DTime']);
-//    if (!isset($order['DDate'])) {
-//        $order['DDate'] = date('Y.m.d'); //set curent
-//    }
+    
+    if (!isset($order['CDate'])) {
+        $order['CDate'] = date('Y.m.d'); //set curent
+    }
+    if (!isset($order['CTime'])) {
+        $order['CTime'] = date('H:i:s'); //set curent
+    }
+//echo 'try create from';
+//    var_dump($order);
+//    $order['Client']['id'];
+//    return;
     $res = $stmt->execute();
+
     $id = $db->conn->lastInsertId();
-
-
-    $query = "INSERT INTO orders_products (idOrder,idProduct,isGift,Count,Comment) VALUES (:idOrder,:idProduct,:isGift,:Count,:Comment)";
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':idOrder', $id);
-
     $idProduct = 1;
     $isGift = 1;
     $Count = 1;
     $Comment = 1;
 
+    $query = "INSERT INTO orders_products (idOrder,idProduct,isGift,Count,Comment) VALUES (:idOrder,:idProduct,:isGift,:Count,:Comment)";
+    $stmt = $db->conn->prepare($query);
+    $stmt->bindParam(':idOrder', $id);
     $stmt->bindParam(':idProduct', $idProduct);
     $stmt->bindParam(':isGift', $isGift);
     $stmt->bindParam(':Count', $Count);
     $stmt->bindParam(':Comment', $Comment);
 
+
+
     foreach ($order['Products'] as $p) {
         $idProduct = intval($p['id']);
-
         $isGift = isset($p['isGift']) ? intval($p['isGift']) : 0;
         $Count = isset($p['Count']) ? intval($p['Count']) : 1;
         $Comment = isset($p['Comment']) ? $p['Comment'] : null;
-        $res = $stmt->execute();
+        //$res = $stmt->execute();
     }
 
 //    $a = array('phone' => 111111111, 'image' => "sadasdasd43eadasdad");
@@ -709,6 +727,46 @@ function fillApp_site($idSite) {
     $item = $stmt->fetch(PDO::FETCH_ASSOC); //FETCH_ASSOC
     //return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
     return $item['Client'];
+}
+
+/**
+ * Определяет находится ли точка в многоугольнике
+ * @param array $point Точка [x,y]
+ * @param array $polygon Координаты многоугольника [[x,y],[x,y]...]
+ * @return boolean
+ */
+function in_polygon($point, $polygon) {
+    if ($polygon[0] != $polygon[count($polygon) - 1])
+        $polygon[count($polygon)] = $polygon[0];
+    $j = 0;
+    $oddNodes = false;
+    $x = $point[1];
+    $y = $point[0];
+    $n = count($polygon);
+    for ($i = 0; $i < $n; $i++) {
+        $j++;
+        if ($j == $n) {
+            $j = 0;
+        }
+        if ((($polygon[$i][0] < $y) && ($polygon[$j][0] >= $y)) || (($polygon[$j][0] < $y) && ($polygon[$i][0] >= $y))) {
+            if ($polygon[$i][1] + ($y - $polygon[$i][0]) / ($polygon[$j][0] - $polygon[$i][0]) * ($polygon[$j][1] -
+                    $polygon[$i][1]) < $x) {
+                $oddNodes = !$oddNodes;
+            }
+        }
+    }
+    return $oddNodes;
+}
+
+/**
+ * Анализирует местоположение курьера и назначает ему заказы, если нужно
+ * @param type $id id курьера
+ * @param type $lat GPS координаты курьера
+ * @param type $lon GPS координаты курьера
+ * @return int
+ */
+function setCourierCoords($id, $lat, $lon) {
+    return 1;
 }
 
 // Parameters:

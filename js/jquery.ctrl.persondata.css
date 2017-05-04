@@ -1,0 +1,49 @@
+.persondata{
+    margin-top: 40px;
+    float:left;
+    width: 340px;
+    padding: 4px;
+    margin: 6px;
+    height: 574px;
+}
+.persondata.ui-widget-content{
+  font-size: 12px;  
+}
+.persondata input {
+    /*height: 2em;*/
+    /*width: 170px;*/
+    border: 1px solid #d8d8d8;
+    padding: 0 7px;
+    margin: 2px;
+}
+.prs-phone{
+    width: 70px;
+}
+.prs-card{
+    width: 50px;
+}
+.prs-name{
+    width: 126px;
+}
+.prs-address{
+    width: 180px;
+}
+.prs-et{
+    width: 26px;
+}
+.prs-info{
+    height:100px;
+    
+    width: 80%;
+    
+    
+}
+.prs-comment{
+    width: 410px;
+}
+.panel-map {
+    height: 300px;
+    border: 1px solid #d8d8d8;
+    background: #ffffff;
+    /*background-size: 400px 250px;*/
+}

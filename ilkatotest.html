@@ -6,23 +6,45 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>title</title>
+        <title>Ilkato services</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <style>
+            pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+            .string { color: green; }
+            .number { color: darkorange; }
+            .boolean { color: blue; }
+            .null { color: magenta; }
+            .key { color: red; }
+        </style>
+        <!--        <style>
+                    #map {
+                        height: 400px;width: 100%;
+                    }
+                </style>-->
     </head>
     <body>
+        <h3>Order</h3>
         <button onclick="test_getOrder()">getOrder</button>
         <button onclick="test_setOrder()">setOrder</button>
+        <button onclick="test_getOrdersByClient()">getOrdersByClient</button>
+        <h3>Client</h3>
         <button onclick="test_setClient()">setClient</button>
-        <button onclick="test_getSiteUpdates()">getSiteUpdates</button>
         <button onclick="test_getClientByPhone()">getClientByPhone</button>
         <button onclick="test_getClients()">getClients</button>
+        <h3>Product</h3>
         <button onclick="test_getProducts()">getProducts</button>
-        <button onclick="test_getOrdersByClient()">getOrdersByClient</button>
+        <h3>Courier</h3>
+        <button onclick="test_setCourierCoords()">setCourierCoords</button>
+        <h3>under development...</h3>
+        <button onclick="test_getSiteUpdates()">getSiteUpdates</button>
+        <hr/>
         <p>result</p>
-        <div id="result" style="border:1px black solid"></div>
 
+        <div id="gmap" style="height: 400px;width: 100%;"></div>
+
+        <pre id="result"></pre>
         <script>
 
             function test_getOrder() {
@@ -34,7 +56,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -44,32 +66,30 @@ and open the template in the editor.
             }
 
             function test_setClient() {
-                var Client = {};
-
                 //если id задан, то клиент обновиться                
                 //если не задан или равен null, то клиент создастся
                 //На сервере проверится дефолтный телефонный номер клиента. Если он уже занят другим клиентом, то в ответе вернется ощибка. Вместе с ошибкой вернется объект клиента с указанным телефоном.
-
-                Client.id = 9226;
-                
-                Client.Name = 'Ванек';
-                Client.Surname = 'Пупкин';
-                Client.Phones = [{"Phone": 9277777778, "isDefault": 1},{"Phone": 9626040203}];
-                Client.Addresses = [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}]
-                Client.Card = "1234";
-                Client.Comment = "тут коммент";
-                Client.Org = 'ОАО "ТяпЛяпСтрой"';
+                var client = {
+                    id: 9226,
+                    Name: 'Ванек',
+                    Surname: 'Пупкин',
+                    Phones: [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}],
+                    Addresses: [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}],
+                    Card: "1234",
+                    Comment: "тут коммент",
+                    Org: 'ОАО "ТяпЛяпСтрой"'
+                };
 
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    data: "action=setClient&client=" + JSON.stringify(Client),
+                    data: "action=setClient&client=" + JSON.stringify(client),
                     url: "helper.php",
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
                         //$("#clients").text(data);
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -79,41 +99,45 @@ and open the template in the editor.
             }
 
             function test_setOrder() {
-                var Client = {};
-                Client.id = null; //если id задан, то клиент обновится в базе. Иначе - создастся новый
-                Client.Name = 'Пупкин Иван';
-                Client.Phones = [{"Phone": 9277777777, "isDefault": 1}]
-                Client.Addresses = [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}]
-                //Client.Card = null;
-                //Client.Comment = null;
+                var client = {
+                    id: 9226, //на данный момент достаточно только ID клиента. Остальную инфу сервер пока не обрабатывает.
+                    //Name: 'Ванек',
+                    //Surname: 'Пупкин',
+                    //Phones: [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}],
+                    //Addresses: [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}],
+                    //Card: "1234",
+                    //Comment: "тут коммент",
+                    //Org: 'ОАО "ТяпЛяпСтрой"'
+                };
 
-                var Order = {};
-                Order.id = null;//51979 //если передаем - то заказ редактируется. Если нет - создается
-                Order.No = null;
-                Order.idBranch = 1;
-                Order.idPricingType = null;
-                Order.idStatus = null;
-                Order.idKitchen = null;
-                Order.idBatch = null;
-                Order.idCreatedBy = null;
-                Order.Price = null;
-                Order.Comment = null;
-                Order.QueueNo = null;
-                Order.DDate = "17-02-03"; //"yy-mm-dd"
-                Order.DTime = "15:00";
-                Order.Products = [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}];
-                Order.Client = Client;
-
+                var order = {
+                    id: null, //51979 //если передаем - то заказ редактируется. Если нет - создается
+                    No: null, //номер заказа назначается сервером. Нумерация начинается с 1 каждый день
+                    idBranch: 1,
+                    idPricingType: null,
+                    idStatus: null,
+                    idKitchen: null,
+                    idBatch: null,
+                    idCreatedBy: null,
+                    Price: null,
+                    Comment: null,
+                    QueueNo: null,
+                    //CDate: "17-02-03", // "yy-mm-dd" дата создания заказа. Если не передавать, то сервер установит текущую
+                    //CTime: "15:00", //соответственно, время создания
+                    DDate: "17-02-03", // К какому числу клиент хочет заказ
+                    DTime: "15:00", // Соответственно, к какому времени
+                    Products: [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}],
+                    Client: client
+                };
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    data: "action=setOrder&order=" + JSON.stringify(Order),
+                    data: "action=setOrder&order=" + JSON.stringify(order),
                     url: "helper.php",
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        //$("#clients").text(data);
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -131,7 +155,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -149,7 +173,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -167,7 +191,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -185,7 +209,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -203,7 +227,7 @@ and open the template in the editor.
                     cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").text(JSON.stringify(data));
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
                         console.log(data);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -212,6 +236,47 @@ and open the template in the editor.
                 });
             }
 
+            function test_setCourierCoords() {
+                var Courier = {
+                    id: 4,
+                    lat: 53.204552,
+                    lon: 50.224026
+                };
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    data: "action=setCourierCoords&courier=" + JSON.stringify(Courier),
+                    url: "helper.php",
+                    cache: false,
+                    timeout: 30000,
+                    success: function (data) {
+                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("status: " + xhr.status + " | " + thrownError);
+                    }
+                });
+            }
+
+            function syntaxHighlight(json) {
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                    var cls = 'number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'key';
+                        } else {
+                            cls = 'string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                });
+            }
         </script>
     </body>
 </html>

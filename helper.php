@@ -82,9 +82,9 @@ switch ($action) {
 //        if (isset($c["id"])) { //get client from db and then modify
 //json_encode($client, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
 //            $result = '{"status":1,"msg":"modified","data":' . $client . '}';
- //       } else { //create client in db
- //           $result = '{"status":2,"msg":"created","data":' . $client . '}';
- //       }
+        //       } else { //create client in db
+        //           $result = '{"status":2,"msg":"created","data":' . $client . '}';
+        //       }
         echo $result;
         break;
 
@@ -139,16 +139,17 @@ switch ($action) {
     case 'createOrder':
         $json = filter_input(INPUT_POST, 'order');
         $result = createOrder(json_decode($json, TRUE));
-        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
         break;
     case 'setOrder':
         $o = json_decode(filter_input(INPUT_POST, 'order'), TRUE);
-
         if (isset($o["id"])) { //get order from db and then modify
             $order = getOrderObj($o["id"]);
-            $result = '{"status":1,"msg":"modified","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
+            $result = '{"status":1,"msg":"modified","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}'; // | JSON_UNESCAPED_SLASHES
         } else { //create order in db
+        
             $order = createOrder($o);
+            //var_dump($order);
 //            $order = [
 //                "id" => NULL,
 //                "No" => NULL,
@@ -205,6 +206,32 @@ switch ($action) {
         $result = createBatch($date);
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         break;
+    case 'setCourierCoords':
+        $c = json_decode(filter_input(INPUT_POST, 'courier'), TRUE);
+        $id = $c['id'];
+        $lat = $c['lat'];
+        $lon = $c['lon'];
+//        $result = setCourierCoords($id, $lat, $lon);
+        //$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        //$lat = filter_input(INPUT_POST, 'geo_lat', FILTER_VALIDATE_FLOAT);
+        //$lon = filter_input(INPUT_POST, 'geo_lon', FILTER_VALIDATE_FLOAT);
+        //echo setCourierCoords($id, $lat, $lon);
+//        $result = '{"status":1,"msg":"accepted","data":' . json_encode($c, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
+
+        $polygon = [
+            [53.19632, 50.17889],
+            [53.21437, 50.18082],
+            [53.23195, 50.21318],
+            [53.22537, 50.25609],
+            [53.20605, 50.27154],
+            [53.18198, 50.25506],
+            [53.17602, 50.23],
+            [53.18137, 50.19567]
+        ];
+        //echo $result;
+        echo in_polygon([$lat,$lon], $polygon) ? '{"status":"IN"}' : '{"status":"OUT"}';
+        break;
+
     default:
         header('Content-Type: application/json');
         echo '{"status":0,"msg":"wrong action param"}';
