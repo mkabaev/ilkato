@@ -229,8 +229,8 @@ function getClientObjByPhone($Phone) {
 
 /**
  * Добавление\редактирование клиента. Если id присутствует, то редактируем. Проверяем, не существует ли в базе клмента с таким номером телефона.
- * @param json $Client
- * @return type
+ * @param JSON $Client
+ * @return JSON
  */
 function setClient($Client) {
     //Client - 
@@ -300,7 +300,7 @@ function setClient($Client) {
             $isDefault = isset($p['isDefault']) ? intval($p['isDefault']) : 0;
             $res = $stmt->execute();
         }
-        return '{"status":1,"msg":"modified","data":' . getClient($id) . '}';
+        return '{"status":2,"msg":"modified","data":' . getClient($id) . '}';
     } else { //create client
         if ($clientByPhone !== null) {
             return '{"status":0,"msg":"error: client phone already exists on server","data":' . json_encode($clientByPhone, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES) . '}';
@@ -344,7 +344,7 @@ function setClient($Client) {
             $isDefault = isset($p['isDefault']) ? intval($p['isDefault']) : 0;
             $res = $stmt->execute();
         }
-        return '{"status":2,"msg":"created","data":' . getClient($id) . '}';
+        return '{"status":1,"msg":"created","data":' . getClient($id) . '}';
     }
     //$stmt = $db->conn->prepare("SET @@group_concat_max_len:=10000000");
     //$stmt->execute();
@@ -499,23 +499,56 @@ function updateBatch($id, $idCourier, $QueueNo) {
     return $res;
 }
 
-function createOrder($order) {
+/**
+ * Добавление\редактирование заказа. Если id присутствует, то редактируем.
+ * @param JSON $order
+ * @return JSON
+ */
+function setOrder($order) {
+    $result = [
+        "status" => NULL,
+        "msg" => NULL,
+        "data" => NULL
+    ];
+
+    /* Вызов хранимой процедуры с INOUT параметром */
+//$colour = 'red';
+//$sth = $dbh->prepare('CALL puree_fruit(?)');
+//$sth->bindParam(1, $colour, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT, 12);
+//$sth->execute();
+//print("After pureeing fruit, the colour is: $colour");
+//$result = '{"status":1,"msg":"created","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
+    $queryIns = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,CDate,CTime,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,:idStatus,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:CDate,:CTime,:DDate,:DTime)";
+    $queryUpd = "UPDATE orders SET idBranch=:idBranch,idClient=:idClient,idPricingType=:idPricingType,idStatus=:idStatus,idKitchen=:idKitchen,idBatch=:idBatch,idCreatedBy=:idCreatedBy,Price=:Price,Comment=:Comment,QueueNo=:QueueNo,CDate=:CDate,CTime=:CTime,DDate=:DDate,DTime=:DTime WHERE id=:id";
+    $idStatus = empty($order["idStatus"]) ? 1 : $order["idStatus"];
+    $isNew = empty($order["id"]); // если id задан, то заказ создается, иначе редактируется
+
     $db = new DB();
-    //SELECT MAX(No)+1 from orders WHERE DDate='2016-11-27'
-    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,CDate,CTime,DDate,DTime) VALUES (:idBranch,:idClient,:idPricingType,1,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:CDate,:CTime,:DDate,:DTime)";
-//    $query = "INSERT INTO orders (idBranch,idClient,idPricingType,idStatus,idKitchen,idBatch,idCreatedBy,Price,Comment,QueueNo,DDate,DTime,No) VALUES (:idBranch,:idClient,:idPricingType,:idStatus,:idKitchen,:idBatch,:idCreatedBy,:Price,:Comment,:QueueNo,:DDate,:DTime,(SELECT MAX(No)+1 from orders WHERE DDate='".$order['DDate']."'))";
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':idBranch', $order['idBranch']);
-    $stmt->bindParam(':idClient', $order['Client']['id']); //);
-    //$order['Client']['id']
-    //$order['Products'][1]['id']
-    $stmt->bindParam(':idPricingType', $order['idPricingType']);
-    //$stmt->bindParam(':idStatus', $order['idStatus']);
-    $stmt->bindParam(':idKitchen', $order['idKitchen']);
-    $stmt->bindParam(':idBatch', $order['idBatch']);
-    $stmt->bindParam(':idCreatedBy', $order['idCreatedBy']);
+
+//SELECT MAX(No)+1 from orders WHERE DDate='2016-11-27'
+
+    $stmt = $db->conn->prepare($isNew ? $queryIns : $queryUpd);
+    if ($isNew) {
+        $result["status"] = 1;
+        $result["msg"] = "created";
+    } else {
+        $result["status"] = 2;
+        $result["msg"] = "modified";
+        $db->conn->exec('DELETE from orders_products WHERE idOrder=' . $order["id"]); //очистим список продуктов
+        $stmt->bindParam(':id', $order['id'], PDO::PARAM_INT);
+    }
+
+    $stmt->bindParam(':idBranch', $order['idBranch'], PDO::PARAM_INT);
+    $stmt->bindParam(':idClient', $order['Client']['id'], PDO::PARAM_INT); //);
+//$order['Client']['id']
+//$order['Products'][1]['id']
+    $stmt->bindParam(':idPricingType', $order['idPricingType'], PDO::PARAM_INT);
+    $stmt->bindParam(':idStatus', $idStatus, PDO::PARAM_INT);
+    $stmt->bindParam(':idKitchen', $order['idKitchen'], PDO::PARAM_INT);
+    $stmt->bindParam(':idBatch', $order['idBatch'], PDO::PARAM_INT);
+    $stmt->bindParam(':idCreatedBy', $order['idCreatedBy'], PDO::PARAM_INT);
 //No
-    $stmt->bindParam(':Price', $order['Price']);
+    $stmt->bindParam(':Price', $order['Price'], PDO::PARAM_STR);
 //ts
     $stmt->bindParam(':Comment', $order['Comment']);
     $stmt->bindParam(':QueueNo', $order['QueueNo']);
@@ -523,49 +556,45 @@ function createOrder($order) {
     $stmt->bindParam(':CTime', $order['CTime']);
     $stmt->bindParam(':DDate', $order['DDate']);
     $stmt->bindParam(':DTime', $order['DTime']);
-    
-    if (!isset($order['CDate'])) {
+
+    if (empty($order['CDate'])) {
         $order['CDate'] = date('Y.m.d'); //set curent
     }
-    if (!isset($order['CTime'])) {
+    if (empty($order['CTime'])) {
         $order['CTime'] = date('H:i:s'); //set curent
     }
-//echo 'try create from';
-//    var_dump($order);
-//    $order['Client']['id'];
-//    return;
+
     $res = $stmt->execute();
 
-    $id = $db->conn->lastInsertId();
-    $idProduct = 1;
-    $isGift = 1;
-    $Count = 1;
-    $Comment = 1;
+    if ($isNew) {
+        $order["id"] = $db->conn->lastInsertId();
+    }
+    $idProduct = NULL;
+    $isGift = NULL;
+    $Count = NULL;
+    $Comment = NULL;
 
-    $query = "INSERT INTO orders_products (idOrder,idProduct,isGift,Count,Comment) VALUES (:idOrder,:idProduct,:isGift,:Count,:Comment)";
-    $stmt = $db->conn->prepare($query);
-    $stmt->bindParam(':idOrder', $id);
+    $stmt = $db->conn->prepare("INSERT INTO orders_products (idOrder,idProduct,isGift,Count,Comment) VALUES (:idOrder,:idProduct,:isGift,:Count,:Comment)");
+    $stmt->bindParam(':idOrder', $order["id"]);
     $stmt->bindParam(':idProduct', $idProduct);
     $stmt->bindParam(':isGift', $isGift);
     $stmt->bindParam(':Count', $Count);
     $stmt->bindParam(':Comment', $Comment);
 
-
-
     foreach ($order['Products'] as $p) {
         $idProduct = intval($p['id']);
-        $isGift = isset($p['isGift']) ? intval($p['isGift']) : 0;
-        $Count = isset($p['Count']) ? intval($p['Count']) : 1;
-        $Comment = isset($p['Comment']) ? $p['Comment'] : null;
-        //$res = $stmt->execute();
+        $isGift = empty($p['isGift']) ? 0 : intval($p['isGift']);
+        $Count = empty($p['Count']) ? 1 : intval($p['Count']);
+        $Comment = empty($p['Comment']) ? null : $p['Comment'];
+        $res = $stmt->execute();
     }
 
 //    $a = array('phone' => 111111111, 'image' => "sadasdasd43eadasdad");
 //    $db->insertArray('user', $a);
 //    // This will asume your table has a 'id' column, id: 1 will be updated in the example below:
 //    $db->updateArray('user', 1, $a);
-
-    return getOrderObj($id);
+    $result["data"] = getOrderObj($order["id"]);
+    return json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
 }
 
 function createBatch($date = null) {
@@ -577,16 +606,16 @@ function createBatch($date = null) {
         $date = date('Y.m.d'); //set curent
     }
     $res = $stmt->execute();
-    //return $res;
+//return $res;
 
     $query = "SELECT * from batches where DDate=:date";
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':date', $date);
-    //$date = date('Y.m.d');
-    //$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
+//$date = date('Y.m.d');
+//$date = date('Y.m.d', strtotime('-1 day')); //'2015.12.27';
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC); //FETCH_ASSOC
-    //return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
+//return json_encode($orders, JSON_UNESCAPED_UNICODE); //$orders
     return $items;
 }
 
@@ -594,9 +623,9 @@ function updateBatchesQueue($ids) {
     $db = new DB();
 
     $query = "UPDATE ilkato.batches SET QueueNo=? WHERE id=?";
-    //$query = ";
-    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
-    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+//$query = ";
+//$query = "UPDATE employees SET isOnline=true WHERE id=3";
+//UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
     $stmt = $db->conn->prepare($query);
 
     $queue = 0;
@@ -616,8 +645,8 @@ function registerNewSession($uid, $wid) {
     $stmt->execute();
 
     $query = "INSERT INTO app_activesessions (id_employee, id_workplace) values(:uid, :wid)";
-    //$query = "UPDATE employees SET isOnline=true WHERE id=3";
-    //UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
+//$query = "UPDATE employees SET isOnline=true WHERE id=3";
+//UPDATE module_kitchen SET `stopCoocking`=NOW() WHERE id=$id
     $stmt = $db->conn->prepare($query);
     $stmt->bindParam(':uid', $uid);
     $stmt->bindParam(':wid', $wid);
@@ -725,7 +754,7 @@ function fillApp_site($idSite) {
     $stmt->bindParam(':idClient', $idClient);
     $stmt->execute();
     $item = $stmt->fetch(PDO::FETCH_ASSOC); //FETCH_ASSOC
-    //return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+//return json_encode($items, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
     return $item['Client'];
 }
 

@@ -94,14 +94,34 @@ $.widget("ctrl.personData", {
     _create: function () {
         this.options.value = this._constrain(this.options.value);
         this.element.addClass("ui-widget ui-widget-content persondata");
-
         var cgClient = $('<div/>').appendTo(this.element);
         cgClient.append('+7<input id="phone" class="prs-phone" placeholder="Телефон">');
         cgClient.append('+7<input id="phone2" class="prs-phone" placeholder="Телефон">');
         cgClient.append('<input id="card" class="prs-card" placeholder="№ карты">');
         cgClient.append('<input id="name"  class="prs-name" placeholder="Имя">');
         cgClient.append('<input type="text" id="info"  class="prs-info" placeholder="Доп. инфориация">');
-
+        
+var select = $('<select/>', {
+        //id: "o_selstatus",
+        name: "address",
+//        class: 'ui-widget-header',
+    }).appendTo(cgClient).append('<label for="address">Адрес</label>');
+    select.append(ArrayToOptionItems(["Владимирская 43, кв.82", "Партизанская 86","новый адрес..."]));
+    //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
+    $(select).selectmenu({
+        width: 240,
+//        position: {
+//            my: "left+10 top",
+//            at: "left top+20"
+//        },
+        change: function (event, ui) {
+        }
+    });
+    select.val(2);
+    select.selectmenu('refresh', true);
+    
+    
+    
         var divAddress = $('<div/>').appendTo(cgClient);
         divAddress.append('<h3>Владимирская 43</h3>');
         divAddress.append('<div><input class="prs-address" type="text" placeholder="Адрес"><input class="prs-et" placeholder="этаж"></div>');
@@ -113,7 +133,7 @@ $.widget("ctrl.personData", {
         divAddress.accordion({
             heightStyle: "content", //fill",
             //active: 2,
-            //icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" } //можно и без этого
+            icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" } //можно и без этого
         });
         
 //        cgClient.controlgroup({
@@ -122,6 +142,7 @@ $.widget("ctrl.personData", {
 
         var mapPanel = $('<div class="panel-map"></div>').appendTo(cgClient);
 
+//this._hoverable( this.element.find( "*" ) );
 
         //initMap(map[0]);
         var mapbox = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {

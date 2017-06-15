@@ -142,13 +142,20 @@ switch ($action) {
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
         break;
     case 'setOrder':
-        $o = json_decode(filter_input(INPUT_POST, 'order'), TRUE);
-        if (isset($o["id"])) { //get order from db and then modify
-            $order = getOrderObj($o["id"]);
-            $result = '{"status":1,"msg":"modified","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}'; // | JSON_UNESCAPED_SLASHES
-        } else { //create order in db
+        $order = json_decode(filter_input(INPUT_POST, 'order'), TRUE);
+        $result = setOrder($order);
+        echo $result;
+        //$result = '{"status":1,"msg":"created","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
+//        if (isset($o["id"])) { //get order from db and then modify
+//            $order = getOrderObj($o["id"]);
+//            $result = '{"status":1,"msg":"modified","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}'; // | JSON_UNESCAPED_SLASHES
+//        } else { //create order in db
+//        
+//            $order = createOrder($o);
+
+
         
-            $order = createOrder($o);
+        
             //var_dump($order);
 //            $order = [
 //                "id" => NULL,
@@ -193,13 +200,9 @@ switch ($action) {
 //            $order["DDate"] = $o["DDate"];
 //            $order["DTime"] = $o["DTime"];
             //$result = createOrder($order);
-//        echo json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
             //echo json_encode($order, JSON_UNESCAPED_UNICODE);
 //        echo getOrder($o["order_id"]);
             //$result = '{"status":2,"msg":"created"}';
-            $result = '{"status":1,"msg":"created","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
-        }
-        echo $result;
         break;
     case 'createBatch':
         $date = filter_input(INPUT_POST, 'date');

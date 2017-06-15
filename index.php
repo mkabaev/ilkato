@@ -10,7 +10,6 @@
         <link rel="stylesheet" href="css/operator.css">
         <link rel="stylesheet" href="css/kitchen.css">
 
-
         <!--<script src="js-ext/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>-->
         <script src="js-ext/jquery-3.2.1.min.js"></script>
         <script src="js-ext/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
@@ -44,12 +43,18 @@
         <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.10/css/suggestions.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.10/js/jquery.suggestions.min.js"></script>
 
-        <!--person data plugin-->
+        <!--jsGrid plugin-->
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+        <!--Person data plugin-->
         <link rel="stylesheet" href="js/jquery.ctrl.persondata.css">
         <script src="js/jquery.ctrl.persondata.js"></script>
-        
+
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>
+        <script src="js/AdmHelper.js"></script>
         <script src="js/KHelper.js"></script>
         <script src="js/OHelper.js"></script>
         <script src="js/orderEditor.js"></script>
@@ -91,11 +96,13 @@
                 //console.log(document.attributes);
                 $('#workplace').addClass('wp-' + type);
                 switch (type) {
+                    case '1':
+                        createAdmInterface();
+                        break;
                     case '2':
                         createOperatorInterface();
                         break;
                     case '3':
-
                         createKitchenInterface();
                         break;
                     default:
@@ -109,7 +116,6 @@
             $(document).ajaxComplete(function () {
                 $('#settings').fadeOut().fadeIn();
             });
-
 
 //
             $('#settings').click(function () {

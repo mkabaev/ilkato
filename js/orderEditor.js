@@ -1,7 +1,3 @@
-var clientsCache = [];//сюда кэшируем клиентов для поиска по номеру телефона
-var AllProducts = []; //справочник продуктов
-var curOrder = {};
-
 //var map;
 //var markers;
 
@@ -87,7 +83,7 @@ function createOrderEditor() { //TODO  all orders to global
     var cgClient = $('<div/>').appendTo(div).personData({
         value: 20,
         complete25: function (event, data) {
-            alert("Callbacks are great!");
+           // alert("Callbacks are great!");
         }
     });
 

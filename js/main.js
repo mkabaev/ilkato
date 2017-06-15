@@ -1,3 +1,7 @@
+var clientsCache = [];//сюда кэшируем клиентов для поиска по номеру телефона
+var AllProducts = []; //справочник продуктов
+var curOrder = {};
+
 function createClientObj() {
     var c = {};
     c.id = null;
@@ -244,6 +248,7 @@ function CreateDialog(id, caption, _class, enableAnimation) {
         autoOpen: false,
         modal: true,
         resizable: false,
+        //buttons: [ { text: "Okkkk", click: function() { $( this ).dialog( "close" ); } } ],
 //        show: {
 //            effect: "blind",
 //            duration: 300
