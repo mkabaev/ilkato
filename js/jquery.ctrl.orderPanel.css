@@ -1,0 +1,166 @@
+.op {
+    /*    width:auto;*/
+    width: 130px;
+    height:130px;
+    margin: 5px;
+    position: relative;
+}
+
+.op .no{
+    margin-left: 16px;
+}
+.op.overdue{
+}
+.op.overdue .overdue-text{
+    transform: rotate(-35deg);
+    position: absolute;
+    z-index: 100;
+    top: 52px;
+    font-weight: bold;
+    color: red;
+    font-size: 20px;
+}
+
+/*kitchen workplace*/
+.wp-3 .op{
+    /*    width:auto;*/
+    width: 60px;
+    height:60px;
+    margin: 5px;
+    position: relative;
+}
+.wp-3 .op .time,.wp-3 .op .content{
+    display: none;
+}
+.wp-3 .op.selected {
+    border-color: red;
+    border-width: 2px;
+}
+
+.op:hover {
+    border-color: red;
+}
+
+.op .status {
+    font-size:larger;
+    float:right;
+}
+.op .header {
+    padding: 0.1em;
+    /* margin-bottom: 0.5em; */
+    position: relative;
+    font-size: 2em;
+    /*height: 60px;*/
+}
+/*.ui-state-disabled .order-content{
+    text-decoration: line-through;
+}*/
+.circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #fff;
+    line-height: 24px;
+    text-align: center;
+    background: #c77405;
+    position: absolute;
+    left: -6px;
+    top: -6px;
+    opacity: 0.8;
+    border-color: black;
+    border-width: 2px;
+}
+.ui-state-disabled .op-content ul {
+    list-style: none;
+}
+/*.ui-state-disabled .order-content ul li {
+    position: relative;
+}
+.ui-state-disabled .order-content ul li:after {
+    content: '\2714';
+    position: absolute;
+    top: -3px;
+    left: -25px;
+}*/
+
+.op .header .time{
+    /*padding: 0.3em 0.3em;*/
+    /*    margin-bottom: 0.5em;
+        position: relative;*/
+    font-size: 0.25em;
+    position: absolute;
+    right: 2px;
+    top: 24px;
+    /*background-color: red;*/
+}
+/*.order-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+}*/
+.op .content {
+    padding: 0 0 0 0.4em;
+    white-space: normal;
+    font-size: 0.55em;
+    overflow: auto;
+    margin-bottom: 0.2em;
+    height:80px;
+}
+/*.ui-button{
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+}*/
+
+.ord-status-7{
+    opacity: 0.2;
+}
+
+.ord-status-6{
+    opacity: 0.2;
+}
+
+.ord-status-5{
+    opacity: 0.4;
+}
+
+.ord-status-4{
+    opacity: 0.7;
+}
+
+.ord-status-3{
+    opacity: 0.9;
+}
+
+.ord-status-3 .status{
+    animation: blinker 800ms linear infinite;
+}
+
+.ord-status-2{
+}
+
+.ord-status-1{
+}
+
+@keyframes blinker {  
+    50% { opacity: 0; }
+}
+.ord-status-8{
+    /*    opacity: 0.2;*/
+    animation: blinker 500ms linear infinite;
+}
+
+.op .ico-s-1{
+    width: 50%;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+.op .ico-s-2{
+    width: 60%;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}

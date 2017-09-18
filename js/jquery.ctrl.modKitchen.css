@@ -1,0 +1,63 @@
+.modKitchen {
+    float: left;
+    width:500px;
+    padding-top:6px; 
+    padding:0; 
+    margin-left: 10px; 
+    height: 90%;
+    overflow-y:auto;
+    position: relative;
+}
+.modKitchen .tProducts{
+    position: relative; 
+    margin-left: auto; 
+    margin-right: auto;
+    width: 90%;
+}
+.modKitchen .logo{
+    position: absolute;
+    right: 8px;
+    top: 5px;
+    width: 200px;
+}
+
+.modKitchen .header{
+    min-height: 24px;
+    padding: 5px 10px 5px 10px;
+    font-size: 1.5em;
+}
+
+.modKitchen .bprint{
+    font-size: 1.5em;
+}
+
+.modKitchen .comment{
+    min-height: 24px;
+    color: red;
+    padding: 5px 10px 5px 10px;
+    font-size: 1.5em;
+}
+/*background-color: #F39814;*/
+.modKitchen .doneButton{
+    font-size: 2em;
+    font-weight:bold;
+    position: relative;
+    margin:20px;
+    width: calc(100% - 40px);
+}
+.imgPizza {
+    content:url(../images/pizza.png);
+    width:55px;
+    height:55px;  
+    position: absolute;
+    right: 20px;
+    top: 20px;  
+}
+.imgRoll {
+    content:url(../images/rollb.png);
+    width:55px;
+    height:55px;  
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}

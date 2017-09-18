@@ -5,14 +5,28 @@ header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header('Connection: keep-alive');
 $id_session = filter_input(INPUT_GET, 'id_session'); // isset($_GET['uid']) ? (int) $_GET['uid'] : null;
-// установить в базе статус онлайн для этого юзера
+//$wid = filter_input(INPUT_GET, 'wid');
+
 require_once 'functions.php';
+
+// установить в базе статус онлайн для этого юзера
 //updateUserStatus($uid, true);
 //$i = 0;
 
-while (true) { //$i < 3
-    $updates = getSessionUpdates($id_session);
+//TODO
+//switch ($wid) {
+//    case 2: //Operator
+//        break;
+//    case 5: //Kitchen
+//        break;
+//    case 6: //Couriers
+//        break;
+//    default:
+//        break;
+//}
 
+while (true) {
+    $updates = getSessionUpdates($id_session);
     foreach ($updates as $update) {
         echo "event: " . $update['event'] . PHP_EOL;
         // TODO: send changed orders only
@@ -32,18 +46,15 @@ while (true) { //$i < 3
         ob_end_flush();
         flush();
     }
-    sleep(2);
-
-    //$i = $i + 1;
+    sleep(1);
+//$i = $i + 1;
 //            echo "data: msg\n\n";
 //echo PHP_EOL;
 //            echo ": heartbeat\n\n";
 //            ob_end_flush();
 //            flush();
 }
-        
-        
-        
+
 //$event='ordUpdate';        
 //switch ($event) {
 //    case 'ordUpdate':

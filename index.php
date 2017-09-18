@@ -33,37 +33,66 @@
         <!--OpenStreetMap-->
         <!--<script src="https://openlayers.org/en/v4.1.0/build/ol.js"></script>-->
         <!--<script src="http://www.openlayers.org/api/OpenLayers.js"></script>-->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-              integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
-              crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
-                integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
-        crossorigin=""></script>
-        <!--SUGGESTIONS-->
-        <link href="https://cdn.jsdelivr.net/jquery.suggestions/16.10/css/suggestions.css" type="text/css" rel="stylesheet" />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.suggestions/16.10/js/jquery.suggestions.min.js"></script>
 
-        <!--jsGrid plugin-->
-        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
-        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+
+        <!--LEAFLET 1.1.0-->
+        <link href="js-ext/leaflet/leaflet.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="js-ext/leaflet/leaflet.js"></script>
+
+        <!--GeoSearch-->
+        <script type="text/javascript" src="js-ext/bundle.min.js"></script>
+
+
+        <!--SUGGESTIONS 17.2-->
+        <link href="js-ext/suggestions/suggestions.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="js-ext/suggestions/jquery.suggestions.min.js"></script>
+
+        <!--jsGrid 1.5.3 plugin-->
+        <link type="text/css" rel="stylesheet" href="js-ext/jsGrid/jsgrid.min.css" />
+        <link type="text/css" rel="stylesheet" href="js-ext/jsGrid/jsgrid-theme.min.css" />
+        <script type="text/javascript" src="js-ext/jsGrid/jsgrid.min.js"></script>
 
         <!--Person data plugin-->
         <link rel="stylesheet" href="js/jquery.ctrl.persondata.css">
         <script src="js/jquery.ctrl.persondata.js"></script>
+
+        <!--Kitchen module plugin-->
+        <link rel="stylesheet" href="js/jquery.ctrl.modKitchen.css">
+        <script src="js/jquery.ctrl.modKitchen.js"></script>
+
+        <link rel="stylesheet" href="js/jquery.ctrl.orderPanel.css">
+        <script src="js/jquery.ctrl.orderPanel.js"></script>
+
+        <link rel="stylesheet" href="js/jquery.ctrl.orderEditor.css">
+        <script src="js/jquery.ctrl.orderEditor.js"></script>
+
+        <script src="js-ext/jquery.dialogextend.min.js"></script>
 
         <script src="js/main.js"></script>
         <script src="js/services.js"></script>
         <script src="js/AdmHelper.js"></script>
         <script src="js/KHelper.js"></script>
         <script src="js/OHelper.js"></script>
+        <script src="js/CHelper.js"></script>
         <script src="js/orderEditor.js"></script>
-        <script src="js/timer.js"></script>
+        <!--<script src="js/timer.js"></script>-->
+        <script src="js-ext/jquery.countdown360.js"></script>
     </head>
     <body>
         <div id="topmenu" class="ui-widget ui-state-focus" style="height:42px;">
             <div id="userinfo" onclick="showSelectUserDialog()">пользователь</div>
             <div id="settings" title="Please provide your firstname." ><span class="ui-icon ui-icon-gear"></span>Настройки</div>
+            <!--                    <div id="fountainG">
+                                    <div id="fountainG_1" class="fountainG"></div>
+                                    <div id="fountainG_2" class="fountainG"></div>
+                                    <div id="fountainG_3" class="fountainG"></div>
+                                    <div id="fountainG_4" class="fountainG"></div>
+                                    <div id="fountainG_5" class="fountainG"></div>
+                                    <div id="fountainG_6" class="fountainG"></div>
+                                    <div id="fountainG_7" class="fountainG"></div>
+                                    <div id="fountainG_8" class="fountainG"></div>
+                                </div>-->
         </div>
         <div id="progressbar"></div>
 
@@ -83,39 +112,51 @@
             //123   |   ordUpdate   |   {...}
             //123   |   ordUpdate   |   {...}
             function createWorkplace(type) {
-                stopTimer();
 //                $("#topmenu").append('<div class="ui-widget"><label for="phone">Телефон:</label><input type="text" name="phone" id="phone"></div>');
 //                $("#phone").autocomplete({
 //                    source: clientsCache
 //                });
                 $('#workplace').empty();
+
+                //$('#topwidget').remove();
                 $('#topwidget').remove();
                 $('#workplace').removeClass('wp-2');
                 $('#workplace').removeClass('wp-3');
                 $("body").disableSelection();
                 //console.log(document.attributes);
                 $('#workplace').addClass('wp-' + type);
-                switch (type) {
-                    case '1':
-                        createAdmInterface();
-                        break;
-                    case '2':
-                        createOperatorInterface();
-                        break;
-                    case '3':
-                        createKitchenInterface();
-                        break;
-                    default:
-                        alert('select interface type');
-                        break;
-                }
+                //загружаем справочник продуктов
+//                if (localStorage.getItem("Products") === null) {
+                sendRequest('getProducts', '', function (response) {
+                    G.AllProducts = response;
+                    //console.log("LOADED:");
+                    //console.log(AllProducts);
+                    localStorage.Products = JSON.stringify(response);
+                    switch (type) {
+                        case '1':
+                            createAdmInterface();
+                            break;
+                        case '2':
+                            createOperatorInterface();
+                            break;
+                        case '3':
+                            createKitchenInterface();
+                            break;
+                        case '4':
+                            createCourierInterface();
+                            break;
+                        default:
+                            alert('select interface type');
+                            break;
+                    }
+                });
+//                } else {
+//                    G.AllProducts = JSON.parse(localStorage.Products);
+//                }
             }
 
             var audio = new Audio('s1.mp3');
             //localStorage.removeItem('user_id');
-            $(document).ajaxComplete(function () {
-                $('#settings').fadeOut().fadeIn();
-            });
 
 //
             $('#settings').click(function () {

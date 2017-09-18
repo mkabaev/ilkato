@@ -5,7 +5,6 @@ function createOperatorInterface() {
         //attr: {'title': 'caption'}
     });
     pnlOrders.appendTo($('#workplace'));
-
 //    var filterdate = (new Date()).toISOString().substring(0, 10);
     //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
     //var orders = getOrdersFromLS().filter(function (order, index, arr) {
@@ -37,7 +36,7 @@ function createOperatorInterface() {
             sendRequest('updateBatchesQueue', 'ids=' + JSON.stringify(IDs), function (response) {
                 console.log(response);
             });
-        },
+        }
 //        change: function( event, ui ) {
 //            //console.log("Changed" + ui.sender.attr("id"));// + " to " + ui.item.parent().attr("id"));
 //            console.log("Changed" + ui );// + " to " + ui.item.parent().attr("id"));
@@ -111,87 +110,91 @@ function createOperatorInterface() {
         //attr: {'idBatch': idBatch, 'QueueNo': QueueNo}
         //html:'<div class="o_orderBatchPanelButtons">asd</div>'
     }).appendTo("#topmenu");
-    topwidget.append('Дата: <input type="text" id="datepicker"/>');
+//    topwidget.append('Дата: <input type="text" id="datepicker"/>');
     topwidget.addClass("ui-widget ui-widget-content ui-corner-bottom");
 
 
     //localStorage.dates = ["25.10.2016", "26.10.2016", "29.10.2016"]
 
-    $("#datepicker").datepicker({
-        //showOn: "button",
-        //buttonImage: "images/calendar.gif",
-        //buttonImageOnly: true,
-        //buttonText: "Select date"
-        //minDate: -1,
-        //maxDate: "+1M +10D",
-        //maxDate: +3,
-        //dateFormat: "yy-mm-dd",
-//        beforeShowDay: function (date) {
-//            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
-//            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
-//            return [localStorage.dates.indexOf(string) != -1]
-//        },
-        onSelect: function () {
-            var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-            selectDate(dt);
-        }
-    });
-
-//        var date = new Date();
-//    date.setDate(date.getDate() - 1);
-//
 //    $("#datepicker").datepicker({
-//        dateFormat: "yy-mm-dd",
-//        defaultDate: date,
+//        //showOn: "button",
+//        //buttonImage: "images/calendar.gif",
+//        //buttonImageOnly: true,
+//        //buttonText: "Select date"
+//        //minDate: -1,
+//        //maxDate: "+1M +10D",
+//        //maxDate: +3,
+//        //dateFormat: "yy-mm-dd",
+////        beforeShowDay: function (date) {
+////            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+////            //var string = jQuery.datepicker.formatDate('dd.mm.yy', date);
+////            return [localStorage.dates.indexOf(string) != -1]
+////        },
 //        onSelect: function () {
-//            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+//            var dt = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+//            selectDate(dt);
 //        }
 //    });
 
-    var fs = $('<fieldset/>', {
-        class: 'o-filter-rg'
-    });
-
-    topwidget.append(fs);
-
-    //fs.append('<legend>Фильтр: </legend>');
-    fs.append('<label for="chkP">Печерская</label>');
-    fs.append('<input type="checkbox" name="chkP" id="chkP" item_id=3 checked>');
-    fs.append('<label for="chkNS">Ново-Садовая</label>');
-    fs.append('<input type="checkbox" name="chkNS" id="chkNS" item_id=4 checked>');
-    fs.children('input').checkboxradio({
-        icon: false,
-    });
-//    fs.children('input').prop('checked', true);
-
-    fs.children('input').on("change", function (e) {
-        var target = $(e.target);
-        var id = target.attr("item_id");
-        if (target.is(":checked")) {
-            $('.order[idKitchen=' + id + ']').show();
-        } else {
-            $('.order[idKitchen=' + id + ']').hide();
-        }
-
-//        alert(target.attr("id"));
-    });
+//    var fs = $('<fieldset/>', {
+//        class: 'o-filter-rg'
+//    });
+//
+//    topwidget.append(fs);
+//
+//    //fs.append('<legend>Фильтр: </legend>');
+//    fs.append('<label for="chkP">Печерская</label>');
+//    fs.append('<input type="checkbox" name="chkP" id="chkP" item_id=3 checked>');
+//    fs.append('<label for="chkNS">Ново-Садовая</label>');
+//    fs.append('<input type="checkbox" name="chkNS" id="chkNS" item_id=4 checked>');
+//    fs.children('input').checkboxradio({
+//        icon: false,
+//    });
+////    fs.children('input').prop('checked', true);
+//
+//    fs.children('input').on("change", function (e) {
+//        var target = $(e.target);
+//        var id = target.attr("item_id");
+//        if (target.is(":checked")) {
+//            $('.order[idKitchen=' + id + ']').show();
+//        } else {
+//            $('.order[idKitchen=' + id + ']').hide();
+//        }
+//
+////        alert(target.attr("id"));
+//    });
 
     var bAdd = $("<button/>", {
         //type: 'checkbox',
         id: 'bCreateOrder',
         //name: 'n' + order.id
         //class: 'orderDoneButton'
-    }).appendTo($("#topmenu"));
+    }).appendTo($("#topwidget"));
+
+    var bAddSXL = $("<button/>", {
+        //type: 'checkbox',
+        id: 'bCreateSXLOrder',
+        //name: 'n' + order.id
+        //class: 'orderDoneButton'
+    }).appendTo($("#topwidget"));
 
     bAdd.button({
-        icons: {
-            primary: "ui-icon-plus",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-        text: 'false'
+        icon: "ui-icon-plus",
+//        iconPosition: "bottom",
+//        icons: {
+//            primary: "ui-icon-plus",
+//            //secondary: "ui-icon-triangle-1-s"
+//        },
+        //text: 'false'
+        label: 'ILKato'
     }
     );
 //    bAdd.css({'width': '25px', 'height': '25px', })
+    bAddSXL.button({
+        icon: "ui-icon-plus",
+        label: 'XL Суши'
+    }
+    );
 
     bAdd.click(function (event) {
 ////        $(event.target).parent().
@@ -201,7 +204,7 @@ function createOperatorInterface() {
 //        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
 //            IDs.push($(this).attr("idBatch"));
 //        });
-        showOrderEditor();
+        showOrderEditor({idPricingType: 1});
 //        sendRequest('getUsers', '', function (data) {
 //            console.log(data);
 //        });
@@ -212,293 +215,143 @@ function createOperatorInterface() {
 
         ////updateOInterface_batches(getBatchesFromLS()); ?
     });
+    bAddSXL.click(function (event) {
+        showOrderEditor({idPricingType: 2});
+    });
 
-    if (localStorage.getItem("activeDate") === null || localStorage.getItem("activeDate") === "") {
-        $("#datepicker").datepicker("setDate", new Date());
-    } else {
-        $("#datepicker").datepicker("setDate", new Date(localStorage.activeDate));
-    }
-    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-    selectDate(dt);
+//    if (localStorage.getItem("activeDate") === null || localStorage.getItem("activeDate") === "") {
+//        $("#datepicker").datepicker("setDate", new Date());
+//    } else {
+//        $("#datepicker").datepicker("setDate", new Date(localStorage.activeDate));
+//    }
+//    var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+//    selectDate(dt);    
+    updateOInterface();
     /////////////////updateOInterface_batches(batches);
-
 }
 
-function selectDate(date) {
-    localStorage.activeDate = date;
-    sendRequest('getOrdersAndBatches', 'date=' + date, function (data) {
-        //$.each(localStorage, function (key, value) {
-        //    if (key.startsWith('o_') | key.startsWith('b_')) {
-        //        localStorage.removeItem(key);
-        //    }
-        //});
+function updateOInterface() {
 
-        //save orders to LS
-        //localStorage.id_session = data.id_session;
-        setItemsToLS('o_', data.orders);
-        setItemsToLS('b_', data.batches);
-        $("#o_activeOrdersPanel").empty();//right panel
-        updateOInterface_batches(data.batches);
-        var pnlOrders = $("#o_ordersPanel");
-        pnlOrders.empty();//left panel
-        console.log("sorted orders:");
-        var orders = data.orders;//getOrdersFromLS();
-        orders = orders.filter(function (currentValue, index, arr) {
-            return currentValue.DDate === localStorage.activeDate;
-        });
-        orders = $(orders).sort(function (a, b) {
-            var tt = a.DTime.split(":");
-            var secA = tt[0] * 3600 + tt[1] * 60;
-            tt = b.DTime.split(":");
-            var secB = tt[0] * 3600 + tt[1] * 60;
-            return secA - secB;
-        });
-        console.log(orders);
+    //$.each(localStorage, function (key, value) {
+    //    if (key.startsWith('o_') | key.startsWith('b_')) {
+    //        localStorage.removeItem(key);
+    //    }
+    //});
 
-        //var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-        //if (localStorage.activeDate !== dt) {
-        //    //$('#o_ordersPanel, .o_itemsPanel').empty();
-        //}
+    $("#o_activeOrdersPanel").empty();//right panel
+    //updateOInterface_batches(data.batches);
 
-        $(orders).each(function (indx, order) {
-            var divOrder = CreateOrder(order, 1);
+    var pnlOrders = $("#o_ordersPanel");
+    pnlOrders.empty();//left panel
 
-            if (order.idBatch != null) {
-                divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-            } else {
-                pnlOrders.append(divOrder);
-            }
-//        divOrder.tooltip({
-//            //content: "Awesome title!"
+//        //sort orders
+//        var orders = G.AllOrders;
+//        orders = orders.filter(function (o, index, arr) {
+//            return o.DDate === G.today;
 //        });
+//        orders = $(orders).sort(function (a, b) {
+//            if (a.DTime && b.DTime) {
+//                var tt = a.DTime.split(":");
+//                var secA = tt[0] * 3600 + tt[1] * 60;
+//                tt = b.DTime.split(":");
+//                var secB = tt[0] * 3600 + tt[1] * 60;
+//                return secA - secB;
+//            }
+//        });
+
+    //var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+    //if (localStorage.activeDate !== dt) {
+    //    //$('#o_ordersPanel, .o_itemsPanel').empty();
+    //}
+//uniq batch nums
+    if (G.AllOrders !== null) {
+        var batches = G.AllOrders.map(function (item, i, arr) {
+            var newObj = {};
+            newObj.idBatch = item.idBatch;
+            return newObj;
+        }).filter(function (item, i, arr) {
+            return item.idBatch !== null
+        });
+        var a = [];
+        batches.forEach(function (itm) {
+            a.push(itm.idBatch);
+        });
+        //a = remove_duplicates_es6(a);
+//---
+
+        var activeOrdersPanel = $("#o_activeOrdersPanel");
+        var maxBatchNo = Math.max.apply(null, a);
+
+        for (var id = 1; id < 8; id++) {
+            var divBatchPanel = $('#b' + id);
+            if (!divBatchPanel.length) {
+                divBatchPanel = CreateBatchPanel(id, 1);
+                activeOrdersPanel.append(divBatchPanel);
+            }
+            divBatchPanel.attr("QueueNo", 1);
+        }
+
+//        for (var id = 1; id < maxBatchNo + 2; id++) {
+//            var divBatchPanel = $('#b' + id);
+//            if (!divBatchPanel.length) {
+//                divBatchPanel = CreateBatchPanel(id, 1);
+//                activeOrdersPanel.append(divBatchPanel);
+//            }
+//            divBatchPanel.attr("QueueNo", 1);
+//        }
+        //    
+//    a.forEach(function (id) {
+//        var divBatchPanel = $('#b' + id);
+//        if (!divBatchPanel.length) {
+//            divBatchPanel = CreateBatchPanel(id, 1);
+//            activeOrdersPanel.append(divBatchPanel);
+//        }
+//        divBatchPanel.attr("QueueNo", 1);
+//        //divItemsPanel.effect("bounce", "slow");
+//    });
+
+        $(G.AllOrders).each(function (indx, o) {
+            $("<div/>")
+                    .orderPanel({order: o})
+                    .appendTo(o.idBatch === null ? pnlOrders : $("#b" + o.idBatch + ">div.o_itemsPanel"))
+                    .dblclick(function (a) {
+                        //showOrderEditor($(a.currentTarget));
+                        showOrderEditor(o);
+                    });
             //}
             //pnlOrders.append(CreateOrder(order));
             //divOrder.effect( "bounce", { times: 3 }, "slow" );
             //divOrder.effect("bounce", "slow");
         });
-    });
-//            $.ajax({
-//                type: "POST",
-//                data: "action=getOrdersAndBatches&date=" + dt,
-//                url: "helper.php?",
-//                cache: false,
-//                success: function (jsondata) {
-//                    $("body").removeClass("ui-state-error");
-//                    // remove orders from LS
-//                    $.each(localStorage, function (key, value) {
-//                        if (key.startsWith('o_') | key.startsWith('b_')) {
-//                            localStorage.removeItem(key);
-//                        }
-//                    });
-//
-//                    //save orders to LS
-//                    var data = JSON.parse(jsondata);
-//                    localStorage.id_session = data.id_session;
-//                    setItemsToLS('o_', data.orders);
-//                    setItemsToLS('b_', data.batches);
-//                    $("#o_activeOrdersPanel").empty();
-//                    updateOInterface_batches(data.batches);
-//                    updateInterface_orders(data.orders);
-//
-//                },
-//                error: function (xhr, ajaxOptions, thrownError) {
-//                    $("body").addClass("ui-state-error");
-//                    alert("Сервер не доступен: " + xhr.status + " | " + thrownError);
-//                    //$("body").addClass("ui-state-error");
-////            alert(xhr.status);
-////            alert(thrownError);
-//                }
-//            });
-}
-/**
- * Create order object
- * @param order {Object} Order Object
- * @return {Object} div order
- */
-function CreateOrder(order, isOperator) {
-    //var js_date_str = d.substr(0,10)+'T'+d.substr(11,8);
-    var divOrder = $('<div/>', {
-        id: order.id,
-        class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top',
-        attr: {'idKitchen': order.idKitchen, 'idBatch': order.idBatch}
-    });
-    var divOrderHeader = $('<div/>', {
-        //id: order_id,
-        class: 'order-header ui-widget-header ui-corner-top',
-        html: order.No //+'<div class="imgRoll"/>'
-    });
-//    if (stop_time == null) {
-//        stop_time = '-'
-//    };
-//var selectHTML='<select name="menu_drivers" id="menu_drivers" style="width: 100%;"><option selected disabled>Назначить курьера</option><option>Пупкин</option><option>Сидоров</option><!--<option selected="selected">Medium</option>--><option>Иванов</option><option>Петров</option></select>';
-    var strAddress = 'адрес не указан';
-    if (order.Client) {
-        strAddress = order.Client.Street + ', ' + order.Client.Building;
     }
-    var comments = order.Comment.split('|');
-
-    var divOrderContent = $('<div/>', {
-        //id: "content_"+order_id,
-        class: 'order-content',
-        //html: '<div class="products"><ul id="ulProducts_' + order.id + '"></ul><span class=comment>' + order.Comment + '</span><hr/>' + order.Client.Street + ', ' + order.Client.Building + '</div>'
-        html: '<div><span class=comment>' + comments[0] + '</span><hr/>' + strAddress + '</div>'
-    });
-
-    //var dt = new Date(order.CreateDate)
-    var divTime = $('<div/>', {
-        class: 'time',
-        //dt.getHours()+':'+dt.getMinutes() 
-        //html: 'Принят в <span class="CTime">' + order.CTime + '</span><br/>Доставить к <span class="DTime">' + order.DTime + '</span><br/>'//order_time
-        //html: 'Принят в <span class="startTime">' + dt.toLocaleTimeString() + '</span><br/>Готов в <span class="stopTime">' + "" + '</span><br/><br/><span class="status">' + order.idStatus + '</span>'//order_time
-    });
-    var coockingTime = Math.max(calcCoockingTime(order.Products, 1), calcCoockingTime(order.Products, 2));
-    divTime.append('<span class="status">' + idStatusToString(order.idStatus) + '</span>');
-    divTime.append('<br/><br/>Время на заказ <span class="DTime">' + coockingTime.toHHMMSS() + '</span>');
-    divTime.append('<br/>Доставить к <span class="DTime">' + order.DTime + '</span>');
-
-    divOrderHeader.append(divTime);
-
-
-//    $('<label for="' + 'chkDone' + order.id + '">Готов</label>').appendTo(divOrderContent);
-//    var chkDone = $("<input/>", {
-//        type: 'checkbox',
-//        id: 'chkDone' + order.id,
-//        name: 'n' + order.id,
-//        class: 'orderDoneButton'
-//    });
-////    SetOrderProducts(order_id);
-//    $(chkDone).appendTo(divOrderContent);
-//    $(chkDone).button({
-//        icons: {
-//            primary: "ui-icon-check",
-//            //secondary: "ui-icon-triangle-1-s"
-//        },
-//        text: false
-//    }
-//    );
-//    $(chkDone).click(function (event) {
-//        var order = $(event.target).parent().parent();
-//        order.toggleClass('ui-state-disabled');
-//
-//        order.attr('status_id', function (index, attr) {
-//            return attr == 3 ? 4 : 3;
-//        });
-////        UpdateOrderStatusOnServer(order.attr("id"), order.attr("status_id"));
-//
-//
-//        //$("#log").append("<br/>Moved from " + ui.sender.attr("id") + " to " + ui.item.parent().attr("id"));
-////                        switch (ui.item.parent().attr("id")) {
-////                            case "mainPanel":
-////                                ui.item.attr("status_id", 2);
-////                                UpdateOrderStatusOnServer(ui.item.attr("id"), 2);
-////                                break;
-////                            case "donePanel":
-////                                ui.item.attr("status_id", 5);
-////                                UpdateOrderStatusOnServer(ui.item.attr("id"), 5);
-////                                break;
-////                        }
-//        order.fadeOut(200);
-//        order.fadeIn(400);
-//    });
-
-//$("<button>Редактор</button>").button({
-//      icons: {
-//        primary: "ui-icon-locked"
-//      },
-//      text: false
-//  }).appendTo(divOrderContent);
-    if (isOperator) {
-        divOrder.dblclick(function (event) {
-            showOrderEditor(order);
-        });
-    } else {
-        divOrder.click(function (event) {
-            //if (divOrder.attr("id") != order.id) {
-            updateOrderViewer(order.id);
-            $(".order").removeClass('selected');
-            divOrder.addClass('selected');
-            //TODO START TIMER?
-            //}
-        });
-
-    }
-
-
-    var tt = $('<div/>', {
-        class: 'kplace',
-        html: '<button idKitchen=3 class="ui-button ui-widget bGreen">П</button><button idKitchen=4 class="ui-button ui-widget bOrange">НС</button>'
-    }).appendTo(divOrderContent);
-    tt.children('button').click(function () {
-        var idOrder = $(this).parent().parent().parent().attr('id');
-        var idKitchen = $(this).attr('idKitchen');
-        console.log("updating idKitchen in order");
-        sendRequest('updateOrderKitchenID', 'idOrder=' + idOrder + '&idKitchen=' + idKitchen, function (data) {
-            console.log("resul:");
-            console.log(data);
-            var order = JSON.parse(localStorage.getItem('o_' + idOrder));
-            order.idKitchen = $(this).parent().parent().parent().attr('idKitchen');
-            localStorage['o_' + idOrder] = JSON.stringify(order);
-            //console.log('DONE');
-//            updateInterface_orders([getOrderFromLS(idOrder)]);
-        });
-
-    });
-
-//    var rCount = 0;
-//    var pCount = 0;
-//    if (order.Products !== null) {
-//        rCount = order.Products.filter(function (currentValue, index, arr) {
-//            return currentValue.idType == 1;
-//        }).length;
-//
-//        pCount = order.Products.filter(function (currentValue, index, arr) {
-//            return currentValue.idType == 2;
-//        }).length;
-//    }
-
-
-    var log = '';
-    $(order.Log).each(function (index) {
-        //log += (new Date(this.ts)).toLocaleTimeString() + ": "+this.idStatus+'\n';
-        log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
-    });
-    divOrder.attr('title', log);
-
-    divOrder.addClass('ord-workplace-' + order.idKitchen);
-
-    divOrder.addClass('ord-status-' + order.idStatus);
-
-
-    divOrder.append(divOrderHeader);
-    divOrder.append(divOrderContent);
-    return divOrder;
 }
 
-function mapUpdate(lat, lon, zoom) { //address - адрес или lat,lon в текстовом виде
-//    if (address) {//&& map_created
-//        var geocode = ymaps.geocode(address);
-//        geocode.then(function (res) {
-//            map.geoObjects.each(function (geoObject) {
-//                map.geoObjects.remove(geoObject);
-//            });
-//
-//            var position = res.geoObjects.get(0).geometry.getCoordinates(),
-//                    placemark = new ymaps.Placemark(position, {}, {});
-//
-//            map.geoObjects.add(placemark);
-//            map.setCenter(position, zoom);
-//        });
-//    }
-    var lonLat = new OpenLayers.LonLat(lon, lat)
-            .transform(
-                    new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                    map.getProjectionObject() // to Spherical Mercator Projection
-                    );
 
-    markers.addMarker(new OpenLayers.Marker(lonLat));
-
-    map.setCenter(lonLat, zoom);
-}
+//function mapUpdate(lat, lon, zoom) { //address - адрес или lat,lon в текстовом виде
+////    if (address) {//&& map_created
+////        var geocode = ymaps.geocode(address);
+////        geocode.then(function (res) {
+////            map.geoObjects.each(function (geoObject) {
+////                map.geoObjects.remove(geoObject);
+////            });
+////
+////            var position = res.geoObjects.get(0).geometry.getCoordinates(),
+////                    placemark = new ymaps.Placemark(position, {}, {});
+////
+////            map.geoObjects.add(placemark);
+////            map.setCenter(position, zoom);
+////        });
+////    }
+//    var lonLat = new OpenLayers.LonLat(lon, lat)
+//            .transform(
+//                    new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+//                    map.getProjectionObject() // to Spherical Mercator Projection
+//                    );
+//
+//    markers.addMarker(new OpenLayers.Marker(lonLat));
+//
+//    map.setCenter(lonLat, zoom);
+//}
 
 function CreateBatchPanel(idBatch, QueueNo) {
     var divPanel = $('<div/>', {
@@ -508,54 +361,9 @@ function CreateBatchPanel(idBatch, QueueNo) {
         //html:'<div class="o_orderBatchPanelButtons">asd</div>'
     });
 
-    var divButtonsPanel = $('<div/>', {
-        //id: panel_id,
-        class: 'o_orderBatchPanelButtons',
-        //attr: {'row': row, 'bla': 'blllaa'}
-        //html:'<span class="ui-icon ui-icon-grip-dotted-vertical"></span>'
-    }).appendTo(divPanel);
-
-    var bAdd = $("<button/>", {
-        //type: 'checkbox',
-        //id: 'bAdd' + order.id,
-        //name: 'n' + order.id
-        //class: 'orderDoneButton'
-    }).appendTo(divButtonsPanel);
-
-    bAdd.button({
-        icons: {
-            primary: "ui-icon-plus",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-        text: false
-    }
-    );
-    bAdd.css({'width': '25px', 'height': '25px', });
-    //bAdd.addClass('ui-state-disabled');
-
-    bAdd.click(function (event) {
-////        $(event.target).parent().
-//        var pnlActiveOrders = $('#o_activeOrdersPanel');
-//        pnlActiveOrders.append(CreateBatchPanel());
-//        var IDs = [];
-//        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
-//            IDs.push($(this).attr("idBatch"));
-//        });
-
-
-
-
-        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-        sendRequest('createBatch', 'date=' + dt, function (response) {
-            console.log(response);
-        });
-
-        updateOInterface_batches(getBatchesFromLS());
-    });
-
     var divItemsPanel = $('<div/>', {
         //id: id,
-        class: 'o_itemsPanel connectedSortable ui-state-hover',
+        class: 'o_itemsPanel connectedSortable ui-widget ui-state-default',
         //attr: {'idBatch': idBatch, 'QueueNo': QueueNo}
         //html:'<h3>asd</h3>'
     }).appendTo(divPanel);
@@ -576,83 +384,77 @@ function CreateBatchPanel(idBatch, QueueNo) {
             });
 
             if ($(".o_itemsPanel:empty").length === 0) { //if no empty batches then create one
-                var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-                sendRequest('createBatch', 'date=' + dt, function (response) {
-                    console.log(response);
-                });
+                var activeOrdersPanel = $("#o_activeOrdersPanel");
+                //activeOrdersPanel.append(CreateBatchPanel());
+//                var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+//                sendRequest('createBatch', 'date=' + dt, function (response) {
+//                    console.log(response);
+//                });
             }
         }
     }).disableSelection();
     //divPanel.append(QueueNo);
+
+    var divButtonsPanel = $('<div/>', {
+        //id: panel_id,
+        class: 'o_orderBatchPanelButtons'
+                //attr: {'row': row, 'bla': 'blllaa'}
+                //html:'<span class="ui-icon ui-icon-grip-dotted-vertical"></span>'
+    }).appendTo(divPanel);
+
+    var bAdd = $("<button/>", {
+        //type: 'checkbox',
+        //id: 'bAdd' + order.id,
+        //name: 'n' + order.id
+        //class: 'orderDoneButton'
+    }).appendTo(divButtonsPanel);
+
+    bAdd.button({
+        icons: {
+            primary: "ui-icon-play",
+            //secondary: "ui-icon-triangle-1-s"
+        },
+        text: false
+    }
+    );
+    bAdd.css({'width': '10px', 'height': '10px', });
+    //bAdd.addClass('ui-state-disabled');
+
+    bAdd.click(function (event) {
+////        $(event.target).parent().
+//        var pnlActiveOrders = $('#o_activeOrdersPanel');
+//        pnlActiveOrders.append(CreateBatchPanel());
+//        var IDs = [];
+//        pnlActiveOrders.find(".o_orderBatchPanel").each(function () {
+//            IDs.push($(this).attr("idBatch"));
+//        });
+
+//        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+//        sendRequest('createBatch', 'date=' + dt, function (response) {
+//            console.log(response);
+//        });
+//
+//        updateOInterface_batches(getBatchesFromLS());
+    });
+
     return divPanel;
 }
 
-function updateInterface_order(order) {
-    var ordersPanel = $('#o_ordersPanel');
-    var divOrder = $('#' + order.id);
-
-    switch (localStorage.wp_type) {
-        case "2"://O
-            if (!divOrder.length) { //new order
-                divOrder = CreateOrder(order, 1);
-                if (order.idBatch != null) {
-                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-                } else {
-                    ordersPanel.append(divOrder);
-                }
-            } else {// update existing
-                if (order.idBatch != divOrder.attr("idBatch")) {
-                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-                }
-                divOrder.replaceWith(CreateOrder(order, 1));
-                //todo if idbatch changed
-
-//                if (order.idBatch != null) {
-//                    divOrder.appendTo($("#b" + order.idBatch + ">div.o_itemsPanel"));
-//                } else {
-//                    divOrder.replaceWith(CreateOrder(order, 1));
-//                    //ordersPanel.append(divOrder);
-//                }
-            }
-
-            break;
-        case "3"://K
-            if (!divOrder.length) {
-                divOrder = CreateOrder(order);
-                ordersPanel.append(divOrder);
-            }//TODO сделать чтоб добавлялся только заказ с нужным idBatch
-            divOrder.replaceWith(CreateOrder(order));
-            break;
+function updateOInterface_order(o) {
+    var pnlOrders = $('#o_ordersPanel');
+    var divOrder = $('#' + o.id);
+    if (!divOrder.length) { //new order
+        $("<div/>")
+                .orderPanel({order: o})
+                .appendTo(o.idBatch === null ? pnlOrders : $("#b" + o.idBatch + ">div.o_itemsPanel"))
+                .dblclick(function () {
+                    showOrderEditor(o);
+                });
+    } else {// update existing
+        divOrder.orderPanel({order: o});
+        //todo if idbatch changed
     }
-//    if (localStorage.wp_type === "2") {//O
-//        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-//        if (localStorage.activeDate !== dt) {
-//            //$('#o_ordersPanel, .o_itemsPanel').empty();
-//        }
-//    }
-
-
-    var log = '';
-    $(order.Log).each(function (index) {
-        log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
-    });
-    divOrder.attr('title', log);
-    divOrder.find('span.CTime').text(order.CTime);
-    divOrder.find('span.DTime').text(order.DTime);
-
-    //if (divOrder) {
-    divOrder.removeClass('ord-workplace-3 ord-workplace-4');
-    divOrder.addClass('ord-workplace-' + order.idKitchen);
-
-    divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
-    divOrder.addClass('ord-status-' + order.idStatus);
-    //console.log('try: '+order.id);
-
-
-    divOrder.find("span.status").text(idStatusToString(order.idStatus));
-
-    divOrder.effect("bounce", "slow");
-
+    divOrder.effect("pulsate", "slow");
 }
 
 function updateOInterface_batches(batches) {
@@ -671,13 +473,13 @@ function updateOInterface_batches(batches) {
         return $(a).attr('QueueNo') - $(b).attr('QueueNo');
     }).appendTo(activeOrdersPanel);
 
-//create batch if no one
-    if (!activeOrdersPanel.children().length) {
-        // add batch on server
-        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
-        sendRequest('createBatch', 'date=' + dt, function (response) {
-            console.log(response);
-        });
-    }
+////create batch if no one
+//    if (!activeOrdersPanel.children().length) {
+//        // add batch on server
+//        var dt = $.datepicker.formatDate("yy-mm-dd", $("#datepicker").datepicker('getDate'));
+//        sendRequest('createBatch', 'date=' + dt, function (response) {
+//            console.log(response);
+//        });
+//    }
 
 }

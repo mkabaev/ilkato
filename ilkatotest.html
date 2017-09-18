@@ -38,7 +38,7 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=getOrder&id=51979",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -55,11 +55,20 @@ and open the template in the editor.
                 //если не задан или равен null, то клиент создастся
                 //На сервере проверится дефолтный телефонный номер клиента. Если он уже занят другим клиентом, то в ответе вернется ощибка. Вместе с ошибкой вернется объект клиента с указанным телефоном.
                 var client = {
-                    id: 9226,
-                    Name: 'Ванек',
+                    id: 9249,
+                    Name: 'ИванYY',
                     Surname: 'Пупкин',
-                    Phones: [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}],
-                    Addresses: [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}],
+                    Phones: [
+                        {Phone: 9271234567, isDefault: 1},
+                        {Phone: 9626040203},
+                        {Phone: 9626040204}
+                    ],
+                    Addresses: [
+                        {id:11125, Floor: 6, Address: "Адрес 1, д 43, кв 82", isDefault: 1},
+                        {id:11126, Floor: 4, Address: "Адрес 2, д 45, кв 83"},
+                        {Floor: 6, Address: "Адрес 1, д 43, кв 82", isDefault: 1}
+                         //{Floor: 4, Address: "Адрес 2, д 45, кв 83"}
+                    ],
                     Card: "1234",
                     Comment: "тут коммент",
                     Org: 'ОАО "ТяпЛяпСтрой"'
@@ -70,7 +79,7 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=setClient&client=" + JSON.stringify(client),
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         //$("#clients").text(data);
@@ -85,7 +94,7 @@ and open the template in the editor.
 
             function test_setOrder() {
                 var client = {
-                    id: 9226, //на данный момент достаточно только ID клиента. Остальную инфу сервер пока не обрабатывает.
+                    id: 923, //на данный момент достаточно только ID клиента. Остальную инфу сервер пока не обрабатывает.
                     //Name: 'Ванек',
                     //Surname: 'Пупкин',
                     //Phones: [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}],
@@ -96,11 +105,11 @@ and open the template in the editor.
                 };
 
                 var order = {
-                    id: 54336, //51979 //если передаем - то заказ редактируется. Если нет - создается
+                    id: null, //51979 //если передаем - то заказ редактируется. Если нет - создается
                     No: null, //номер заказа назначается сервером. Нумерация начинается с 1 каждый день
                     idBranch: 1,
-                    idPricingType: null,
-                    idStatus: 8,
+                    idPricingType: 1,
+                    //idStatus: 1, можно не передавать
                     idKitchen: null,
                     idBatch: null,
                     idCreatedBy: null,
@@ -112,14 +121,16 @@ and open the template in the editor.
                     DDate: "17-02-03", // К какому числу клиент хочет заказ
                     DTime: "15:00", // Соответственно, к какому времени
                     Products: [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}],
-                    Client: client
+                    Client: client,
+                    Phone: "9277501811", //телефон для связи с клиентом
+                    idAddress: 612 //адрес доставки
                 };
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
                     data: "action=setOrder&order=" + JSON.stringify(order),
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -137,7 +148,7 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=getSiteUpdates&idSite=12",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -153,9 +164,9 @@ and open the template in the editor.
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    data: "action=getClientByPhone&Phone=9277501811",
+                    data: "action=getClientByPhone&Phone=9271234567",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -173,7 +184,7 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=getClients",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -191,7 +202,7 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=getProducts",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
                         $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
@@ -209,11 +220,11 @@ and open the template in the editor.
                     type: "POST",
                     data: "action=getOrdersByClient&id=923",
                     url: "helper.php",
-                    cache: false,
+                    //cache: false,
                     timeout: 30000,
                     success: function (data) {
-                        $("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
-                        console.log(data);
+                        //$("#result").html(syntaxHighlight(JSON.stringify(data, undefined, 2)));
+                        console.log("data");
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert("status: " + xhr.status + " | " + thrownError);

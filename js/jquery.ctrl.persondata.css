@@ -1,13 +1,21 @@
 .persondata{
     margin-top: 40px;
     float:left;
-    width: 340px;
+    width: 380px;
     padding: 4px;
     margin: 6px;
-    height: 574px;
+    /*    height: 574px;*/
+    height: -webkit-fill-available;
+    position: relative;
 }
+
+.persondata .head{
+    width: 160px;
+    height: 40px;
+}
+
 .persondata.ui-widget-content{
-  font-size: 12px;  
+    font-size: 12px;  
 }
 .persondata input {
     /*height: 2em;*/
@@ -16,9 +24,21 @@
     padding: 0 7px;
     margin: 2px;
 }
-.prs-phone{
-    width: 70px;
+.persondata .def-phone{
+    width: 100px;
+    font-size: 18px;
+    /*color: #cccccc;*/
+    /*    font-size: 16px; 
+        font-family: Tahoma;*/
 }
+
+.persondata .phone{
+    width: 70px;
+    /*color: #cccccc;*/
+    /*    font-size: 16px; 
+        font-family: Tahoma;*/
+}
+
 .prs-card{
     width: 50px;
 }
@@ -26,24 +46,56 @@
     width: 126px;
 }
 .prs-address{
-    width: 180px;
+    width: 100%;
+    height:60px;
+    border-top: orange 1px solid;
+    padding-top: 6px;
+    margin-top: 6px;
 }
-.prs-et{
-    width: 26px;
+.prs-address select{
+    width: 300px;
 }
-.prs-info{
-    height:100px;
-    
-    width: 80%;
-    
-    
+
+.prs-floor{
+    width: 30px;
 }
-.prs-comment{
-    width: 410px;
+
+.persondata .comment{
+    width: 330px !important;
+    margin: 4px;
 }
 .panel-map {
     height: 300px;
+    /*width: 200px;*/
     border: 1px solid #d8d8d8;
     background: #ffffff;
     /*background-size: 400px 250px;*/
+}
+
+.persondata .history{
+    height: 200px;
+    border: 1px solid;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: 2px;
+}
+
+.persondata .mode-search{
+    top: 0;
+    left: 0;
+    height: 30px;
+    background: #eeeeee;
+    /* height: 200px; */
+    width: 100%;
+    /*position: absolute;*/
+    /*    opacity: .8;*/
+}
+
+.persondata .sfield{
+    border: 2px solid #aaa; 
+    background: none;
+    width: -webkit-fill-available;
+    font-size: 18px;
 }

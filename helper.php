@@ -24,9 +24,25 @@ switch ($action) {
     case 'login':
         $uid = filter_input(INPUT_POST, 'uid');
         $wid = filter_input(INPUT_POST, 'wid');
-        updateUserStatus($uid, true);
+        //updateUserStatus($uid, true);
         $id_session = registerNewSession($uid, $wid);
-        $data = ['id_session' => $id_session, 'orders' => getOrders(date("Y-m-d")), 'batches' => getBatches(date("Y-m-d"))];
+        $data = ['id_session' => $id_session];
+        switch ($wid) {
+            case 1: //Admin
+                $data = ['id_session' => $id_session, 'orders' => getOOrders()];
+                break;
+            case 2: //Operator
+                $data = ['id_session' => $id_session, 'orders' => getOOrders()];
+                break;
+            case 5: //Kitchen
+                $data = ['id_session' => $id_session, 'orders' => getKOrders()];
+                break;
+            case 6: //Couriers
+                $data = ['id_session' => $id_session, 'orders' => getCOrders()];
+                break;
+            default:
+                break;
+        }
         echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
         //, JSON_NUMERIC_CHECK
         break;
@@ -64,11 +80,12 @@ switch ($action) {
     case 'getClientByPhone':
         $phone = filter_input(INPUT_POST, 'Phone');
         $res = getClientByPhone($phone);
-        if (is_null($res)) {
-            echo "NULL";
-        } else {
-            echo $res;
-        }
+        echo $res;
+//        if (is_null($res)) {
+//            echo '{"status":0,"msg":"client doesnt exist"}';
+//        } else {
+//            echo $res;
+//        }
         break;
     case 'getClients':
         //$idSite = filter_input(INPUT_POST, 'idSite', FILTER_VALIDATE_INT);
@@ -93,8 +110,15 @@ switch ($action) {
         $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_VALIDATE_INT);
         echo updateOrderStatus($idOrder, $idStatus);
         break;
+    case 'updateOrderProductsIsCookedStatus':
+        $params = json_decode(filter_input(INPUT_POST, 'params'), TRUE);
+        echo updateOrderProductsIsCookedStatus($params["idOrder"], $params["Products"]);
+        break;
     case 'getUsers':
         echo getUsers();
+        break;
+    case 'getCouriers':
+        echo getCouriers();
         break;
     case 'updateOrderKitchenID':
         $idOrder = filter_input(INPUT_POST, 'idOrder', FILTER_VALIDATE_INT);
@@ -144,6 +168,7 @@ switch ($action) {
     case 'setOrder':
         $order = json_decode(filter_input(INPUT_POST, 'order'), TRUE);
         $result = setOrder($order);
+        //call copyOrderToSessionData(NEW.idOrder);
         echo $result;
         //$result = '{"status":1,"msg":"created","data":' . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK) . '}';
 //        if (isset($o["id"])) { //get order from db and then modify
@@ -152,11 +177,7 @@ switch ($action) {
 //        } else { //create order in db
 //        
 //            $order = createOrder($o);
-
-
-        
-        
-            //var_dump($order);
+        //var_dump($order);
 //            $order = [
 //                "id" => NULL,
 //                "No" => NULL,
@@ -190,7 +211,7 @@ switch ($action) {
 //                ];
 //                array_push($order["Products"], $product);
 //            }
-            //array_push($order["Client"]["Phones"], ["Phone" => $o["phone"], "isDefault" => 1]);
+        //array_push($order["Client"]["Phones"], ["Phone" => $o["phone"], "isDefault" => 1]);
 //            if (isset($o["phone"])) {
 //                if (strlen($o["phone"]) == 10) {
 //                    $order["Client"] = json_decode(getClientByPhone($o["phone"]));
@@ -199,10 +220,10 @@ switch ($action) {
 //            $order["Comment"] = $o["comment"];
 //            $order["DDate"] = $o["DDate"];
 //            $order["DTime"] = $o["DTime"];
-            //$result = createOrder($order);
-            //echo json_encode($order, JSON_UNESCAPED_UNICODE);
+        //$result = createOrder($order);
+        //echo json_encode($order, JSON_UNESCAPED_UNICODE);
 //        echo getOrder($o["order_id"]);
-            //$result = '{"status":2,"msg":"created"}';
+        //$result = '{"status":2,"msg":"created"}';
         break;
     case 'createBatch':
         $date = filter_input(INPUT_POST, 'date');
@@ -232,7 +253,7 @@ switch ($action) {
             [53.18137, 50.19567]
         ];
         //echo $result;
-        echo in_polygon([$lat,$lon], $polygon) ? '{"status":"IN"}' : '{"status":"OUT"}';
+        echo in_polygon([$lat, $lon], $polygon) ? '{"status":"IN"}' : '{"status":"OUT"}';
         break;
 
     default:

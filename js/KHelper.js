@@ -5,82 +5,65 @@ function createKitchenInterface() {
         //attr: {'title': 'caption'}
     });
     pnlOrders.appendTo($('#workplace'));
-//    var filterdate = (new Date()).toISOString().substring(0, 10);
-    //console.log("--загружаем из LS заказы со всеми статусами кроме Доставлен и датой " + filterdate);
-    //var orders = getOrdersFromLS().filter(function (order, index, arr) {
-    //return order.idStatus >= 1 && order.idStatus <= 6 && order.DDate == filterdate;
-    //return order.DDate == filterdate;
-    var orders = getOrdersFromLS().filter(function (currentValue, index, arr) {
-//        return currentValue.idKitchen == localStorage.wp_id && currentValue.idStatus > 1 && currentValue.idStatus < 5; //5
-        return currentValue.idKitchen == localStorage.wp_id && [2, 3, 4].indexOf(currentValue.idStatus) != -1;
-//1	Принят
-//2	Готовить
-//3	Готовится
-//4	Приготовлен
-//5	Доставка
-//6	В пути
-//7	Доставлен
-//8	Отказ
 
-    });
-    //updateInterface_orders(orders);
-    //    var ordersPanel = $('#o_ordersPanel');
-    console.log("sorted orders:");
-    orders = $(orders).sort(function (a, b) {
-        var tt = a.DTime.split(":");
-        var secA = tt[0] * 3600 + tt[1] * 60;
-
-        tt = b.DTime.split(":");
-        var secB = tt[0] * 3600 + tt[1] * 60;
-
-        return secA - secB;
-    });
-    console.log(orders);
-    if (orders.length) {
-        var order = orders[0]; //active order
-        localStorage.activeOrder = order.id;
-        var idBatch = order.idBatch;
-
-        $(orders).each(function (indx, order) {
-            if (order.idBatch === idBatch) {
-                var divOrder = CreateOrder(order);
-                pnlOrders.append(divOrder);
+//    console.log("sorted orders:");
+//    orders = $(orders).sort(function (a, b) {
+//        var tt = a.DTime.split(":");
+//        var secA = tt[0] * 3600 + tt[1] * 60;
+//
+//        tt = b.DTime.split(":");
+//        var secB = tt[0] * 3600 + tt[1] * 60;
+//
+//        return secA - secB;
+//    });
+//    console.log(orders);
+    if (G.AllOrders !== null) {
+        //find idBatch for cooking
+        var idBatch = null;
+        $(G.AllOrders).each(function (indx, order) {
+            if (order.idStatus === 2 || order.idStatus === 3) { //готовить\готовится
+                idBatch = order.idBatch;
+                G.curOrder = order;
+                return false;
             }
         });
 
-        console.log("activeOrder status: " + order.idStatus);
-        var ct = Math.max(calcCoockingTime(order.Products, 1), calcCoockingTime(order.Products, 2));
+        localStorage.activeOrder = G.curOrder.id;
 
-        if (ct > 0) {
-            console.log("ct>0, start timer with ct=" + ct);
-            createTimer('timer', 'ktimer', ct, 240).appendTo($('#workplace'));
-            startTimer(ct, function (sec) {
-                localStorage.timer = sec;
-            });
-//                
-//            if (!startTimer(ct, function (sec) {
-//                localStorage.timer = sec;
-//            })) {
-//                console.log("create timer");
-//                //createTimer('timer', 'ktimer', ct, 140).appendTo($('#workplace'));
-//                createTimer('timer', 'ktimer', ct, 340).appendTo($('#workplace'));
-//            }
-//            $("#timer").show();
-        }
+        window.mk1 = $('<div/>').appendTo($('#workplace')).modKitchen({
+            type: 1
+        });
+        window.mk2 = $('<div/>').appendTo($('#workplace')).modKitchen({
+            type: 2
+        });
 
 
+        $(G.AllOrders).each(function (indx, o) {
+            if (G.curOrder.idBatch === idBatch) {
+                $("<div/>")
+                        .orderPanel({order: o})
+                        .appendTo(pnlOrders)
+                        .click(function () {
+                            localStorage.activeOrder = o.id;
+                            G.curOrder = createOrderObj(o);
+                            window.mk1.modKitchen({
+                                order: G.curOrder,
+                                type: 1
+                            });
+                            window.mk2.modKitchen({
+                                order: G.curOrder,
+                                type: 2
+                            });
+                        });
+            }
+        });
 
+//        var ov = createOrderViewer('ordViewer', 'orderViewer', G.curOrder);
+//        ov.appendTo($('#workplace')).fadeIn(1000);
+
+        //$(".order").first().click();
     }
 
-
-
-    var ov = createOrderViewer('ordViewer', 'orderViewer');
-    ov.appendTo($('#workplace')).fadeIn(1000);
-    $(".order").first().click();
-    
-    
-    
-    
     //$(document).scannerDetection({
 //	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
 //	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
@@ -93,46 +76,46 @@ function createKitchenInterface() {
 //	onError: function(string){alert('Error ' + string);}
 //});
 
-$(document).scannerDetection({
+    $(document).scannerDetection({
 //...
-    onKeyDetect: function (event) {
-        console.log("key detect:" + event.which);
-        //return false;
-    },
-    onComplete: function (barcode, qty) {
-        console.log("barcode:" + barcode);
-        console.log("qty:" + qty);
-//    //2200003014129 roll
-//    //2200001012985 pizza
-//    if (inp.val().length == 13) {
-//        var s = inp.val();
-//        var type = s.substr(1, 6);
-//        var weight = s.substr(7, 5);
-//        weight = parseInt(weight);
-//        switch (type) {
-//            case "200003": //roll
-//                //var inttt=parseInt(weight);
-//
-//                //$('#tProducts').append('<tr><td>my data</td><td>more data</td></tr>');
-//                //items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td id='scanp'>" + val.count + "</td><td>" + val.price + "</td></tr>");
-//
-//                weightR = weight / 1000;
-//                $("#scanr").text(weightR);
-//                //$("#scanr").attr('weight', weightP);
-//                break;
-//            case "200001":
-//                weightP = weight / 1000;
-//                $("#scanp").text(weightP);
-//                //$("#scanp").attr('weight', weightR);
-//                break;
-//        }
-//        inp.val("");
-//        //$("#weight").text((weightP + weightR));
-//        SetOrderProductsOnServer($("#dlgEdit").attr("order_id"), weightR, weightP);
-//    }
-    }
+        onKeyDetect: function (event) {
+            console.log("key detect:" + event.which);
+            //return false;
+            audio.play();
+
+        },
+        onComplete: function (barcode, qty) {
+            console.log("barcode:" + barcode);
+            console.log("qty:" + qty);
+            //2200003014129 roll
+            //2200001012985 pizza
+            if (barcode.length == 13) {
+                var s = barcode;
+                var type = s.substr(1, 6);
+                var weight = s.substr(7, 5);
+                weight = parseInt(weight);
+                switch (type) {
+                    case "200003": //roll
+                        //var inttt=parseInt(weight);
+                        //$('#tProducts').append('<tr><td>my data</td><td>more data</td></tr>');
+                        //items.push("<tr id='" + val.product_id + "'><td>" + val.name + "</td><td id='scanp'>" + val.count + "</td><td>" + val.price + "</td></tr>");
+                        weightR = weight / 1000;
+                        alert(weightR);
+                        //$("#scanr").attr('weight', weightP);
+                        break;
+                    case "200001":
+                        weightP = weight / 1000;
+                        alert(weightP);
+                        //$("#scanp").attr('weight', weightR);
+                        break;
+                }
+                //$("#weight").text((weightP + weightR));
+                alert("SetOrderProductsOnServer");
+                //SetOrderProductsOnServer($("#dlgEdit").attr("order_id"), weightR, weightP);
+            }
+        }
 //...
-});
+    });
 //$(document).on('pageshow', '#pageId', function(){
 //	$(document).scannerDetection({
 //		avgTimeByChar: 40,
@@ -143,265 +126,21 @@ $(document).scannerDetection({
 //$(document).on('pagehide', '#pageId', function(){
 //	$(document).scannerDetection(false);
 //});
-
-
-}
-
-/**
- * Create module with table and buttons
- * @param modType {string} "R" for Roll and "P" for Pizza
- * @param _class {string} add class
- * @param headerItems {Array} array of li items
- * @param tableItems {Array} array of li items
- * @return {Object} div
- */
-function CreateKitchenModule(modType, _class, headerItems, tableItems) {
-    var divModule = $('<div/>', {
-        id: 'div' + modType,
-        class: 'mk ui-widget ui-widget-content',
-    }).css('border', '1px solid #d34d17')
-
-    var divHeader = $('<div/>', {
-        id: 'divHeader' + modType,
-        //class: 'ui-widget-',
-    }).appendTo(divModule).css('padding-left', '30px')
-
-    divModule.append(CreateTable('table' + modType, 'tProducts', headerItems, tableItems, ["", "", 123, 888]));
-    var bDone = $('<button/>', {
-        id: "bDone" + modType,
-        class: 'doneButton',
-        text: "Готово",
-        click: function (event) {
-            var divModule = $(this).parent();
-            divModule.addClass('ui-state-disabled');
-            if ($("#divR").hasClass('ui-state-disabled') && $("#divP").hasClass('ui-state-disabled')) {
-
-                localStorage.removeItem("check");
-                //if (localStorage.getItem("chktemplate") === null) {
-                $.ajaxSetup({cache: false});
-                $.get("check.html", function (data) {
-                    localStorage.check = data;
-                    //alert(data);
-                    //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-                    printHTML(data, getOrderFromLS(localStorage.activeOrder));
-                });
-                //var idOrder = parseInt($('#ordViewer').attr("idOrder"));
-                sendRequest('updateOrderStatus', 'idOrder=' + localStorage.activeOrder + '&idStatus=4', function (response) {
-                    console.log(response);
-                });
-            }
-        },
-    }).appendTo(divModule);
-    bDone.button({
-        icons: {
-            primary: "ui-icon-check",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-    var bPrint = $('<button/>', {
-        id: "bPrint" + modType,
-        //class: 'ui-widget-content',
-        //text: "Печать",
-        click: function (event) {
-            localStorage.removeItem("chktemplate");
-            //if (localStorage.getItem("chktemplate") === null) {
-            $.ajaxSetup({cache: false});
-            $.get("chktemplate.html", function (data) {
-                localStorage.chktemplate = data;
-                //alert(data);
-                //printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-                //printHTML(data, getOrderFromLS(localStorage.activeOrder));
-                printHTML(data, getOrdersFromLS()[0]);
-            });
-            //} else {
-            //    printHTML(localStorage.chktemplate, getOrderFromLS(localStorage.activeOrder));
-            //}
-
-        },
-    }).appendTo(divHeader);
-    //divFooter.append(CreateTimer('timer2',null,30));
-
-    bPrint.button({
-        icons: {
-            primary: "ui-icon-print",
-            //secondary: "ui-icon-triangle-1-s"
-        },
-    });
-    //var json='[{"id":"3","name":"Илья"},{"id":"10","name":"Дима 12ка"}]';
-    var divChefs = $('<div/>', {
-        id: 'divChefs' + modType,
-        //class: 'ui-widget-',
-    }).appendTo(divHeader).append('<span class="ui-icon ui-icon-person"></span>Повара').css({"float": "right", "padding": "5px"});
-    return divModule;
-}
-
-function createOrderViewer(id, _class) {
-    var headerItems = ["Продукт", "Кол-во", "Вес", "Цена", "T"];
-    var tableItems = null;
-    var divOrderViewer = $('<div/>', {
-        id: id,
-        class: 'ui-widget ui-widget-content ' + _class,
-        //attr: {'order_id': '123', 'ts': timestamp}
-    }).append('<div class="pricingPic"></div>');
-    var select = $('<select/>', {
-        id: "selstatus",
-        name: "status",
-//        class: 'ui-widget-header',
-    }).append('<label for="status">Статус</label>').appendTo(divOrderViewer);
-    var divHeader = $('<div/>', {
-        id: "orderheader",
-        class: 'ui-widget-header',
-    });
-    var divNumber = $('<div/>', {
-        //id: "number",
-    }).append("<h3>Заказ <span id=number>" + 'No' + "</span></h3>");
-    divOrderViewer.append(divHeader);
-    divOrderViewer.append('<div id=ordercomment class="comment">' + 'comment' + '</div>');
-    //var tableItems2 = $.parseJSON('[{"id":"3","name":"Пицца 1","count":"2"},{"id":"10","name":"Пицца 2","count":"2"},{"id":"11","name":"Пицца 3","count":"2"},{"id":"12","name":"Пицца 4","count":"2"},{"id":"13","name":"Пицца 5","count":"2"},{"id":"17","name":"Пицца 6","count":"2"},{"id":"19","name":"Пицца 7","count":"2"},{"id":"20","name":"Пицца 8","count":"2"}]');
-
-    divOrderViewer.append(CreateKitchenModule('R', undefined, headerItems, tableItems));
-    divOrderViewer.append(CreateKitchenModule('P', undefined, headerItems, tableItems));
-    divOrderViewer.append('<div id="ordlog"></div>');
-    select.append(ArrayToOptionItems(["Принят", "Готовить", "Готовится", "Приготовлен", "Доставка", "В пути", "Доставлен", "Отказ"]));
-    //or like this: [{id:1,Name:"Принят"},"Готовить","Готовится","Приготовлен"]
-
-    $(select).selectmenu({
-//        create: function (event, ui) {
-////            $('.ui-selectmenu-menu').css({'height': '100px', 'overflow': 'auto'});
-//            $('.ui-selectmenu-menu').css({'z-index': '10000000'});
-//        },
-//        open: function (event, ui)
-//        {
-//            $('.ui-selectmenu-menu').zIndex($(‘#dialog’).zIndex() + 1);
-//        },
-        width: 140,
-//        position: {
-//            my: "left+10 top",
-//            at: "left top+20"
-//        },
-        change: function (event, ui) {
-            var idOrder = parseInt($('#ordViewer').attr("idOrder"));
-            var idStatus = parseInt($(this).val()) + 1;
-            sendRequest('updateOrderStatus', 'idOrder=' + idOrder + '&idStatus=' + idStatus, function (response) {
-                console.log(response);
-            });
-        }
-    });
-    return divOrderViewer;
-}
-
-function updateOrderViewer(id) {
-    var order = getOrderFromLS(id);
-    if (order === undefined) {
-// load from server
-        console.log('ord undef');
-        $('#ordViewer').hide();
-    } else {
-        var divOrder = $('#ordViewer');
-        divOrder.show();
-        divOrder.children(".mk").removeClass('ui-state-disabled');
-        divOrder.attr("idOrder", order.id);
-        //console.log('ordViewer updating ' + order.comment);
-        //$('#ordlog').html(createUL('asd',undefined,order.Log));
-        $('#number').html(order.No);
-        $('#ordercomment').html(order.Comment);
-        $("#selstatus").val(order.idStatus - 1);
-        $("#selstatus").selectmenu('refresh', true);
-//        
-//                    if (filterIdType) {
-//                items = items.filter(function (row) {
-//                    return row.idType === filterIdType;
-//                });
-//            }
-
-//        function Order() {
-//            this.x = 0;
-//            this.y = 0; yyyyyy
-//        }
-//        
-//        o=new Order();
-//        
-//
-//        var o2 = {
-//            x: 0,
-//            y: 0,
-//        }
-
-        if (order.Products) {
-            var itemsR = order.Products.filter(function (row) {
-                return row.idType === 1;
-            });
-            var itemsP = order.Products.filter(function (row) {
-                return row.idType === 2;
-            });
-            var coockingTimeR = calcCoockingTime(itemsR, 1);
-            var coockingTimeP = calcCoockingTime(itemsP, 2);
-//TODO: check func speed
-//var sum = itemsR.reduce(function(pv, cv) {return pv + cv.CoockingTime;}, 0);
-            var totalSummR = 0;
-            var totalWeightR = 0;
-            $.each(itemsR, function (key, val) {
-                totalSummR += val.Price;
-                totalWeightR += val.Weight;
-            });
-            var totalSummP = 0;
-            var totalWeightP = 0;
-            $.each(itemsP, function (key, val) {
-                totalSummP += val.Price;
-                totalWeightP += val.Weight;
-            });
-
-            itemsR = itemsR.map(function (oldItem) {
-                var newItem = {};
-                newItem.id = oldItem.id;
-                newItem.Name = oldItem.Name;
-                newItem.Count = oldItem.Count;
-                newItem.Weight = oldItem.Weight;
-                newItem.Price = oldItem.Price;
-                newItem.Time = oldItem.CookingTime;
-                return newItem;
-            });
-            $('#tableR tbody').html(ArrayToTableItems(itemsR));
-            $('#tableR tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightR, totalSummR]));
-            itemsP = itemsP.map(function (oldItem) {
-                var newItem = {};
-                newItem.id = oldItem.id;
-                newItem.Name = oldItem.Name;
-                newItem.Count = oldItem.Count;
-                newItem.Weight = oldItem.Weight;
-                newItem.Price = oldItem.Price;
-                newItem.Time = oldItem.CookingTime;
-                return newItem;
-            });
-            $('#tableP tbody').html(ArrayToTableItems(itemsP));
-            $('#tableP tfoot').html(ArrayToTableFooter(["", "Всего", totalWeightP, totalSummP]));
-
-
-
-
-
-
-
-//    $('body').append(localStorage.getItem(localStorage.key(i))); 
-        } else {
-            $('#tableP tbody,#tableR tbody').empty();
-            console.log("ERROR: Заказ " + order.No + " не содержит продуктов");
-        }
-
-        var divOrderViewer = $("#ordViewer");
-        //divOrder.find('span.CTime').text(order.CTime);
-        //divOrder.find('span.DTime').text(order.DTime);
-
-        //if (divOrder) {
-        divOrderViewer.removeClass('ord-pricingType-1 ord-pricingType-2');
-        divOrderViewer.addClass('ord-pricingType-' + order.idPricingType);
-    }
 }
 
 //считает время приготовления продуктов. idType - если задан, то считает только необходимые продукты
-function calcCoockingTime(products, idType) {
+function calcCoockingTime(products, idType, cookCount) {
     var totalCookingTime = 0;
-    if (products) {
+    if (products && products.length > 0 && products[0] !== undefined) {
+
+//        var itemsR = G.curOrder.Products.filter(function (row) {
+//            return row.idType === 1;
+//        });
+//        var itemsP = G.curOrder.Products.filter(function (row) {
+//            return row.idType === 2;
+//        });
+
+
         var items = products;
         if (idType !== undefined) {
             items = products.filter(function (row) {
@@ -414,46 +153,128 @@ function calcCoockingTime(products, idType) {
         switch (idType) {
             case 1: //R
                 $.each(items, function (key, val) {
-                    totalSumm += val.Price;
+                    //totalSumm += val.Price;
                     totalCookingTime += val.CookingTime;
                 });
                 break;
             case 2: //P
-                var ctP = 0;
-                var ct30cm = 0;
-                var count30 = 0;
-                var ct40cm = 0;
-                var count40 = 0;
-                var totalSumm = 0;
-                $.each(items, function (key, val) {
-                    totalSumm += val.Price;
-                    if (val.Name.indexOf("30 см") > -1) {
-                        count30++;
-                        ct30cm = Math.max(ct30cm, val.CookingTime);
-                    } else
-                    if (val.Name.indexOf("40 см") > -1) {
-                        count40++;
-                        ct40cm = Math.max(ct40cm, val.CookingTime);
+//вмещает
+//1б 1м - 600с
+//2б - 600с
+//3м - 600с
+//
+//4м - 1200
+//5 - 1200
+//6 - 1200
+//7 - 1800
+//
+//
+//1---------
+//поваров = 2
+//колво загрузок = ОКРУГЛ(колвоПицц/2)
+//Время = колво загрузок*600/поваров
+//
+//2---------
+//поваров = 2
+//колво загрузок = ОКРУГЛ(колвоПицц/3)
+//Время = колво загрузок*600/поваров
+
+                items = items.map(function (p) {
+                    if (p.Tags !== undefined) {
+                        var tags = p.Tags
+                                .filter(function (tag) {
+                                    return tag.id === 10 || tag.id === 17;//30cm 40cm
+                                })
+                                .map(function (tag) {
+//                    return '<a href="#" class="ico">' + tag.Name + '</a>';
+                                    return tag.id;
+                                });
+                        var newItem = {};
+                        newItem.Name = p.Name;
+                        newItem.CookingTime = p.CookingTime;
+                        newItem.Tag = tags[0];
+                        newItem.Price = p.Price;
+                        newItem.Count = p.Count;
+                        return newItem;
+                    } else {
+                        console.log(p.Name + ": Tags undefined");
                     }
-                    //console.log("P:" + val.Name + " - " + val.CookingTime);
                 });
-                var floor30 = Math.floor(count30 / 4);
-                var mod30 = count30 % 4;
-                if (mod30 > 0) {
-                    ct30cm = ct30cm * floor30 + ct30cm;
-                } else {
-                    ct30cm = ct30cm * floor30;
+
+                var _cookCount = cookCount === undefined ? 1 : cookCount;
+                //var ctP = 0;
+//                var ct30cm = 0;
+                var count30 = 0;
+//                var ct40cm = 0;
+                var count40 = 0;
+                //var totalSumm = 0;
+                $.each(items, function (key, val) {
+                    if (val !== undefined) {
+                        //totalSumm += val.Price;
+                        if (val.Tag !== undefined) {
+                            switch (val.Tag) {
+                                case 10: //30cm
+                                    count30 = count30 + val.Count;
+                                    //ct30cm = Math.max(ct30cm, val.CookingTime);
+                                    break;
+                                case 17: //40cm
+                                    count40 = count40 + val.Count;
+                                    //ct40cm = Math.max(ct40cm, val.CookingTime);
+                                    break;
+
+                                default:
+
+                                    break;
+                            }
+
+                            //console.log("P:" + val.Name + " - " + val.CookingTime);
+                        } else {
+                            console.log(val.Name + "tags undefined");
+                        }
+                    }
+                });
+
+
+//                var loadCount30 = Math.ceil(count30 / 3);
+//                ct30cm = ct30cm * loadCount30 / _cookCount;
+
+                var loadCount30 = 0; //сколько целых загрузок
+                var mod30 = count30 % 3; //остаток пиц
+                switch (mod30) {
+                    case 0:
+                        loadCount30 = count30 / 3;
+                        break;
+                    case 1://!
+                        loadCount30 = Math.floor(count30 / 3);
+                        break;
+                    case 2:
+                        loadCount30 = Math.ceil(count30 / 3);
+                        break;
+                }
+                //ct30cm = ct30cm * loadCount30 / _cookCount;
+                //console.log("Время30:" + ct30cm + " | остаток " + mod30 + " пицц");
+
+                var loadCount40 = 0; //сколько целых загрузок
+                var mod40 = count40 % 2; //остаток пиц
+                switch (mod40) {
+                    case 0:
+                        loadCount40 = count40 / 2;
+                        break;
+                    case 1://!
+                        loadCount40 = Math.floor(count40 / 2);
+                        break;
+                }
+//                ct40cm = ct40cm * loadCount40 / _cookCount;
+//                console.log("Время40:" + ct40cm + " | остаток " + mod40 + " пицц");
+
+                var totalLoads = loadCount30 + loadCount40;
+                if (mod30 !== 0 || mod40 !== 0) {
+                    totalLoads++;
                 }
 
-                var floor40 = Math.floor(count40 / 3);
-                var mod40 = count40 % 3;
-                if (mod40 > 0) {
-                    ct40cm = ct40cm * floor40 + ct40cm;
-                } else {
-                    ct40cm = ct40cm * floor40;
-                }
-                ctP = Math.max(ct30cm, ct40cm);
-                totalCookingTime = ctP;
+                totalLoads = Math.ceil(totalLoads / _cookCount);
+                totalCookingTime = Math.max(totalLoads * 600, 600);
+                console.log("totalLoads:" + totalLoads);
                 break;
             default:
                 alert("TODO calc total CoockingTime");
@@ -527,4 +348,37 @@ function updateKInterface_SelPanel() {
 
     });
     $('[item_id=' + localStorage.activeOrder + ']').addClass('ui-selected');
+}
+
+function updateKInterface_order(order) {
+    var ordersPanel = $('#o_ordersPanel');
+    var divOrder = $('#' + order.id);
+
+    if (!divOrder.length) {
+        divOrder = CreateOrder(order);
+        ordersPanel.append(divOrder);
+    }//TODO сделать чтоб добавлялся только заказ с нужным idBatch
+    divOrder.replaceWith(CreateOrder(order));
+
+
+    var log = '';
+    $(order.Log).each(function (index) {
+        log += this.ts.substr(11, 5) + ": " + idStatusToString(this.idStatus) + '\n';
+    });
+    divOrder.attr('title', log);
+    divOrder.find('span.CTime').text(order.CTime);
+    divOrder.find('span.DTime').text(order.DTime);
+
+    //if (divOrder) {
+    divOrder.removeClass('ord-workplace-3 ord-workplace-4');
+    divOrder.addClass('ord-workplace-' + order.idKitchen);
+
+    divOrder.removeClass('ord-status-1 ord-status-2 ord-status-3 ord-status-4 ord-status-5 ord-status-6 ord-status-7 ord-status-8');
+    divOrder.addClass('ord-status-' + order.idStatus);
+    //console.log('try: '+order.id);
+
+
+    divOrder.find("span.status").text(idStatusToString(order.idStatus));
+
+    divOrder.effect("bounce", "slow");
 }

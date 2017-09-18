@@ -35,7 +35,6 @@ function createTimer(id, _class, length, size) {
 
     return divTimer;
 }
-
 function stopTimer() {
     if (timerId !== undefined) {
         clearInterval(timerId);
@@ -61,27 +60,4 @@ function startTimer(length, callback) {
     } else {
         return false;
     }
-}
-
-Number.prototype.toHHMMSS = function () {
-    var sec_num = this;
-    var hours = Math.floor(sec_num / 3600);
-    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-    if (hours < 10) {
-        hours = "0" + hours;
-    }
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
-    return hours > 0 ? hours + ':' : '' + minutes + ':' + seconds;
-}
-
-String.prototype.toHHMMSS = function () {
-    var sec_num = parseInt(this, 10); // don't forget the second param
-    return sec_num.toHHMMSS();
 }

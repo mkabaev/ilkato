@@ -1,32 +1,127 @@
-var clientsCache = [];//сюда кэшируем клиентов для поиска по номеру телефона
-var AllProducts = []; //справочник продуктов
-var curOrder = {};
+var G = {
+    //clientsCache: null, //сюда кэшируем клиентов для поиска по номеру телефона
+    AllProducts: null, //справочник продуктов
+    AllOrders: null, //текущие заказы
+    curOrder: null,
+    today: function () {
+        var d = new Date();
+        d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    } //yyyy-mm-dd
+};
+
+
+
+//function Order(firstName,lastName,age,eyeColor) {
+//    this.firstName = firstName;
+//    this.lastName = lastName;
+//    this.age = age;
+//    this.eyeColor = eyeColor;
+//    this.el=document.getElementById("or");
+//    this.el.innerHTML=age;
+//    this.changeName = function (name) {
+//        this.lastName = name;
+//    }
+//    this.changeEl = function (v) {
+//        this.el.innerHTML = v;
+//    }
+//}
+//var order = new Order("Sally","Rally",48,"green");
+//order.changeName("Doe");
+//document.getElementById("demo").innerHTML =
+//"My order last name is " + order.lastName;
+//order.changeEl("Doe");
+
+
+
+
+
+
 
 function createClientObj() {
     var c = {};
     c.id = null;
     c.Name = null;
-    c.Phones = []; // [{"Phone":9277034366,"isDefault":1}]
-    c.Addresses = []; //[{"Flat":null,"Floor":6,"Address":"советской армии 203 252","geo_lat":null,"geo_lon":null,"house_id":null,"isDefault":null}]
+    c.Surname = null;
+    c.Phones = []; // [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}]
+    c.Addresses = []; //[{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}]
     c.Card = null;
     c.Comment = null;
+    c.Org = null;
     return c;
 }
 
-function createProductObj() {
+function createProductObj(product) {
     var p = {};
-    p.id = null;
-    p.Name = null;
-    p.Count = null;
-    p.Price = null;
-    p.Weight = null;
-    p.idType = null;
-    p.isCooked = null;
-    p.CookingTime = null;
+    if (product === undefined || product.id === undefined) {
+        p.id = null;
+        p.Name = null;
+        p.Price = null;
+        p.Weight = null;
+        p.idType = null;
+        p.isCooked = null;
+        p.isGift = null;
+        p.CookingTime = null;
+        p.Tags = [];
+        p.Count = null;
+    } else {
+        p = getProduct(product.id);
+//        p.id = product.id === undefined ? null : product.id;
+//        p.Name = product.Name === undefined ? null : product.Name;
+//        p.Count = product.Count === undefined ? null : product.Count;
+//        p.Price = product.Price === undefined ? null : product.Price;
+//        p.Weight = product.Weight === undefined ? null : product.Weight;
+//        p.idType = product.idType === undefined ? null : product.idType;
+//        p.isCooked = product.isCooked === undefined ? null : product.isCooked;
+//        p.isGift = product.isCooked === undefined ? null : product.isGift;
+//        p.CookingTime = product.CookingTime === undefined ? null : product.CookingTime;
+//        p.Tags = product.Tags === undefined ? null : product.Tags;
+    }
+    return p;
+}
+function createOrderProductObj(product) {
+    var p = createProductObj(product);
+    //padding product for order
+    if (product !== undefined) {
+        p.Count = product.Count === undefined ? null : product.Count;
+        p.isCooked = product.isCooked === undefined ? null : product.isCooked;
+        p.isGift = product.isCooked === undefined ? null : product.isGift;
+        p.Price = product.Price === undefined ? null : product.Price;
+        p.Weight = product.Weight === undefined ? null : product.Weight;
+    }
     return p;
 }
 
 function createOrderObj(order) {
+//          var client = {
+//            id: 9226, //на данный момент достаточно только ID клиента. Остальную инфу сервер пока не обрабатывает.
+//            //Name: 'Ванек',
+//            //Surname: 'Пупкин',
+//            //Phones: [{"Phone": 9277777778, "isDefault": 1}, {"Phone": 9626040203}],
+//            //Addresses: [{"Floor": 6, "Address": "ул Владимирская, д 43, кв 82", "isDefault": 1}],
+//            //Card: "1234",
+//            //Comment: "тут коммент",
+//            //Org: 'ОАО "ТяпЛяпСтрой"'
+//        };
+//
+//        var order = {
+//            id: 54336, //51979 //если передаем - то заказ редактируется. Если нет - создается
+//            No: null, //номер заказа назначается сервером. Нумерация начинается с 1 каждый день
+//            idBranch: 1,
+//            idPricingType: null,
+//            idStatus: 8,
+//            idKitchen: null,
+//            idBatch: null,
+//            idCreatedBy: null,
+//            Price: null,
+//            Comment: null,
+//            QueueNo: null,
+//            //CDate: "17-02-03", // "yy-mm-dd" дата создания заказа. Если не передавать, то сервер установит текущую
+//            //CTime: "15:00", //соответственно, время создания
+//            DDate: "17-02-03", // К какому числу клиент хочет заказ
+//            DTime: "15:00", // Соответственно, к какому времени
+//            Products: [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}],
+//            Client: client
+//        };
     var o = {};
     if (order === undefined) {
         o.id = null;
@@ -45,6 +140,8 @@ function createOrderObj(order) {
         o.DTime = null;
         o.Products = [];
         o.Client = createClientObj();
+        o.Phone = null;
+        o.idAddress = null;
     } else {
         o.id = order.id === undefined ? null : order.id;
         o.No = order.No === undefined ? null : order.No;
@@ -60,8 +157,13 @@ function createOrderObj(order) {
         o.QueueNo = order.QueueNo === undefined ? null : order.QueueNo;
         o.DDate = order.DDate === undefined ? null : order.DDate;
         o.DTime = order.DTime === undefined ? null : order.DTime;
-        o.Products = order.Products === undefined || order.Products === null ? [] : order.Products;
+        o.Products = order.Products === undefined || order.Products === null ? [] : (order.Products.map(function (p) {
+            return createOrderProductObj(p);
+        }));
+
         o.Client = order.Client === undefined ? createClientObj() : order.Client;
+        o.Phone = order.Phone === undefined ? null : order.Phone;
+        o.idAddress = order.idAddress === undefined ? null : order.idAddress;
     }
     return o;
 }
@@ -117,9 +219,9 @@ function printHTML(htmlTemplate, order) {
     s = s.replace("$order_time", order.CTime);
     s = s.replace("$delivery_time", order.DTime);
 //
-    s = s.replace("$comment", order.Comment.split("|")[0]);
+    s = s.replace("$comment", order.Comment);
 //
-    var pcount = order.Comment.split("|")[1].slice(19);
+    var pcount = 1;
     s = s.replace("$count_person", pcount);
 //
 //    //table id, _class, headerItems, tableItems, footerItems
@@ -158,38 +260,19 @@ function printHTML(htmlTemplate, order) {
 }
 
 function showSelectUserDialog() {
-    var dlg = $('#dlg_selUsers');
+    var dlg = $('#SelUser');
     if (!dlg.length) {
-        dlg = CreateSelectDialog('SelUsers', 'Авторизация', undefined, undefined, afterSelUser);
+        sendRequest('getUsers', '', function (data) {
+            //console.log('dialog ' + id + ' found on page. items');
+            console.log('users loaded from server:');
+            console.log(data);
+            dlg = CreateSelectDialog('SelUser', 'Авторизация', undefined, data, afterSelUser);
+            dlg.dialog("option", {width: 400, height: 200});
+//$('ul.ul_selectItems').html(ArrayToLiItems(data));
+            //$('#authSel').append(ArrayToOptionItems(["U1", "U2", "U3"]));
+            dlg.dialog('open');
+        });
     }
-    sendRequest('getUsers', '', function (data) {
-        //console.log('dialog ' + id + ' found on page. items');
-        console.log('users loaded from server:');
-        console.log(data);
-        $('ul.ul_selectItems').html(ArrayToLiItems(data));
-        dlg.dialog('open');
-    });
-
-//    $.ajax({
-//        type: "POST",
-//        data: "action=getUsers",
-//        url: "helper.php",
-//        cache: false,
-//        success: function (jsondata) {
-//            //console.log('dialog ' + id + ' found on page. items');
-//            console.log('users loaded from server: ' + jsondata);
-//            $('#workplace').removeClass("ui-state-error");
-//            $('ul.ul_selectItems').html(ArrayToLiItems($.parseJSON(jsondata)));
-//            dlg.dialog('open');
-//        },
-//        error: function (xhr, ajaxOptions, thrownError) {
-//            console.log("status: " + xhr.status + " | " + thrownError);
-//            $("#workplace").addClass("ui-state-error");
-//            //$("body").addClass("ui-state-error");
-////            alert(xhr.status);
-////            alert(thrownError);
-//        }
-//    });
 }
 
 function createSelectPanel(id, _class, items, callback) {
@@ -242,12 +325,14 @@ function CreateDialog(id, caption, _class, enableAnimation) {
     //divDialog.attr("user_id", $(this).parent().attr("item_id"));
 
     divDialog.dialog({
-        width: 900,
-        height: 600,
+        width: "100%",
+        height: $(window).height(),
         //width: "auto",
-        autoOpen: false,
-        modal: true,
-        resizable: false,
+//        autoOpen: false,
+//        modal: true,
+//        resizable: false,
+//        closeOnEscape: false,
+//        draggable: false,
         //buttons: [ { text: "Okkkk", click: function() { $( this ).dialog( "close" ); } } ],
 //        show: {
 //            effect: "blind",
@@ -257,18 +342,18 @@ function CreateDialog(id, caption, _class, enableAnimation) {
 //            effect: "explode",
 //            duration: 300
 //        },
-        open: function () {
-            $('.ui-widget-overlay').bind('click', function () {
-                divDialog.dialog('close');
-                divDialog.dialog('destroy');
-            })
-        },
-        close: function () {
-            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
-//            $(this).dialog('destroy').remove();
-            $(this).remove();
-        },
-        dialogClass: "noclose"//+_class
+//        open: function () {
+//            $('.ui-widget-overlay').bind('click', function () {
+//                divDialog.dialog('close');
+//                //divDialog.dialog('destroy');
+//            })
+//        },
+//        close: function () {
+//            //This will destroy the dialog and then remove the div that was "hosting" the dialog completely from the DOM
+////            $(this).dialog('destroy').remove();
+//            $(this).remove();
+//        },
+        //dialogClass: "noclose"//+_class
     });
     if (enableAnimation === undefined) {
         divDialog.dialog("option", "show", {effect: "blind", duration: 300});
@@ -288,36 +373,79 @@ function CreateDialog(id, caption, _class, enableAnimation) {
  */
 function CreateSelectDialog(id, caption, _class, items, callback) {
     var divDialog = CreateDialog(id, caption, _class);
-    var list = $('<ul/>', {
-        //id: 'ul_'+id,
-        class: 'ul_selectItems',
-        //attr: {'title': "Авторизация", 'ts': timestamp}
-    });
-    divDialog.append(list);
+//    var list = $('<ul/>', {
+//        //id: 'ul_'+id,
+//        class: 'ul_selectItems',
+//        //attr: {'title': "Авторизация", 'ts': timestamp}
+//    });
+//    divDialog.append(list);
 
-    //divDialog.attr("user_id", $(this).parent().attr("item_id"));
-    list.html(items);
-    list.selectable({
-        tolerance: "fit",
-        selected:
-                function (event, ui) {
-                    //alert($(ui.selected).attr("item_id") + " " + ui.selected.innerHTML);
-                    //localStorage.user_id = $(ui.selected).attr("item_id");
-                    //localStorage.user_name = ui.selected.innerHTML;
-                    //updateInterface_user();
-                    //$("#"+idPanel + " .order").css("visible:none;");
-                    //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
-                    if (callback) {
-                        //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
-                        callback(ui.selected);
-                    } else {
-                        alert('callback error');
-                    }
-                    //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
-                    //console.log(JSON.stringify(ar));
-                    divDialog.dialog("close");
-                }
+    var selUser = $('<select/>', {
+        id: "authSel",
+        //name: "paytype",
+        class: 'authSel',
     });
+    divDialog.append(selUser);
+    selUser.append(ArrayToOptionItems(items));
+    selUser.selectmenu({
+//        create: function (event, ui) {
+////            $('.ui-selectmenu-menu').css({'height': '100px', 'overflow': 'auto'});
+//            $('.ui-selectmenu-menu').css({'z-index': '10000000'});
+//        },
+//        open: function (event, ui)
+//        {
+//            $('.ui-selectmenu-menu').zIndex($(‘#dialog’).zIndex() + 1);
+//        },
+        width: 340,
+//        position: {
+//            my: "left+10 top",
+//            at: "left top+20"
+//        },
+        change: function (event, ui) {
+            //alert($(this).val());
+            //localStorage.user_id = $(ui.selected).attr("item_id");
+            //localStorage.user_name = ui.selected.innerHTML;
+            //updateInterface_user();
+            //$("#"+idPanel + " .order").css("visible:none;");
+            //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
+            if (callback) {
+                //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
+                //callback(ui.selected);
+                callback(ui.item.element);
+                //console.log($(ui.item.element).attr("idPerson")); 
+            } else {
+                alert('callback error');
+            }
+            //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
+            //console.log(JSON.stringify(ar));
+            divDialog.dialog("close");
+        }
+    });
+//    selUser.val(1);
+    selUser.selectmenu('refresh', true);
+
+
+//    list.html(items);
+//    list.selectable({
+//        tolerance: "fit",
+//        selected:
+//                function (event, ui) {
+//                    //localStorage.user_id = $(ui.selected).attr("item_id");
+//                    //localStorage.user_name = ui.selected.innerHTML;
+//                    //updateInterface_user();
+//                    //$("#"+idPanel + " .order").css("visible:none;");
+//                    //SetCourierToOrdersAndClear(y, parseInt($(ui.selected).attr("courier_id")));
+//                    if (callback) {
+//                        //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
+//                        callback(ui.selected);
+//                    } else {
+//                        alert('callback error');
+//                    }
+//                    //callback.call($(ui.selected).attr("item_id"),ui.selected.innerHTML);
+//                    //console.log(JSON.stringify(ar));
+//                    divDialog.dialog("close");
+//                }
+//    });
     return divDialog;
 }
 
@@ -366,39 +494,29 @@ function doInit(callback) {
 //        }, null)
 //    }); 
 
-//загружаем справочник продуктов, пока юзер авторизуется
-    if (localStorage.getItem("Products") === null) {
-        sendRequest('getProducts', '', function (response) {
-            AllProducts = response;
-            //console.log("LOADED:");
-            //console.log(AllProducts);
-            localStorage.Products = JSON.stringify(response);
-        });
-    } else {
-        AllProducts = JSON.parse(localStorage.Products);
-        //console.log("EXISTS:");
-        //console.log(AllProducts);
-    }
-
-    if (localStorage.uid === "undefined") {
+    if (localStorage.uid === undefined || localStorage.wp_id === undefined) {
         showSelectUserDialog();
     } else {
         updateInterface_user();
         //set USER ONLINE on server and then get active orders
         sendRequest("login", "uid=" + localStorage.uid + "&wid=" + localStorage.wp_id + "&old_sid=" + localStorage.id_session, function (data) {
-            $.each(localStorage, function (key, value) {
-                if (key.startsWith('o_') | key.startsWith('b_')) {
-                    localStorage.removeItem(key);
-                }
-            });
+
+//            $.each(localStorage, function (key, value) {
+//                if (key.startsWith('o_') | key.startsWith('b_')) {
+//                    localStorage.removeItem(key);
+//                }
+//            });
+            clearStorage(); //except uid, wp_id...
             //save actual orders to LS
-            console.log("received:");
-            console.log(data);
             //var data = JSON.parse(jsondata);
             localStorage.id_session = data.id_session;
-            setItemsToLS('o_', data.orders);
-            setItemsToLS('b_', data.batches);
-
+//            if (data.batches.length) {
+//                setItemsToLS('b_', data.batches);
+//            }
+            if (data.orders.length) {
+                setItemsToLS('o_', data.orders);
+                G.AllOrders = data.orders;
+            }
             //localStorage.activeDate = (new Date()).toISOString().substr(0, 10);
             //var dates = [];
             //$(data.orders).each(function (indx, order) {
@@ -502,8 +620,11 @@ function CreateTable(id, _class, headerItems, tableItems, footerItems) {
     return table;
 }
 
-function UpdateTableItems(table, tableItems) {
+function UpdateTableItems(table, tableItems, footerItems) {
     $(table).find('tbody').html(ArrayToTableItems(tableItems));
+    if (footerItems) {
+        $(table).find('tfoot').html(ArrayToTableFooter(footerItems));
+    }
 }
 
 function ArrayToTableHeader(headerItems) {
@@ -580,27 +701,27 @@ function ArrayToLiItems(items) {
 function ArrayToOptionItems(items) {
     var _items = [];
     $.each(items, function (key, val) {
-        var s = "";
-        var t = "";
+        var opt = $("<option/>");
         if (typeof val === 'object') {
-            $.each(val, function (key2, val2) {
+            $.each(val, function (atrName, atrVal) {
                 //class: 'order ui-widget ui-widget-content ui-helper-clearfix ui-corner-top'
-                switch (key2) {
+                switch (atrName) {
                     case 'id':  // if (x === 'value1')
-                        s = s + " item_id=" + val2;
-                        break
-
+                        opt.attr("item_id", atrVal);
+//                      break;
                     case 'Name':  // if (x === 'value2')
-                        t = val2;
-                        break
+                        opt.text(atrVal);
+//                        break;
                     default:
-                        s = s + " " + key2 + "=" + val2;
-                        break
+                        opt.attr(atrName, atrVal);
+//                        break;
                 }
             });
-            _items.push("<option" + s + ">" + t + "</option>");
+            _items.push(opt);
         } else {
-            _items.push("<option value=" + key + ">" + val + "</option>");
+            opt.attr("value", key);
+            opt.text(val);
+            _items.push(opt);
         }
 
     });
@@ -634,6 +755,12 @@ function getItemsFromLS(prefix) {
     return items;
 }
 
+function getProduct(id) {
+    return G.AllProducts.find(function (p) {
+        return p.id === id;
+    });
+}
+
 function getOrderFromLS(id) {
     return getItemFromLS("o_", id);
 }
@@ -653,12 +780,16 @@ function getBatchesFromLS() {
 function afterSelUser(sender) {
     //callback(ui.selected, $(ui.selected).attr("item_id"), ui.selected.innerHTML);
     //alert(ui.selected.id + " " + ui.selected.innerHTML);
-    //localStorage.clear();
+    if (eventSource) {
+        eventSource.close();
+    }
+    localStorage.clear();
     localStorage.wp_id = $(sender).attr("idWorkplace");
     localStorage.wp_type = $(sender).attr("idType");
     localStorage.uid = $(sender).attr("idPerson");
-    ;
     localStorage.user_name = $(sender).text();
+    console.log("Clear localStorage and set wp_id=" + localStorage.wp_id + ", wp_type=" + localStorage.wp_type + ", uid=" + localStorage.uid);
+
 //    $("#SelUsers").remove();
     doInit();
     //updateInterface_user();
@@ -666,18 +797,24 @@ function afterSelUser(sender) {
 
 function sendRequest(action, paramsstr, callback) {
     //alert("action=" + action + "&" + paramsstr);
+    //$(this).addClass("ui-state-disabled");
     $.ajax({
         dataType: 'json',
         type: "POST",
         data: "action=" + action + "&" + paramsstr,
         url: "helper.php",
-        cache: false,
+        //cache: false,
         timeout: 30000,
-        success: function (jsondata) {
-            $("body").removeClass("ui-state-error");
-            if (callback) {
-                callback(jsondata);
-            }
+        //processData: false,
+        success: function (data) {
+//            console.log("sendRequest " + action + " successful. Response:");
+//            console.log(data);
+//            $("body").removeClass("ui-state-error");
+//            //$(this).removeClass("ui-state-disabled");
+//
+//            if (callback) {
+//                callback(data);
+//            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("status: " + xhr.status + " | " + thrownError);
@@ -686,7 +823,17 @@ function sendRequest(action, paramsstr, callback) {
 //            alert(xhr.status);
 //            alert(thrownError);
         }
-    });
+    }).done(
+            function (data) {
+                console.log("sendRequest " + action + " successful. Response:");
+                console.log(data);
+                $("body").removeClass("ui-state-error");
+                //$(this).removeClass("ui-state-disabled");
+                if (callback) {
+                    callback(data);
+                }
+            }
+    );
 
 }
 
@@ -711,18 +858,22 @@ function loadjscssfile(filename, filetype) {
 function clearStorage() {
     var uid = localStorage.uid;
     var user_name = localStorage.user_name;
+    var wp_type = localStorage.wp_type;
+    var wp_id = localStorage.wp_id;
 
     localStorage.clear();
 
     localStorage.uid = uid;
     localStorage.user_name = user_name;
-    //updateInterface_user();
+    localStorage.wp_type = wp_type;
+    localStorage.wp_id = wp_id;
+//updateInterface_user();
 }
 
 //copy data to LS and update interface if needed
 function setItemsToLS(prefix, data) {
     $.each(data, function (key, val) {
-        //console.log('saving '+prefix+' to LS:' + JSON.stringify(val));
+        console.log('try to saving ' + prefix + ' to LS:');
         if (val) {
             localStorage.setItem(prefix + val.id, JSON.stringify(val));
         } else {
@@ -733,19 +884,48 @@ function setItemsToLS(prefix, data) {
 
 //собирает необходимые данные для создания заказа на сервере. Если клиент новый, то отправляются данные клиента вместо его id
 function prepareDataToCreateOrderOnServer(order) {
-    var Client = {};
-    if (order.Client.id) {
-        Client = {id: order.Client.id}
-    } else {
-        Client = order.Client;
-    }
-    var Products = order.Products.map(function (oldItem) {
-        var newItem = {};
-        newItem.id = oldItem.id;
-        return newItem;
-    });
+//            id: 54336, //51979 //если передаем - то заказ редактируется. Если нет - создается
+//            No: null, //номер заказа назначается сервером. Нумерация начинается с 1 каждый день
+//            idBranch: 1,
+//            idPricingType: null,
+//            idStatus: 1,
+//            idKitchen: null,
+//            idBatch: null,
+//            idCreatedBy: null,
+//            Price: null,
+//            Comment: null,
+//            QueueNo: null,
+//            //CDate: "17-02-03", // "yy-mm-dd" дата создания заказа. Если не передавать, то сервер установит текущую
+//            //CTime: "15:00", //соответственно, время создания
+//            DDate: "17-02-03", // К какому числу клиент хочет заказ
+//            DTime: "15:00", // Соответственно, к какому времени
+//            Products: [{"id": 774, "Count": 2}, {"id": 1319, "Count": 1}, {"id": 1319, "Count": 1, "isGift": 1}],
+//            Client: 
+    var Client = null;
+    if (order.Client !== null) {
+        if (order.Client.id) {
+            Client = {id: order.Client.id}
+        } else {
+            if (order.Client.Phones !== null && order.Client.Phones.length) { // & order.Client.Phones[0].length === 10
+                Client = order.Client;
+            }
+            //else {
+            //    Client = null;
+            //}
+        }
 
+    }
+    var Products = null;
+    if (order.Products !== null && order.Products.length) {
+        Products = order.Products.map(function (oldItem) {
+            var newItem = {};
+            newItem.id = oldItem.id;
+            newItem.Count = oldItem.Count;
+            return newItem;
+        });
+    }
     var newOrder = {
+        id: order.id,
         idBranch: order.idBranch,
         idPricingType: order.idPricingType,
         idStatus: order.idStatus,
@@ -759,6 +939,8 @@ function prepareDataToCreateOrderOnServer(order) {
         DTime: order.DTime,
         Client: Client,
         Products: Products,
+        Phone: order.Phone,
+        idAddress: order.idAddress,
     }
     return newOrder;
 }
@@ -814,7 +996,29 @@ $.extend($.expr[':'], {
     }
 });
 
+$(document).ajaxStart(function () {
+    $("#topmenu").addClass("ui-autocomplete-loading");
+//    $("#fountainG").show();
+});
+$(document).ajaxStop(function () {
+    $("#topmenu").removeClass("ui-autocomplete-loading");
+//    $("#fountainG").hide();
+});
+
+//Load and execute a JavaScript file.
+//$.ajax({
+//  method: "GET",
+//  url: "test.js",
+//  dataType: "script"
+//});
+
+//$(document).ajaxComplete(function () {
+//    $('#settings').fadeOut().fadeIn();
+//});
+
 $(document).ready(function () {
+//    $("#fountainG").hide();
+
     //K_RequestServer();
     //LoadCouriers();
     //setInterval('K_RequestServer()', 3000);
@@ -945,3 +1149,42 @@ $(document).ready(function () {
 //        db.close();
 //    };
 //}
+
+Number.prototype.toHHMMSS = function () {
+    var sec_num = this;
+    if (sec_num > 0) {
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+        return hours > 0 ? hours + ':' : '' + minutes + ':' + seconds;
+    } else {
+        return sec_num;
+    }
+}
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    return sec_num.toHHMMSS();
+}
+
+function remove_duplicates_es6(arr) {
+    let s = new Set(arr);
+    let it = s.values();
+    return Array.from(it);
+}
+
+Date.prototype.withoutTime = function () {
+    var d = new Date(this);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}

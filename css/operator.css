@@ -1,39 +1,8 @@
-.order {
-    /*    width:auto;*/
-    width: 130px;
-    height:130px;
-    margin: 5px;
-    position: relative;
-}
 
-/*kitchen workplace*/
-.wp-3 .order{
-    /*    width:auto;*/
-    width: 60px;
-    height:60px;
-    margin: 5px;
-    position: relative;
-}
-.wp-3 .order .time,.wp-3 .order .order-content{
-    display: none;
-}
-.wp-3 .order.selected {
-    border-color: red;
-    border-width: 2px;
-}
-
-.order:hover {
-    border-color: red;
-}
-
-.status {
-    font-size:larger;
-    float:right;
-}
 /*принятые*/
 #o_ordersPanel{
     border: 1px solid #eee;
-    width: 162px;
+    min-width: 48px;
     min-height: 180px;
     margin: 0;
     height: 600px;
@@ -45,11 +14,11 @@
 
 /*где делать заказ*/
 
-.ord-workplace-null .ui-widget-header {
+/*.ord-workplace-null .ui-widget-header {
     border:none;
     background: none;
     color: #666666;
-}
+}*/
 
 /*NS*/
 .ord-workplace-4 .ui-widget-header {
@@ -67,11 +36,10 @@
 
 
 
-#o_ordersPanel .order {
+#o_ordersPanel .op {
     /*    width:auto;*/
 
 }
-
 
 #o_activeOrdersPanel{
     border: 1px solid #e78f08ee;
@@ -86,33 +54,30 @@
 }
 
 .o_orderBatchPanel{
-    height: 147px;
-    border: 1px solid #eee;
-    margin: 5px;
+    height: 164px;
+    /*border: 1px solid #eee;*/
+    border: 1px solid #EA5;
+    margin-top: 10px;
 }
 
 .o_itemsPanel{
     height: 145px;
     border: 1px solid #eee;
-    width:900px;
-    float:left;
+    width:1000px;
+    /*    float:left;*/
     overflow-x:auto;
 }
 
 .o_orderBatchPanelButtons {
-    width:25px;
-    height: 145px;
-    float:left;
-    position: relative;
-    bottom:0;
-    font-size: 0.5em;
+    height: 17px;
+    background-color: #f3f3f3;        
 }
 .o_orderBatchPanelButtons button{
-    bottom:0;
-    position: absolute;
+    /*bottom:0;*/
+    /*position: absolute;*/
 }
 
-.o_orderBatchPanel .order {
+.o_orderBatchPanel .op {
     display:inline-block;
 }
 
@@ -147,13 +112,13 @@
     padding: 4px;
 }
 
-.ui-checkboxradio-label{
+/*.ui-checkboxradio-label{
     opacity: 0.2;
 }
 
 .ui-checkboxradio-label.ui-checkboxradio-checked{
     opacity: 1;
-}
+}*/
 
 #topwidget *{
     display:inline-block;
@@ -189,60 +154,8 @@
     content: " руб";
 }
 
-.order-header {
-    padding: 0.1em;
-    /* margin-bottom: 0.5em; */
-    position: relative;
-    font-size: 2em;
-    /*height: 60px;*/
-}
-/*.ui-state-disabled .order-content{
-    text-decoration: line-through;
-}*/
 
-.ui-state-disabled .order-content ul {
-    list-style: none;
-}
-/*.ui-state-disabled .order-content ul li {
-    position: relative;
-}
-.ui-state-disabled .order-content ul li:after {
-    content: '\2714';
-    position: absolute;
-    top: -3px;
-    left: -25px;
-}*/
-
-.order-header .time{
-    /*padding: 0.3em 0.3em;*/
-    /*    margin-bottom: 0.5em;
-        position: relative;*/
-    font-size: 0.25em;
-    position: absolute;
-    right: 2px;
-    top: 4px;
-    /*background-color: red;*/
-}
-/*.order-toggle {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    margin-top: -8px;
-}*/
-.order-content {
-    padding: 0 0 0 0.4em;
-    white-space: normal;
-    font-size: 0.55em;
-    overflow: auto;
-    margin-bottom: 0.2em;
-    height:80px;
-}
-/*.ui-button{
-    bottom: 0;
-    padding: 0;
-    margin: 0;
-}*/
-.order-placeholder {
+.op-placeholder {
     border: 1px dotted black;
     margin: 1em 1em 1em 1em;
     width: 30px;
@@ -277,39 +190,7 @@
     right: 200px;
 }*/
 
-.ord-status-7{
-    opacity: 0.2;
-}
 
-.ord-status-6{
-    opacity: 0.2;
-}
-
-.ord-status-5{
-    opacity: 0.4;
-}
-
-.ord-status-4{
-    opacity: 0.7;
-}
-
-.ord-status-3{
-    opacity: 0.9;
-}
-
-.ord-status-2{
-}
-
-.ord-status-1{
-}
-
-@keyframes blinker {  
-    50% { opacity: 0; }
-}
-.ord-status-8{
-    /*    opacity: 0.2;*/
-    animation: blinker 500ms linear infinite;
-}
 
 
 .o_orderEditDlg .tProducts .rowButton{
@@ -321,7 +202,7 @@
 }
 
 .o_orderEditDlg .tProducts{
-    width: 450px;
+    width: 98%;
     /*table-layout: fixed;*/
 }
 
@@ -344,13 +225,14 @@ ul li i{
 .controlgroup{
     margin: 6px;
     padding: 4px;
+    float: left;
+    height: -webkit-fill-available;
 }
 
 .controlgroup #divProducts{
-    height: 480px;
-    margin-top: 10px;
+    height: 450px;
     overflow-y: auto;
-    float: bottom;
+    float: top;
 }
 
 .controlgroupDDate{
@@ -377,10 +259,61 @@ ul li i{
 
 .tMenuProducts tbody tr{
     /*border: 1px solid orange;*/
+    height: 48px;
 }
 
 .tMenuProducts tbody tr:hover {
-    font-weight: bold;
+    /*font-weight: bold;*/
+}
+
+/*.tMenuProducts .prodPizza{
+    background-image: url(../images/pizza.png);
+        width: 24px;
+        height: 24px;
+}*/
+
+/*.ico:before {
+    content: url(../images/pizza.png);
+    width: 20px;
+}*/
+.ptag-4:before{
+    content: "";
+    display: block;
+    background: url('../images/rollb.png') no-repeat;
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin-right: 10px;
+}
+
+.ptag-10:before{
+    content: "";
+    display: block;
+    background: url('../images/pizza30b.png') no-repeat;
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin-right: 10px;
+    /*background-color: yellow;*/
+}
+
+.ptag-13:before{
+    content: "";
+    display: block;
+    background: url('../images/sousb.png') no-repeat;
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin-right: 10px;
+}
+.ptag-17:before{
+    content: "";
+    display: block;
+    background: url('../images/pizza40b.png') no-repeat;
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin-right: 10px;
 }
 
 #bOk{

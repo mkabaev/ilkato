@@ -16,7 +16,7 @@ echo 'db init...';
     $db = new DB();
 	echo 'done<br/>';
 
-    $query = "SELECT idPerson, Name, idWorkplace FROM employees";
+    $query = "SELECT * FROM employees";
     $stmt = $db->conn->prepare($query);
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);

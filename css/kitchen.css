@@ -2,7 +2,7 @@
 
 /*.orderViewer {position:absolute; top:40px; bottom:10px; left:80px; right:10px; display:none;}*/
 .orderViewer {
-    display:none;
+    /*display:none;*/
     position:absolute;
     width:1035px;
     min-height: 480px;
@@ -45,28 +45,6 @@
 
 /*  height: calc(100% - 40px); width: calc(100%-10px); margin: 20px 10px;*/
 
-.mk {
-    float: left;
-    width:500px;
-    padding-top:6px; 
-    margin-left: 10px; 
-    height: 90%;
-    overflow-y:auto;
-}
-.mk .tProducts{
-    position: relative; 
-    margin-left: auto; 
-    margin-right: auto;
-    width: 90%;
-}
-/*background-color: #F39814;*/
-.mk .doneButton{
-    font-size: 2em;
-    font-weight:bold;
-    position: relative;
-    margin:20px;
-    width: calc(100% - 40px);
-}
 .ui-dialog .mk .doneButton{
     visibility: hidden;  
 }
@@ -92,20 +70,6 @@
 }
 .selItems li:hover {opacity: 0.2;}
 .ui-selectable-helper{display:none;}*/
-
-div.imgRoll {
-    /*   background-image:url(../bg_japan.png);*/
-    content:url(../bg_japan.png);
-    width:15px;
-    height:15px;
-}​
-
-div.imgPizza {
-    /*   background-image:url(../bg_japan.png);*/
-    content:url(../bg_italian.png);
-    width:15px;
-    height:15px;
-}​
 
 /*тут какой-то косяк. убираешь строчку и стиль коммента меняется*/
 .orderViewer.ord-pricingType-2 .comment{
