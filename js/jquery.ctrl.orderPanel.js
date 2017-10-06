@@ -120,9 +120,14 @@ $.widget("ctrl.orderPanel", {
 
             this.pCircleTime.text(Math.max(cookingTimeR, cookingTimeP) / 60);
             var strAddress = 'адрес не указан';
-            if (this.options.order.Address) {
-                //strAddress = order.Client.Street + ', ' + order.Client.Building;
-                strAddress = this.options.order.idAddress;
+            var idAddress=this.options.order.idAddress;
+            if (idAddress) {
+                var adr = this.options.order.Client.Addresses.find(function (element, index, array) {
+                        return element.id === idAddress;
+                    });
+                    var str=adr.Street===null?'---':adr.Street;
+                    var bld=adr.Building===null?'---':adr.Building;
+                strAddress = str + ', ' + bld;
             }
             this.pAddress.html(strAddress);
 

@@ -708,13 +708,13 @@ function ArrayToOptionItems(items) {
                 switch (atrName) {
                     case 'id':  // if (x === 'value1')
                         opt.attr("item_id", atrVal);
-//                      break;
+                      break;
                     case 'Name':  // if (x === 'value2')
                         opt.text(atrVal);
-//                        break;
+                        break;
                     default:
                         opt.attr(atrName, atrVal);
-//                        break;
+                        break;
                 }
             });
             _items.push(opt);
@@ -802,7 +802,8 @@ function sendRequest(action, paramsstr, callback) {
         dataType: 'json',
         type: "POST",
         data: "action=" + action + "&" + paramsstr,
-        url: "helper.php",
+        //url: "helper.php",
+        url: "http://api.ilkato.ru",
         //cache: false,
         timeout: 30000,
         //processData: false,

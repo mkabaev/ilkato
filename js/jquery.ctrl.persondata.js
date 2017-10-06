@@ -444,17 +444,15 @@ $.widget("ctrl.personData", {
         $(this.pCard).val(this.options.Card);
         $(this.pComment).val(this.options.Comment);
         $(this.pAddresses).empty();
-        console.log("---------addr");
-        console.log(this.options);
         if (this.options.Addresses) {
             var preparedAddrItems = this.options.Addresses.map(function (oldItem) {
                 var newItem = {};
 //                newItem.id = oldItem.id;
-                newItem.Name = oldItem.Address;
+                newItem.Name = oldItem.Street+", "+oldItem.Building;
                 newItem.value = oldItem.id;
                 newItem.isDefault = oldItem.isDefault;
-                newItem.Floor = oldItem.Floor;
-                newItem.Flat = oldItem.Flat;
+//                newItem.Floor = oldItem.Floor;
+//                newItem.Flat = oldItem.Flat;
                 return newItem;
             });
             $(this.pAddresses).append(ArrayToOptionItems(preparedAddrItems));
@@ -463,8 +461,8 @@ $.widget("ctrl.personData", {
             });
 //            //TODO set selected addr
             if (defAddr) {
-                //alert("try to set addr: "+defAddr.Address);
-                this.pAddresses.val(defAddr.Address);
+//                alert("Set default address: "+defAddr.Street);
+                this.pAddresses.val(defAddr.id);
             }
 
         }
@@ -517,7 +515,7 @@ $.widget("ctrl.personData", {
             return {Floor: $selopt.attr('Floor'), Address: $selopt.text(), isDefault: $selopt.attr('isDefault'), Flat: $selopt.attr('Flat')};
         } else {
             if (value !== null) {
-                alert("try addr" + value);
+//                alert("Set selectedAddress: " + value);
 //                $(this.pAddresses).val(value).change(); // if need "change" event fired
                 $(this.pAddresses).val(value);
             }
@@ -918,7 +916,7 @@ $.widget("ctrl.personData", {
             dataType: 'json',
             type: "POST",
             data: "action=setCourierCoords&courier=" + JSON.stringify(Courier),
-            url: "helper.php",
+            url: "api.ilkato.ru",
             cache: false,
             timeout: 30000,
             success: function (data) {

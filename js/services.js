@@ -181,7 +181,7 @@ function SetOrderProductsOnServer(order_id, weightR, weightP)
     $.ajax({
         type: "POST",
         data: "action=SetOrderProducts&issue_id=" + order_id + "&weightR=" + weightR + "&weightP=" + weightP,
-        url: "helper.php",
+        url: "api.ilkato.ru",
         cache: false,
         success: function (timestamp) {
             //$("#" + panel_id + " > *:not('.setCourierButton')").remove();
